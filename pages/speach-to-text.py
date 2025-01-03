@@ -24,7 +24,7 @@ st.write("""  I leverages tools like Deepgram for real-time transcription, LangC
 
 
 # Add Video Link
-st.markdown("[Click here to watch the demo video on how this AI Voice Asistant  works.](https://www.loom.com/share/608753e9879e4c4ca716303db3e73037?sid=d11ae961-d6b0-4889-892a-01f17bd09030)")
+st.markdown("[Click here to watch the demo video on how this AI Voice Asistant  works.](https://www.loom.com/share/9602e7baf5634fb4b010c1347738b289?sid=6a8e87fc-cfa4-4bfc-bde6-4b999e0bcb40)")
 
 st.subheader("Screenshots:")
 # Add Image (replace with your own image path)

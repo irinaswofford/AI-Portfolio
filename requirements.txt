@@ -18,7 +18,6 @@ opencv-python
 pytesseract
 opencv-python-headless
 numpy
-tensorflow
 moviepy
 datasets
 transformers

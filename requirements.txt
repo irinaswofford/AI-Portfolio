@@ -4,7 +4,7 @@ tensorflow; platform_system != "Darwin"
 tensorflow-macos; platform_system == "Darwin"
 
 # Core Dependencies
-streamlit==1.19.0
+streamlit
 cmake==3.25.2
 dlib==19.24.2
 protobuf

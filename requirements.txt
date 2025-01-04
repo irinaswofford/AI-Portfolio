@@ -3,6 +3,7 @@ pyobjc; platform_system == "Darwin"
 tensorflow; platform_system != "Darwin"
 tensorflow-macos; platform_system == "Darwin"
 
+
 # Core Dependencies
 streamlit
 cmake==3.25.2
@@ -13,6 +14,8 @@ build
 # Google API
 google-api-core
 google-cloud-texttospeech
+google-api-python-client
+
 
 # Machine Learning & AI
 accelerate

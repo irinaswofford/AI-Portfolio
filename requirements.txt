@@ -858,7 +858,7 @@ proto-plus==1.25.0
     #   google-ai-generativelanguage
     #   google-api-core
     #   google-cloud-texttospeech
-protobuf>=5.26.1,<6.0
+protobuf>=3.19.0,<6.0
     # via
     #   google-ai-generativelanguage
     #   google-api-core

@@ -1,6 +1,8 @@
 pyobjc; platform_system == "Darwin"
 tensorflow; platform_system != "Darwin"
 tensorflow-macos; platform_system == "Darwin"
+build
+cmake
 protobuf
 google-api-core
 google-cloud-texttospeech

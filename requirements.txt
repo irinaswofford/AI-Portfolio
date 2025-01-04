@@ -655,7 +655,7 @@ notebook-shim==0.2.4
     # via
     #   jupyterlab
     #   notebook
-numpy>=1.22,<1.24
+numpy
     # via
     #   accelerate
     #   blis

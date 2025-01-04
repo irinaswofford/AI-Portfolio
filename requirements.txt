@@ -1,406 +1,44 @@
-absl-py==2.1.0
-    # via
-    #   tensorboard
-    #   tensorflow-macos
-accelerate>=1.2.1,<2.0
+pyobjc==1.50.0; platform_system == "Darwin"
+tensorflow==2.12.0; platform_system != "Darwin"
+tensorflow-macos==2.12.0; platform_system == "Darwin"
+
+accelerate==1.2.1
     # via -r requirements.in
-aiohappyeyeballs==2.4.4
-    # via aiohttp
-aiohttp==3.11.11
-    # via
-    #   datasets
-    #   edge-tts
-    #   fsspec
-    #   instructor
-    #   langchain
-    #   langchain-community
-    #   litellm
-    #   pigar
-aiosignal==1.3.2
-    # via aiohttp
-altair==5.5.0
-    # via streamlit
-annotated-types==0.7.0
-    # via pydantic
-anyio==4.7.0
-    # via
-    #   groq
-    #   httpx
-    #   jupyter-server
-    #   openai
-    #   starlette
-    #   watchfiles
-appnope==0.1.4
-    # via
-    #   ipykernel
-    #   ipython
-argon2-cffi==23.1.0
-    # via jupyter-server
-argon2-cffi-bindings==21.2.0
-    # via argon2-cffi
-arrow==1.3.0
-    # via isoduration
-asgiref==3.8.1
-    # via opentelemetry-instrumentation-asgi
-astor==0.8.1
-    # via pandasai
-asttokens==3.0.0
-    # via stack-data
-astunparse==1.6.3
-    # via tensorflow-macos
-async-lru==2.0.4
-    # via jupyterlab
-async-timeout==4.0.3
-    # via
-    #   aiohttp
-    #   langchain
-attrs==24.3.0
-    # via
-    #   aiohttp
-    #   jsonschema
-    #   referencing
-autocommand==2.2.2
-    # via jaraco-text
-babel==2.16.0
-    # via jupyterlab-server
-backcall==0.2.0
-    # via ipython
-backoff==2.2.1
-    # via posthog
-backports-tarfile==1.2.0
-    # via jaraco-context
-bcrypt==4.2.1
-    # via chromadb
-beautifulsoup4==4.12.3
-    # via
-    #   nbconvert
-    #   rpaframework
-bleach[css]==6.2.0
-    # via nbconvert
-blinker==1.9.0
-    # via
-    #   flask
-    #   streamlit
-blis>=1.1.0,<2.0
-    # via thinc
-build==1.2.2.post1
-    # via
-    #   chromadb
-    #   pip-tools
-cachetools==5.5.0
-    # via
-    #   google-auth
-    #   streamlit
-catalogue==2.0.10
-    # via
-    #   spacy
-    #   srsly
-    #   thinc
-certifi==2024.12.14
-    # via
-    #   edge-tts
-    #   httpcore
-    #   httpx
-    #   kubernetes
-    #   requests
-cffi==1.17.1
-    # via argon2-cffi-bindings
-charset-normalizer==3.4.1
-    # via requests
-chroma-hnswlib==0.7.6
-    # via chromadb
-chromadb==0.5.23
-    # via langchain-chroma
-click==8.1.8
-    # via
-    #   flask
-    #   gtts
-    #   litellm
-    #   nltk
-    #   pigar
-    #   pip-tools
-    #   streamlit
-    #   typer
-    #   uvicorn
-cloudpathlib==0.20.0
-    # via weasel
-colorama==0.4.6
-    # via pigar
-coloredlogs==15.0.1
-    # via onnxruntime
-comm==0.2.2
-    # via
-    #   ipykernel
-    #   ipywidgets
-confection==0.1.5
-    # via
-    #   thinc
-    #   weasel
-contourpy==1.3.0
-    # via matplotlib
-cycler==0.12.1
-    # via matplotlib
-cymem==2.0.10
-    # via
-    #   preshed
-    #   spacy
-    #   thinc
-dash==2.18.2
-    # via dash-daq
-dash-core-components==2.0.0
-    # via dash
-dash-daq==0.5.0
-    # via -r requirements.in
-dash-html-components==2.0.0
-    # via dash
-dash-table==5.0.0
-    # via dash
-dataclasses-json==0.6.7
-    # via langchain-community
-datasets>=3.2.0
-    # via evaluate
-debugpy==1.8.11
-    # via ipykernel
-decorator==5.1.1
-    # via
-    #   ipython
-    #   moviepy
-defusedxml==0.7.1
-    # via nbconvert
-deprecated==1.2.15
-    # via
-    #   opentelemetry-api
-    #   opentelemetry-exporter-otlp-proto-grpc
-    #   opentelemetry-semantic-conventions
 diffusers==0.32.1
     # via -r requirements.in
-dill==0.3.8
-    # via
-    #   datasets
-    #   evaluate
-    #   multiprocess
-distro==1.9.0
-    # via
-    #   groq
-    #   openai
 dlib==19.24.6
     # via -r requirements.in
-docopt==0.6.2
-    # via pipreqs
-docstring-parser==0.16
-    # via instructor
-duckdb==1.1.3
-    # via pandasai
-durationpy==0.9
-    # via kubernetes
 edge-tts==7.0.0
     # via -r requirements.in
 eval-type-backport==0.2.2
     # via -r requirements.in
 evaluate==0.4.3
     # via -r requirements.in
-exceptiongroup==1.2.2
-    # via anyio
-executing==2.1.0
-    # via stack-data
-faker==19.13.0
-    # via pandasai
-fastapi==0.115.6
-    # via
-    #   chromadb
-    #   langchain-chroma
-fastjsonschema==2.21.1
-    # via nbformat
-filelock==3.16.1
-    # via
-    #   datasets
-    #   diffusers
-    #   huggingface-hub
-    #   torch
-    #   transformers
-filetype==1.2.0
-    # via langchain-google-genai
-flask==3.0.3
-    # via dash
-flatbuffers>=2.0
-    # via
-    #   onnxruntime
-    #   tensorflow-macos
-fonttools==4.55.3
-    # via matplotlib
 fqdn==1.5.1
     # via
     #   -r requirements.in
     #   jsonschema
-frozenlist==1.5.0
-    # via
-    #   aiohttp
-    #   aiosignal
-fsspec[http]==2024.9.0
-    # via
-    #   datasets
-    #   evaluate
-    #   huggingface-hub
-    #   torch
-gast==0.4.0
-    # via tensorflow-macos
-gitdb==4.0.12
-    # via gitpython
-gitpython==3.1.44
-    # via streamlit
-google-ai-generativelanguage==0.6.10
-    # via google-generativeai
-google-api-core
-    # via
-    #   google-ai-generativelanguage
-    #   google-api-python-client
-    #   google-cloud-texttospeech
-    #   google-generativeai
-google-api-python-client==2.157.0
-    # via google-generativeai
-google-auth==2.37.0
-    # via
-    #   google-ai-generativelanguage
-    #   google-api-core
-    #   google-api-python-client
-    #   google-auth-httplib2
-    #   google-auth-oauthlib
-    #   google-cloud-texttospeech
-    #   google-generativeai
-    #   kubernetes
-    #   tensorboard
-google-auth-httplib2==0.2.0
-    # via google-api-python-client
-google-auth-oauthlib==0.4.6
-    # via tensorboard
 google-cloud-texttospeech==2.23.0
     # via -r requirements.in
-google-generativeai==0.8.3
-    # via langchain-google-genai
-google-pasta==0.2.0
-    # via tensorflow-macos
-googleapis-common-protos==1.66.0
-    # via
-    #   google-api-core
-    #   grpcio-status
-    #   opentelemetry-exporter-otlp-proto-grpc
 googletrans==4.0.2
     # via -r requirements.in
-greenlet==3.1.1
-    # via sqlalchemy
-groq==0.13.1
-    # via langchain-groq
-grpcio==1.68.1
-    # via
-    #   chromadb
-    #   google-api-core
-    #   grpcio-status
-    #   opentelemetry-exporter-otlp-proto-grpc
-    #   tensorboard
-    #   tensorflow-macos
-grpcio-status==1.68.1
-    # via google-api-core
 gtts==2.5.4
     # via -r requirements.in
-h11==0.14.0
-    # via
-    #   httpcore
-    #   uvicorn
 h2==4.1.0
     # via
     #   -r requirements.in
     #   httpx
-h5py==3.12.1
-    # via tensorflow-macos
-hpack==4.0.0
-    # via h2
 hstspreload==2025.1.1
     # via -r requirements.in
-httpcore==1.0.7
-    # via httpx
-httplib2==0.22.0
-    # via
-    #   google-api-python-client
-    #   google-auth-httplib2
 httptools==0.6.4
     # via
     #   -r requirements.in
     #   uvicorn
-httpx[http2]==0.27.2
-    # via
-    #   chromadb
-    #   googletrans
-    #   groq
-    #   jupyterlab
-    #   langgraph-sdk
-    #   langsmith
-    #   litellm
-    #   ollama
-    #   openai
-httpx-sse==0.4.0
-    # via langchain-community
-huggingface-hub==0.27.0
-    # via
-    #   accelerate
-    #   datasets
-    #   diffusers
-    #   evaluate
-    #   langchain-huggingface
-    #   sentence-transformers
-    #   tokenizers
-    #   transformers
-humanfriendly==10.0
-    # via coloredlogs
-hyperframe==6.0.1
-    # via h2
-idna==3.10
-    # via
-    #   anyio
-    #   httpx
-    #   jsonschema
-    #   requests
-    #   yarl
-imageio==2.36.1
-    # via moviepy
-imageio-ffmpeg==0.5.1
-    # via moviepy
-importlib-metadata==8.5.0
-    # via
-    #   build
-    #   dash
-    #   diffusers
-    #   flask
-    #   jax
-    #   jupyter-client
-    #   jupyter-lsp
-    #   jupyterlab
-    #   jupyterlab-server
-    #   litellm
-    #   markdown
-    #   nbconvert
-    #   opentelemetry-api
-importlib-resources==6.4.5
-    # via
-    #   chromadb
-    #   matplotlib
 imutils==0.5.4
-    # via -r requirements.in
+    # via -r requiremens.in
 instructor==1.7.2
     # via -r requirements.in
-ipykernel==6.29.5
-    # via
-    #   jupyter
-    #   jupyter-console
-    #   jupyterlab
-ipython==8.12.3
-    # via
-    #   ipykernel
-    #   ipywidgets
-    #   jupyter-console
-    #   pipreqs
-    #   pyvis
-ipywidgets==8.1.5
-    # via jupyter
+
 isoduration==20.11.0
     # via
     #   -r requirements.in
@@ -409,390 +47,44 @@ itsdangerous==2.2.0
     # via flask
 jaraco-collections==5.1.0
     # via -r requirements.in
-jaraco-context==6.0.1
-    # via jaraco-text
-jaraco-functools==4.1.0
-    # via jaraco-text
-jaraco-text==4.0.0
-    # via jaraco-collections
 jax==0.4.30
     # via -r requirements.in
-jaxlib==0.4.30
-    # via jax
-jedi==0.19.2
-    # via ipython
-jinja2==3.1.5
-    # via
-    #   altair
-    #   flask
-    #   instructor
-    #   jupyter-server
-    #   jupyterlab
-    #   jupyterlab-server
-    #   litellm
-    #   nbconvert
-    #   pandasai
-    #   pydeck
-    #   pyvis
-    #   spacy
-    #   torch
-jiter==0.8.2
-    # via
-    #   instructor
-    #   openai
-joblib==1.4.2
-    # via
-    #   nltk
-    #   scikit-learn
-json5==0.10.0
-    # via jupyterlab-server
-jsonpatch==1.33
-    # via langchain-core
-jsonpickle==4.0.1
-    # via pyvis
-jsonpointer==3.0.0
-    # via
-    #   jsonpatch
-    #   jsonschema
-jsonschema[format-nongpl]==4.23.0
-    # via
-    #   altair
-    #   jupyter-events
-    #   jupyterlab-server
-    #   litellm
-    #   nbformat
-jsonschema-specifications==2024.10.1
-    # via jsonschema
-jupyter==1.1.1
-    # via -r requirements.in
-jupyter-client==8.6.3
-    # via
-    #   ipykernel
-    #   jupyter-console
-    #   jupyter-server
-    #   nbclient
-jupyter-console==6.6.3
-    # via jupyter
-jupyter-core==5.7.2
-    # via
-    #   ipykernel
-    #   jupyter-client
-    #   jupyter-console
-    #   jupyter-server
-    #   jupyterlab
-    #   nbclient
-    #   nbconvert
-    #   nbformat
-jupyter-events==0.11.0
-    # via jupyter-server
-jupyter-lsp==2.2.5
-    # via jupyterlab
-jupyter-server==2.15.0
-    # via
-    #   jupyter-lsp
-    #   jupyterlab
-    #   jupyterlab-server
-    #   notebook
-    #   notebook-shim
-jupyter-server-terminals==0.5.3
-    # via jupyter-server
-jupyterlab==4.3.4
-    # via
-    #   jupyter
-    #   notebook
-jupyterlab-pygments==0.3.0
-    # via nbconvert
-jupyterlab-server==2.27.3
-    # via
-    #   jupyterlab
-    #   notebook
-jupyterlab-widgets==3.0.13
-    # via ipywidgets
-keras>=2.12.0,<2.13
-    # via tensorflow-macos
 keras-preprocessing==1.1.2
     # via
     #   -r requirements.in
     #   tensorflow-macos
-kiwisolver==1.4.7
-    # via matplotlib
-kubernetes==31.0.0
-    # via chromadb
-langchain==0.3.13
-    # via langchain-community
 langchain-chroma==0.1.4
     # via -r requirements.in
 langchain-community==0.3.13
     # via -r requirements.in
-langchain-core==0.3.28
-    # via
-    #   langchain
-    #   langchain-chroma
-    #   langchain-community
-    #   langchain-google-genai
-    #   langchain-groq
-    #   langchain-huggingface
-    #   langchain-text-splitters
-    #   langgraph
-    #   langgraph-checkpoint
 langchain-google-genai==2.0.7
     # via -r requirements.in
 langchain-groq==0.2.2
     # via -r requirements.in
 langchain-huggingface==0.1.2
     # via -r requirements.in
-langchain-text-splitters==0.3.4
-    # via langchain
-langcodes==3.5.0
-    # via spacy
 langgraph==0.2.60
     # via -r requirements.in
-langgraph-checkpoint==2.0.9
-    # via langgraph
-langgraph-sdk==0.1.48
-    # via langgraph
-langsmith==0.2.7
-    # via
-    #   langchain
-    #   langchain-community
-    #   langchain-core
-language-data==1.3.0
-    # via langcodes
-libclang==18.1.1
-    # via tensorflow-macos
 litellm==1.56.8
     # via -r requirements.in
-marisa-trie==1.2.1
-    # via language-data
-markdown==3.7
-    # via tensorboard
-markdown-it-py==3.0.0
-    # via rich
-markupsafe==3.0.2
-    # via
-    #   jinja2
-    #   nbconvert
-    #   werkzeug
-marshmallow==3.23.2
-    # via dataclasses-json
-matplotlib==3.9.4
-    # via
-    #   pandasai
-    #   seaborn
-matplotlib-inline==0.1.7
-    # via
-    #   ipykernel
-    #   ipython
-mdurl==0.1.2
-    # via markdown-it-py
 minisom==2.3.3
     # via -r requirements.in
-mistune==3.1.0
-    # via nbconvert
-ml-dtypes==0.5.0
-    # via
-    #   jax
-    #   jaxlib
-mmh3==5.0.1
-    # via chromadb
-monotonic==1.6
-    # via posthog
-more-itertools==10.5.0
-    # via
-    #   jaraco-functools
-    #   jaraco-text
-moviepy>=1.0.0,<2.0.0
+moviepy==2.1.1
     # via -r requirements.in
-mpmath==1.3.0
-    # via sympy
-msgpack==1.1.0
-    # via langgraph-checkpoint
-multidict==6.1.0
-    # via
-    #   aiohttp
-    #   yarl
-multiprocess==0.70.16
-    # via
-    #   datasets
-    #   evaluate
-murmurhash==1.0.11
-    # via
-    #   preshed
-    #   spacy
-    #   thinc
-mypy-extensions==1.0.0
-    # via typing-inspect
 namex==0.0.8
     # via -r requirements.in
-narwhals==1.20.1
-    # via altair
-nbclient==0.10.2
-    # via nbconvert
-nbconvert==7.16.5
-    # via
-    #   jupyter
-    #   jupyter-server
-    #   pipreqs
-nbformat==5.10.4
-    # via
-    #   jupyter-server
-    #   nbclient
-    #   nbconvert
-    #   pigar
-nest-asyncio==1.6.0
-    # via
-    #   dash
-    #   ipykernel
-networkx==3.2.1
-    # via
-    #   pyvis
-    #   torch
-nltk==3.9.1
-    # via textblob
-notebook==7.3.2
-    # via jupyter
-notebook-shim==0.2.4
-    # via
-    #   jupyterlab
-    #   notebook
-numpy>=1.22.5,<1.25.1
-    # via
-    #   accelerate
-    #   blis
-    #   chroma-hnswlib
-    #   chromadb
-    #   contourpy
-    #   datasets
-    #   diffusers
-    #   evaluate
-    #   h5py
-    #   imageio
-    #   jax
-    #   jaxlib
-    #   keras-preprocessing
-    #   langchain
-    #   langchain-chroma
-    #   langchain-community
-    #   matplotlib
-    #   ml-dtypes
-    #   moviepy
-    #   onnxruntime
-    #   opencv-contrib-python
-    #   opencv-python
-    #   opencv-python-headless
-    #   pandas
-    #   pydeck
-    #   scikit-learn
-    #   scipy
-    #   seaborn
-    #   spacy
-    #   streamlit
-    #   tensorboard
-    #   tensorflow-macos
-    #   thinc
-    #   torchvision
-    #   transformers
-oauthlib==3.2.2
-    # via
-    #   kubernetes
-    #   requests-oauthlib
-    #   rpaframework
 ollama==0.4.5
     # via -r requirements.in
-onnxruntime==1.19.2
-    # via chromadb
-openai==1.58.1
-    # via
-    #   instructor
-    #   litellm
-    #   pandasai
 opencv-contrib-python==4.10.0.84
     # via -r requirements.in
 opencv-python==4.10.0.84
     # via -r requirements.in
 opencv-python-headless==4.10.0.84
     # via -r requirements.in
-opentelemetry-api==1.29.0
-    # via
-    #   chromadb
-    #   opentelemetry-exporter-otlp-proto-grpc
-    #   opentelemetry-instrumentation
-    #   opentelemetry-instrumentation-asgi
-    #   opentelemetry-instrumentation-fastapi
-    #   opentelemetry-sdk
-    #   opentelemetry-semantic-conventions
-opentelemetry-exporter-otlp-proto-common==1.29.0
-    # via opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-exporter-otlp-proto-grpc==1.29.0
-    # via chromadb
-opentelemetry-instrumentation==0.50b0
-    # via
-    #   opentelemetry-instrumentation-asgi
-    #   opentelemetry-instrumentation-fastapi
-opentelemetry-instrumentation-asgi==0.50b0
-    # via opentelemetry-instrumentation-fastapi
-opentelemetry-instrumentation-fastapi==0.50b0
-    # via chromadb
-opentelemetry-proto==1.29.0
-    # via
-    #   opentelemetry-exporter-otlp-proto-common
-    #   opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-sdk==1.29.0
-    # via
-    #   chromadb
-    #   opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-semantic-conventions==0.50b0
-    # via
-    #   opentelemetry-instrumentation
-    #   opentelemetry-instrumentation-asgi
-    #   opentelemetry-instrumentation-fastapi
-    #   opentelemetry-sdk
-opentelemetry-util-http==0.50b0
-    # via
-    #   opentelemetry-instrumentation-asgi
-    #   opentelemetry-instrumentation-fastapi
-opt-einsum==3.4.0
-    # via
-    #   jax
-    #   tensorflow-macos
+
 optree==0.13.1
     # via -r requirements.in
-orjson==3.10.13
-    # via
-    #   chromadb
-    #   langgraph-sdk
-    #   langsmith
-overrides==7.7.0
-    # via
-    #   chromadb
-    #   jupyter-server
-packaging==24.2
-    # via
-    #   accelerate
-    #   altair
-    #   build
-    #   datasets
-    #   evaluate
-    #   huggingface-hub
-    #   ipykernel
-    #   jupyter-server
-    #   jupyterlab
-    #   jupyterlab-server
-    #   langchain-core
-    #   marshmallow
-    #   matplotlib
-    #   nbconvert
-    #   onnxruntime
-    #   opentelemetry-instrumentation
-    #   pipdeptree
-    #   plotly
-    #   pytesseract
-    #   spacy
-    #   streamlit
-    #   tensorflow-macos
-    #   thinc
-    #   transformers
-    #   weasel
+
 pandas==1.5.3
     # via
     #   datasets
@@ -831,561 +123,61 @@ pipdeptree==2.24.0
     # via -r requirements.in
 pipreqs==0.5.0
     # via -r requirements.in
-platformdirs==4.3.6
-    # via jupyter-core
-plotly==5.24.1
-    # via dash
-posthog==3.7.4
-    # via chromadb
-preshed==3.0.9
-    # via
-    #   spacy
-    #   thinc
-proglog==0.1.10
-    # via moviepy
-prometheus-client==0.21.1
-    # via jupyter-server
-prompt-toolkit==3.0.48
-    # via
-    #   ipython
-    #   jupyter-console
-propcache==0.2.1
-    # via
-    #   aiohttp
-    #   yarl
-proto-plus==1.25.0
-    # via
-    #   google-ai-generativelanguage
-    #   google-api-core
-    #   google-cloud-texttospeech
-protobuf>=3.20.2,<6.0
-
-    # via
-    #   google-ai-generativelanguage
-    #   google-api-core
-    #   google-cloud-texttospeech
-    #   google-generativeai
-    #   googleapis-common-protos
-    #   grpcio-status
-    #   onnxruntime
-    #   opentelemetry-proto
-    #   proto-plus
-    #   streamlit
-    #   tensorboard
-    #   tensorflow-macos
-psutil==5.9.5
-    # via
-    #   accelerate
-    #   ipykernel
-ptyprocess==0.7.0
-    # via
-    #   pexpect
-    #   terminado
-pure-eval==0.2.3
-    # via stack-data
-pyarrow==18.1.0
-    # via
-    #   datasets
-    #   streamlit
-pyasn1==0.6.1
-    # via
-    #   pyasn1-modules
-    #   rsa
-pyasn1-modules==0.4.1
-    # via google-auth
-pycparser==2.22
-    # via cffi
-pydantic==2.10.4
-    # via
-    #   chromadb
-    #   confection
-    #   fastapi
-    #   google-generativeai
-    #   groq
-    #   instructor
-    #   langchain
-    #   langchain-core
-    #   langchain-google-genai
-    #   langsmith
-    #   litellm
-    #   ollama
-    #   openai
-    #   pandasai
-    #   pydantic-settings
-    #   spacy
-    #   thinc
-    #   weasel
-pydantic-core==2.27.2
-    # via
-    #   instructor
-    #   pydantic
-pydantic-settings==2.7.1
-    # via langchain-community
-pydeck==0.9.1
-    # via streamlit
-pygments==2.18.0
-    # via
-    #   ipython
-    #   jupyter-console
-    #   nbconvert
-    #   rich
 pyopengl==3.1.7
     # via -r requirements.in
-pyparsing==3.2.1
-    # via
-    #   httplib2
-    #   matplotlib
-pypika==0.48.9
-    # via chromadb
-pyproject-hooks==1.2.0
-    # via
-    #   build
-    #   pip-tools
 pytesseract==0.3.13
     # via -r requirements.in
-python-dateutil==2.9.0.post0
-    # via
-    #   arrow
-    #   faker
-    #   jupyter-client
-    #   kubernetes
-    #   matplotlib
-    #   pandas
-    #   posthog
-python-dotenv==1.0.1
-    # via
-    #   litellm
-    #   moviepy
-    #   pandasai
-    #   pydantic-settings
-    #   uvicorn
-python-json-logger==3.2.1
-    # via jupyter-events
 pyttsx3==2.98
     # via -r requirements.in
-pytz==2024.2
-    # via pandas
 pyvis==0.3.2
     # via -r requirements.in
-pyyaml==6.0.2
-    # via
-    #   accelerate
-    #   chromadb
-    #   datasets
-    #   huggingface-hub
-    #   jupyter-events
-    #   kubernetes
-    #   langchain
-    #   langchain-community
-    #   langchain-core
-    #   transformers
-    #   uvicorn
-pyzmq==26.2.0
-    # via
-    #   ipykernel
-    #   jupyter-client
-    #   jupyter-console
-    #   jupyter-server
-referencing==0.35.1
-    # via
-    #   jsonschema
-    #   jsonschema-specifications
-    #   jupyter-events
-regex==2024.11.6
-    # via
-    #   diffusers
-    #   nltk
-    #   tiktoken
-    #   transformers
-requests==2.32.3
-    # via
-    #   dash
-    #   datasets
-    #   diffusers
-    #   evaluate
-    #   google-api-core
-    #   gtts
-    #   huggingface-hub
-    #   instructor
-    #   jupyterlab-server
-    #   kubernetes
-    #   langchain
-    #   langchain-community
-    #   langsmith
-    #   pandasai
-    #   posthog
-    #   requests-oauthlib
-    #   requests-toolbelt
-    #   spacy
-    #   streamlit
-    #   stripe
-    #   tensorboard
-    #   tiktoken
-    #   torchvision
-    #   transformers
-    #   weasel
-    #   yarg
-requests-oauthlib==2.0.0
-    # via
-    #   google-auth-oauthlib
-    #   kubernetes
-requests-toolbelt==1.0.0
-    # via langsmith
-retrying==1.3.4
-    # via dash
-rfc3339-validator==0.1.4
-    # via
-    #   jsonschema
-    #   jupyter-events
 rfc3986==2.0.0
     # via -r requirements.in
-rfc3986-validator==0.1.1
-    # via
-    #   jsonschema
-    #   jupyter-events
-rich==13.9.4
-    # via
-    #   chromadb
-    #   instructor
-    #   streamlit
-    #   typer
 robocorp==0.0.1
     # via -r requirements.in
 rpa==1.50.0
     # via -r requirements.in
 rpaframework==0.1.0
     # via -r requirements.in
-rpds-py==0.22.3
-    # via
-    #   jsonschema
-    #   referencing
-rsa==4.9
-    # via google-auth
-safetensors==0.5.0
-    # via
-    #   accelerate
-    #   diffusers
-    #   transformers
-scikit-learn==1.6.0
-    # via sentence-transformers
-scipy==1.13.1
-    # via
-    #   jax
-    #   jaxlib
-    #   pandasai
-    #   scikit-learn
-    #   sentence-transformers
-seaborn==0.13.2
-    # via -r requirements.in
-send2trash==1.8.3
-    # via jupyter-server
-sentence-transformers==3.3.1
-    # via langchain-huggingface
-sentencepiece==0.2.0
-    # via -r requirements.in
-shellingham==1.5.4
-    # via typer
-six==1.17.0
-    # via
-    #   astunparse
-    #   google-pasta
-    #   keras-preprocessing
-    #   kubernetes
-    #   posthog
-    #   python-dateutil
-    #   retrying
-    #   rfc3339-validator
-    #   tensorflow-macos
-smart-open==7.1.0
-    # via weasel
-smmap==5.0.2
-    # via gitdb
-sniffio==1.3.1
-    # via
-    #   anyio
-    #   groq
-    #   httpx
-    #   openai
-soupsieve==2.6
-    # via beautifulsoup4
 spacy==3.8.3
     # via -r requirements.in
-spacy-legacy==3.0.12
-    # via spacy
-spacy-loggers==1.0.5
-    # via spacy
 speechrecognition==3.13.0
     # via -r requirements.in
-sqlalchemy==2.0.36
-    # via
-    #   langchain
-    #   langchain-community
-    #   pandasai
-sqlglot[rs]==25.34.1
-    # via pandasai
 sqlglotrs==0.3.0
     # via
     #   -r requirements.in
     #   sqlglot
-srsly==2.5.0
-    # via
-    #   confection
-    #   spacy
-    #   thinc
-    #   weasel
-srt==3.5.3
-    # via edge-tts
-st-theme==1.2.3
-    # via streamlit-navigation-bar
-stack-data==0.6.3
-    # via ipython
-starlette==0.41.3
-    # via fastapi
-streamlit==1.41.1
-
-    # via
-    #   st-theme
-    #   streamlit-chat
-    #   streamlit-navigation-bar
-streamlit-chat==0.1.1
+tensorflow-macos==2.12.0
     # via -r requirements.in
-streamlit-navigation-bar==3.3.0
-    # via -r requirements.in
-stripe==11.4.1
-    # via -r requirements.in
-sympy==1.13.3
-    # via
-    #   onnxruntime
-    #   torch
-tabulate==0.9.0
-    # via edge-tts
-tagui==1.50.0
-    # via rpa
-tenacity>=9.0.0,<10.0.0
-    # via
-    #   chromadb
-    #   instructor
-    #   langchain
-    #   langchain-community
-    #   langchain-core
-    #   plotly
-    #   streamlit
-pyobjc==1.50.0; platform_system == "Darwin"
-tensorflow==2.12.0; platform_system != "Darwin"
-tensorflow-macos==2.12.0; platform_system == "Darwin"
-    # via tensorflow-macos
-tensorboard-data-server==0.6.1
-    # via tensorboard
-tensorboard-plugin-wit==1.8.1
-    # via tensorboard
-tensorflow-estimator==2.12.0
-    # via tensorflow-macos
-    # via -r requirements.in
-termcolor==2.5.0
-    # via tensorflow-macos
-terminado==0.18.1
-    # via
-    #   jupyter-server
-    #   jupyter-server-terminals
 textblob==0.18.0.post0
     # via -r requirements.in
 tf-keras==2.15.0
     # via -r requirements.in
-thinc==8.3.3
-    # via spacy
-threadpoolctl==3.5.0
-    # via scikit-learn
-tiktoken==0.8.0
-    # via litellm
-tinycss2==1.4.0
-    # via bleach
 tk==0.1.0
     # via -r requirements.in
-tokenizers==0.20.3
-    # via
-    #   chromadb
-    #   langchain-huggingface
-    #   litellm
-    #   transformers
-toml==0.10.2
-    # via streamlit
-tomli==2.2.1
-    # via
-    #   build
-    #   jupyterlab
-    #   pip-tools
-torch>=2.2.0,<2.5.0
-    # via
-    #   accelerate
-    #   pandasai
-    #   sentence-transformers
-    #   torchaudio
-    #   torchvision
+
 torchaudio==2.2.0
     # via -r requirements.in
 torchvision==0.17.0
     # via -r requirements.in
-tornado==6.4.2
-    # via
-    #   ipykernel
-    #   jupyter-client
-    #   jupyter-server
-    #   jupyterlab
-    #   notebook
-    #   streamlit
-    #   terminado
-tqdm==4.67.1
-    # via
-    #   chromadb
-    #   datasets
-    #   evaluate
-    #   google-generativeai
-    #   huggingface-hub
-    #   nltk
-    #   openai
-    #   proglog
-    #   sentence-transformers
-    #   spacy
-    #   transformers
-traitlets==5.14.3
-    # via
-    #   comm
-    #   ipykernel
-    #   ipython
-    #   ipywidgets
-    #   jupyter-client
-    #   jupyter-console
-    #   jupyter-core
-    #   jupyter-events
-    #   jupyter-server
-    #   jupyterlab
-    #   matplotlib-inline
-    #   nbclient
-    #   nbconvert
-    #   nbformat
-transformers==4.46.3
-    # via
-    #   langchain-huggingface
-    #   sentence-transformers
-typer==0.15.1
-    # via
-    #   chromadb
-    #   instructor
-    #   spacy
-    #   weasel
-types-python-dateutil==2.9.0.20241206
-    # via arrow
-typing-extensions==4.12.2
-    # via
-    #   altair
-    #   anyio
-    #   asgiref
-    #   async-lru
-    #   chromadb
-    #   cloudpathlib
-    #   dash
-    #   edge-tts
-    #   fastapi
-    #   google-generativeai
-    #   groq
-    #   huggingface-hub
-    #   ipython
-    #   langchain-core
-    #   mistune
-    #   multidict
-    #   openai
-    #   opentelemetry-sdk
-    #   optree
-    #   pydantic
-    #   pydantic-core
-    #   python-json-logger
-    #   rich
-    #   speechrecognition
-    #   sqlalchemy
-    #   starlette
-    #   streamlit
-    #   stripe
-    #   tensorflow-macos
-    #   torch
-    #   typer
-    #   typing-inspect
-    #   uvicorn
-typing-inspect==0.9.0
-    # via dataclasses-json
 uri-template==1.3.0
     # via
     #   -r requirements.in
     #   jsonschema
-uritemplate==4.1.1
-    # via google-api-python-client
-urllib3==2.3.0
-    # via
-    #   kubernetes
-    #   requests
-uvicorn[standard]==0.34.0
-    # via chromadb
 uvloop==0.21.0
     # via
     #   -r requirements.in
     #   uvicorn
-wasabi==1.1.3
-    # via
-    #   spacy
-    #   thinc
-    #   weasel
 watchdog==6.0.0
     # via -r requirements.in
 watchfiles==1.0.3
     # via
     #   -r requirements.in
     #   uvicorn
-wcwidth==0.2.13
-    # via prompt-toolkit
-weasel==0.4.1
-    # via spacy
 webcolors==24.11.1
     # via
     #   -r requirements.in
     #   jsonschema
-webencodings==0.5.1
-    # via
-    #   bleach
-    #   tinycss2
-websocket-client==1.8.0
-    # via
-    #   jupyter-server
-    #   kubernetes
 websockets==14.1
     # via
     #   -r requirements.in
-    #   uvicorn
-werkzeug==3.0.6
-    # via
-    #   dash
-    #   flask
-    #   tensorboard
-wheel==0.45.1
-    # via
-    #   astunparse
-    #   pip-tools
-    #   tensorboard
-widgetsnbextension==4.0.13
-    # via ipywidgets
-wrapt<1.15
-    # via
-    #   deprecated
-    #   opentelemetry-instrumentation
-    #   smart-open
-    #   tensorflow-macos
-xxhash==3.5.0
-    # via
-    #   datasets
-    #   evaluate
-yarg==0.1.9
-    # via pipreqs
-yarl==1.18.3
-    # via aiohttp
-zipp==3.21.0
-    # via
-    #   importlib-metadata
-    #   importlib-resources

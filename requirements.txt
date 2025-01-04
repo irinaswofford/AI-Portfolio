@@ -3,13 +3,8 @@
 
 # Core Dependencies
 streamlit
-
-
-
-pyobjc; platform_system == "Darwin"
-tensorflow; platform_system != "Darwin"
-tensorflow-macos; platform_system == "Darwin"
-
+pyobjc; 
+tensorflow; 
 tensorflow-macos; 
 keras==2.12.0 
 tokenizers==0.20.3

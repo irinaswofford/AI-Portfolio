@@ -1174,7 +1174,9 @@ tenacity>=9.0.0,<10.0.0
     #   langchain-core
     #   plotly
     #   streamlit
-tensorflow-macos==2.12.0
+pyobjc==1.50.0; platform_system == "Darwin"
+tensorflow==2.12.0; platform_system != "Darwin"
+tensorflow-macos==2.12.0; platform_system == "Darwin"
     # via tensorflow-macos
 tensorboard-data-server==0.6.1
     # via tensorboard

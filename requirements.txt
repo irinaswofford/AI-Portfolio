@@ -3,7 +3,7 @@ tensorflow; platform_system != "Darwin"
 tensorflow-macos; platform_system == "Darwin"
 build
 cmake
-dlib==19.24.6
+dlib==19.24.6+cpu  
 protobuf
 google-api-core
 google-cloud-texttospeech

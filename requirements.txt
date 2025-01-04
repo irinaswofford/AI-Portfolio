@@ -8,9 +8,10 @@ streamlit
 cmake==3.25.2
 
 
+pyobjc; platform_system == "Darwin"
+tensorflow; platform_system != "Darwin"
+tensorflow-macos; platform_system == "Darwin"
 
-
-pyobjc; 
 tensorflow-macos; 
 keras==2.12.0 
 tokenizers==0.20.3

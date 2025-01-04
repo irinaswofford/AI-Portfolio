@@ -2,7 +2,7 @@ absl-py==2.1.0
     # via
     #   tensorboard
     #   tensorflow-macos
-accelerate==1.2.1
+accelerate>=1.2.1,<2.0
     # via -r requirements.in
 aiohappyeyeballs==2.4.4
     # via aiohttp
@@ -81,7 +81,7 @@ blinker==1.9.0
     # via
     #   flask
     #   streamlit
-blis==1.1.0
+blis>=1.1.0,<2.0
     # via thinc
 build==1.2.2.post1
     # via
@@ -656,7 +656,6 @@ notebook-shim==0.2.4
     #   jupyterlab
     #   notebook
 numpy>=1.22,<1.24
-numpy>=1.22
     # via
     #   accelerate
     #   blis

@@ -1389,5 +1389,5 @@ zipp==3.21.0
     #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
-#pip
-#setuptools
+pip
+setuptools

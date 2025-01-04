@@ -1,4 +1,15 @@
 # Conditional Dependencies
+
+tensorflow; platform_system != "Darwin"
+tensorflow-macos; platform_system == "Darwin"
+
+# Core Dependencies
+streamlit
+cmake==3.25.2
+@@ -13,6 +14,8 @@ build
+
+
+
 pyobjc; 
 tensorflow-macos; 
 keras==2.12.0 

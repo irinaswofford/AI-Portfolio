@@ -1218,7 +1218,7 @@ tomli==2.2.1
     #   build
     #   jupyterlab
     #   pip-tools
-torch==2.2.0
+torch>=2.2.0,<2.5.0
     # via
     #   accelerate
     #   pandasai

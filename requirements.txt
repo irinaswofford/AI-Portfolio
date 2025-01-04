@@ -1,6 +1,11 @@
 pyobjc==1.50.0; platform_system == "Darwin"
 tensorflow==2.12.0; platform_system != "Darwin"
 tensorflow-macos==2.12.0; platform_system == "Darwin"
+protobuf>=3.20.2,<5.0
+tensorflow==2.12.0
+google-api-core==2.24.0
+google-cloud-texttospeech==2.23.0
+streamlit==1.41.1
 
 accelerate==1.2.1
     # via -r requirements.in

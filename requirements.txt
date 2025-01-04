@@ -1,78 +1,55 @@
+# Conditional Dependencies
 pyobjc; platform_system == "Darwin"
 tensorflow; platform_system != "Darwin"
 tensorflow-macos; platform_system == "Darwin"
-build
+
+# Core Dependencies
 streamlit==1.19.0
 cmake==3.25.2
 dlib==19.24.2
 protobuf
+build
+
+# Google API
 google-api-core
 google-cloud-texttospeech
-streamlit
-pip
+
+# Machine Learning & AI
 accelerate
 diffusers
-edge-tts
-eval-type-backport
 evaluate
-fqdn
-googletrans
-gtts
-h2
-hstspreload
-httptools
-imutils
-instructor
-isoduration
-itsdangerous
-jaraco-collections
 jax
-keras-preprocessing
-langchain-chroma
 langchain-community
 langchain-google-genai
-langchain-groq
 langchain-huggingface
-langgraph
-litellm
-minisom
-moviepy
-namex
-ollama
+instructor
+spacy
+tf-keras
+torch
+torchvision
+torchaudio
+
+# Computer Vision
 opencv-contrib-python
-opencv-python
 opencv-python-headless
-optree
+pytesseract
+imutils
+moviepy
+
+# Audio & Speech
+edge-tts
+speechrecognition
+gtts
+pyttsx3
+
+# Data Processing
 pandas
 pandasai
-pandocfilters
-parso
-pexpect
-pickleshare
-pigar
-pillow
-pip-chill
-pip-tools
-pipdeptree
-pipreqs
-pyopengl
-pytesseract
-pyttsx3
-pyvis
-rfc3986
-robocorp
+
+# Miscellaneous
 rpa
 rpaframework
-spacy
-speechrecognition
 textblob
-tf-keras
-tk
-torchaudio
-torchvision
-uri-template
 uvloop
 watchdog
-watchfiles
-webcolors
 websockets

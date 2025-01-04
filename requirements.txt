@@ -143,12 +143,7 @@ spacy==3.8.3
     # via -r requirements.in
 speechrecognition==3.13.0
     # via -r requirements.in
-sqlglotrs==0.3.0
-    # via
-    #   -r requirements.in
-    #   sqlglot
-tensorflow-macos==2.12.0
-    # via -r requirements.in
+
 textblob==0.18.0.post0
     # via -r requirements.in
 tf-keras==2.15.0

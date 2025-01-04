@@ -1387,7 +1387,3 @@ zipp==3.21.0
     # via
     #   importlib-metadata
     #   importlib-resources
-
-# The following packages are considered to be unsafe in a requirements file:
-pip install --upgrade pip
-setuptools

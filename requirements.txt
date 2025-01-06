@@ -43,7 +43,6 @@ google-api-python-client
 #evaluate
 #jax
 #langchain-community
-pip install langgraph==0.2.50
 #langchain_google_genai==2.0.7
 # chromadb
 # langchain-huggingface

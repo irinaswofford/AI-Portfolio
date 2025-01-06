@@ -34,8 +34,9 @@ build
 # Google API
 
 google-api-python-client==2.8.0
-google-auth>=1.16.0,<2.dev0  # Compatible version for google-api-python-client==2.8.0
-google-cloud-texttospeech==2.23.0
+google-auth>=1.16.0,<2.dev0 
+google-cloud-texttospeech==2.0.0  # Downgraded version
+
 
 
  

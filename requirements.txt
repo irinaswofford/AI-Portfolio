@@ -58,10 +58,13 @@ imutils
 
 
 # Miscellaneous
+matplotlib 
+en-core-web-sm
 rpa
 rpaframework
 textblob
 uvloop
 watchdog
 websockets
+sklearn
 

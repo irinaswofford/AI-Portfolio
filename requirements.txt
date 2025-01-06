@@ -1,4 +1,5 @@
 # Conditional Dependencies
+tensorflow; platform_system != "Darwin"
 tensorflow-macos ==2.12.0; 
 keras==2.12.0 
 tokenizers==0.20.3

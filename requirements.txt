@@ -43,7 +43,7 @@ diffusers
 evaluate
 jax
 langchain-community==0.2.17
-langchain-google-genai
+langchain_google_genai==2.0.6
 # chromadb
 # langchain-huggingface
 langgraph-0.2.60 

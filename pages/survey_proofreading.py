@@ -4,7 +4,6 @@ from textblob import TextBlob
 import spacy
 
 # Load spaCy model for text processing
-spacy.cli.download('en_core_web_sm')
 nlp = spacy.load("en_core_web_sm")
 
 # Function to analyze sentiment of text

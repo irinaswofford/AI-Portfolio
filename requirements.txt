@@ -1,80 +1,31 @@
-# Conditional Dependencies
-tensorflow; platform_system != "Darwin"
-tensorflow-macos; platform_system == "Darwin"
-#tensorflow-macos ==2.12.0; 
-keras==2.12.0 
-tokenizers==0.20.3
-datasets==3.2.0 
-opencv-python
-pytesseract
-opencv-python-headless
-numpy
-tensorflow
-moviepy
-datasets
-transformers
-PyYAML>=6.0.0
-langchain
-async-timeout<5.0.0
-opencv-python 
-pytesseract 
-textblob 
-joblib 
-scipy 
-scikit-learn 
-
-
 # Core Dependencies
 streamlit
 cmake==3.25.2
-dlib==19.24.2
 protobuf
-build
-
-# Google API
-google-api-python-client==2.8.0
-google-auth>=1.16.0,<2.dev0 
-google-cloud-texttospeech==2.0.0  # Downgraded version
-
 
 # Machine Learning & AI
-#accelerate==0.20.0
-#diffusers
-#evaluate
-#jax
-#langchain-community
-langchain-community==0.2.17
-#langchain_google_genai==2.0.7
-# chromadb
-# langchain-huggingface
-langgraph==0.2.50
-instructor
+tensorflow-cpu==2.12.0
+keras==2.12.0
+transformers
+datasets==3.2.0
+langchain
+evaluate
 spacy
-tf-keras
-torchaudio
 
 # Computer Vision
-opencv-contrib-python
-opencv-python-headless
+opencv-contrib-python-headless
 pytesseract
 imutils
 
-
 # Audio & Speech
-edge-tts
 speechrecognition
 gtts
 pyttsx3
 
 # Data Processing
 pandas
-pandasai
 
-# Miscellaneous
-rpa
-rpaframework
-textblob
-uvloop
-watchdog
-websockets
-
+# Google API
+google-api-core
+google-cloud-texttospeech
+google-api-python-client

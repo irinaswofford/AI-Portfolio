@@ -46,6 +46,7 @@ google-cloud-texttospeech==2.0.0  # Downgraded version
 #evaluate
 #jax
 #langchain-community
+langchain-community==0.2.17
 #langchain_google_genai==2.0.7
 # chromadb
 # langchain-huggingface

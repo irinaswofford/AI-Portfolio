@@ -57,5 +57,6 @@ textblob
 uvloop
 watchdog
 websockets
-sklearn
+sklearn==0.0.post12
+
 

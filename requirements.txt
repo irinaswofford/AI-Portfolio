@@ -38,7 +38,7 @@ google-api-python-client
 
 
 # Machine Learning & AI
-accelerate==0.30.0
+accelerate==0.20.0
 #diffusers
 #evaluate
 #jax

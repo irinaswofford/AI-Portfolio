@@ -16,7 +16,7 @@ instructor
 spacy
 tf-keras
 torchaudio
-langchain-community==0.2.17
+#langchain-community==0.2.17
 
 # Computer Vision
 opencv-contrib-python-headless
@@ -49,7 +49,7 @@ imutils
 
 # Miscellaneous
 
-en-core-web-sm
+
 matplotlib==3.9.4
 rpa
 rpaframework

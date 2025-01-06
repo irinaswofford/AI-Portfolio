@@ -41,7 +41,7 @@ google-api-python-client
 accelerate
 diffusers
 evaluate
-jax
+#jax
 #langchain-community
 langchain_google_genai==2.0.8
 # chromadb

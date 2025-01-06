@@ -14,7 +14,6 @@ evaluate
 langgraph==0.2.50
 instructor
 spacy
-en-core-web-sm==3.0.0 
 tf-keras
 torchaudio
 #langchain-community==0.2.17

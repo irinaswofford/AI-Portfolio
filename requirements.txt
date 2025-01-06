@@ -33,7 +33,8 @@ build
 
 # Google API
 google-api-core==1.28.0
-google-cloud-texttospeech==1.2.0
+google-cloud-texttospeech==2.0.0
+
 google-api-python-client==1.7.0
 
  

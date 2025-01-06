@@ -11,6 +11,12 @@ datasets==3.2.0
 langchain
 evaluate
 spacy
+langgraph==0.2.50
+instructor
+spacy
+tf-keras
+torchaudio
+langchain-community==0.2.17
 
 # Computer Vision
 opencv-contrib-python-headless
@@ -29,3 +35,32 @@ pandas
 google-api-core
 google-cloud-texttospeech
 google-api-python-client
+
+
+# Machine Learning & AI
+#accelerate==0.20.0
+#diffusers
+#evaluate
+#jax
+#langchain-community
+#langchain_google_genai==2.0.7
+# chromadb
+# langchain-huggingface
+
+
+# Computer Vision
+opencv-contrib-python
+opencv-python-headless
+pytesseract
+imutils
+
+
+
+# Miscellaneous
+rpa
+rpaframework
+textblob
+uvloop
+watchdog
+websockets
+

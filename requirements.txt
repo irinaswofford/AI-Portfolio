@@ -32,9 +32,11 @@ protobuf
 build
 
 # Google API
-google-api-core>=1.34.1,<2.0.dev0
-google-api-python-client==2.7.0
-google-cloud-texttospeech==2.23.0
+
+google-api-python-client==2.8.0  # Updated version
+google-auth==2.14.1  # Explicitly set the google-auth version
+google-cloud-texttospeech==2.23.0  # Keep the version if it's still needed
+
 # Remove or replace langgraph if necessary
 
 

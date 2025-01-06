@@ -39,7 +39,7 @@ google-api-python-client
 
 # Machine Learning & AI
 accelerate
-diffusers
+#diffusers
 evaluate
 #jax
 #langchain-community

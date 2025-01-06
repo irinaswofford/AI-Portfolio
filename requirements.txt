@@ -48,7 +48,7 @@ imutils
 
 
 # Miscellaneous
-
+en_core_web_sm
 python-dotenv
 matplotlib==3.9.4
 rpa

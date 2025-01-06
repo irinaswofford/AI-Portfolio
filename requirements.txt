@@ -49,7 +49,7 @@ imutils
 
 # Miscellaneous
 
-
+python-dotenv
 matplotlib==3.9.4
 rpa
 rpaframework

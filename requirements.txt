@@ -33,11 +33,9 @@ build
 
 # Google API
 
-google-api-python-client==2.8.0  # Updated version
-google-auth==2.14.1  # Explicitly set the google-auth version
-google-cloud-texttospeech==2.23.0  # Keep the version if it's still needed
-
-# Remove or replace langgraph if necessary
+google-api-python-client==2.8.0
+google-auth>=1.16.0,<2.dev0  # Compatible version for google-api-python-client==2.8.0
+google-cloud-texttospeech==2.23.0
 
 
  

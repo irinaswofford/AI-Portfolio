@@ -46,7 +46,7 @@ google-api-python-client==2.0.0
 #langchain_google_genai==2.0.7
 # chromadb
 # langchain-huggingface
-langgraph-0.2.60 
+langgraph-0.2.50 
 instructor
 spacy
 tf-keras

@@ -5,8 +5,9 @@ protobuf
 
 # Machine Learning & AI
 tensorflow-cpu==2.12.0
-keras==2.12.0
 transformers
+sentencepiece
+keras==2.12.0
 datasets==3.2.0
 langchain
 evaluate

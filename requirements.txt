@@ -49,7 +49,8 @@ google-cloud-texttospeech==2.0.0  # Downgraded version
 #langchain_google_genai==2.0.7
 # chromadb
 # langchain-huggingface
-langgraph-0.2.50 
+--extra-index-url https://your-private-repo-url
+langgraph==0.2.50
 instructor
 spacy
 tf-keras

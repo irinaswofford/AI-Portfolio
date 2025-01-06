@@ -33,8 +33,9 @@ build
 
 # Google API
 google-api-core
-google-cloud-texttospeech
-#google-api-python-client==2.0.0  
+google-cloud-texttospeech==2.1.0
+google-api-python-client==1.12.8
+ 
 
 
 # Machine Learning & AI

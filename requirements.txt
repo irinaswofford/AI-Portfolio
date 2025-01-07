@@ -49,6 +49,7 @@ imutils
 
 
 # Miscellaneous
+moviepy
 python-dotenv
 matplotlib==3.9.4
 rpa

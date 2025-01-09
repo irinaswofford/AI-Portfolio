@@ -12,7 +12,6 @@ def main():
     - **Timeline Management:** Developed detailed project timelines with clear milestones, tracking progress and ensuring timely delivery.
     - **Risk Management:** Created risk matrices and mitigation plans, identifying potential challenges in AI projects (e.g., data quality, model performance).
     - **Stakeholder Communication:** Facilitated regular updates, ensuring stakeholders were informed and engaged throughout the project lifecycle.
-    - **Methodologies:** Applied  a combination of Agile principles  .....fix this 
     - **Resource Allocation:** Effectively managed team resources, balancing workloads to meet deadlines and optimize productivity.
     """)
     st.image("images/Gannt_chart.png", caption="AI Project Roadmap")

@@ -53,7 +53,8 @@ selected_page = st.sidebar.radio("Choose an option:", ["Home", "AI Project Mange
                                                         "Computer Vision - Image Text Extraction",   
                                                         "Computer Vision - Object Detection",
                                                         "Sales Agent- Agentic Framework",
-                                                        "NLP and Generative AI: Speech-to-Text AI Voice Agent", "Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator"] ,key="unique_radio_key" )
+                                                        "NLP and Generative AI: Speech-to-Text AI Voice Agent", "Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator",
+                                                        "Customer Chatbot Fine Tunned with ChatGPT Turbo"], key="unique_radio_key",)
 
 # Update session state based on selection
 st.session_state.page = selected_page          
@@ -288,4 +289,5 @@ elif  st.session_state.page =="NLP and Generative AI: Speech-to-Text AI Voice Ag
         load_page("pages/speach-to-text.py")   
 elif  st.session_state.page =="Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator":
         load_page("pages/text-to-speach.py")          
-
+elif  st.session_state.page =="Customer Chatbot Fine Tunned with ChatGPT Turbo":
+        load_page("pages/chatbot_fine_tuned.py")  

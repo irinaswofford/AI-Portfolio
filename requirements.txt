@@ -20,7 +20,6 @@ torchaudio
 #langchain-community==0.2.17
 
 # Computer Vision
-libgl1-mesa-glx
 opencv-contrib-python-headless
 pytesseract
 imutils

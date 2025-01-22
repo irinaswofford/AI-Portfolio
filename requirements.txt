@@ -24,7 +24,7 @@ libgl1-mesa-glx
 opencv-contrib-python-headless
 pytesseract
 imutils
-pencv-python
+opencv-python
 
 # Audio & Speech
 speechrecognition

@@ -20,9 +20,11 @@ torchaudio
 #langchain-community==0.2.17
 
 # Computer Vision
+apt-get install libgl1-mesa-glx
 opencv-contrib-python-headless
 pytesseract
 imutils
+pencv-python
 
 # Audio & Speech
 speechrecognition

@@ -25,6 +25,8 @@ pytesseract
 imutils
 
 
+
+
 # Audio & Speech
 speechrecognition
 gtts
@@ -37,16 +39,6 @@ pandas
 google-api-core
 google-cloud-texttospeech
 google-api-python-client
-
-
-
-
-# Computer Vision
-opencv-contrib-python
-opencv-python-headless
-pytesseract
-imutils
-
 
 
 # Miscellaneous

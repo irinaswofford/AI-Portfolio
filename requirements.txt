@@ -24,7 +24,7 @@ torchaudio
 pytesseract
 imutils
 opencv-python-headless
-
+opencv-python
 
 
 

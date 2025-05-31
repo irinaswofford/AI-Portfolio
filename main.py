@@ -169,12 +169,12 @@ def load_credentials():
     # No valid credentials found, create flow from secrets dict
     client_secrets_dict = {
         "installed": {
-            "client_id": st.secrets["google_credentials"]["client_id"],
-            "project_id": st.secrets["google_credentials"]["project_id"],
-            "auth_uri": st.secrets["google_credentials"]["auth_uri"],
-            "token_uri": st.secrets["google_credentials"]["token_uri"],
-            "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
-            "client_secret": st.secrets["google_credentials"]["client_secret"]
+            "client_id": st.secrets["client_id"],
+            "project_id": st.secrets["project_id"],
+            "auth_uri": st.secrets["auth_uri"],
+            "token_uri": st.secrets["token_uri"],
+            "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+            "client_secret": st.secrets[client_secret"]
         }
     }
 

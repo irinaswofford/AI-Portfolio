@@ -137,14 +137,12 @@ def generate_ai_answer(query):
                 return f"Error generating AI answer: {e}"
 
         # Load Gmail API Credentials
-
-
-
 def load_credentials():
     try:
         token_file = "token.pickle"
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
 
+        # Try loading cached token
         if os.path.exists(token_file):
             with open(token_file, 'rb') as token:
                 creds = pickle.load(token)
@@ -156,6 +154,7 @@ def load_credentials():
                     pickle.dump(creds, token)
                 return creds
 
+        # Build client config
         client_secrets_dict = {
             "web": {
                 "client_id": st.secrets["client_id"],
@@ -168,6 +167,7 @@ def load_credentials():
             }
         }
 
+        # Initialize OAuth flow
         flow = Flow.from_client_config(
             client_secrets_dict,
             scopes=scopes,
@@ -182,11 +182,11 @@ def load_credentials():
         if code:
             flow.fetch_token(code=code)
             creds = flow.credentials
+
             with open(token_file, 'wb') as token:
                 pickle.dump(creds, token)
-            return creds
 
-        return None
+            return creds
 
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")

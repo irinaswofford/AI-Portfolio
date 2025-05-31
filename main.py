@@ -109,44 +109,72 @@ load_dotenv()
 CSE_ID = os.getenv('CSE_ID')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
-def load_credentials():
-    try:
-        scopes = ['https://www.googleapis.com/auth/gmail.compose']
+import streamlit as st
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+import os
 
-        flow = InstalledAppFlow.from_client_config(
-            {
-                "web": {
-                    "client_id": st.secrets["client_id"],
-                    "project_id": st.secrets["project_id"],
-                    "auth_uri": st.secrets["auth_uri"],
-                    "token_uri": st.secrets["token_uri"],
-                    "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-                    "client_secret": st.secrets["client_secret"],
-                    "redirect_uris": [
-                        "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/oauth2callback",
-                        "http://localhost:8501/oauth2callback"
-                    ],
-                    "javascript_origins": [
-                        "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
-                        "http://localhost:8501"
-                    ]
-                }
-            },
-            scopes=scopes,
-            redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/oauth2callback"
-        )
+def authenticate_user():
+    scopes = ["https://www.googleapis.com/auth/gmail.send"]
 
-        credentials = flow.run_local_server(port=8888)
-        auth_url, _ = flow.authorization_url(prompt='consent')
-        st.markdown(f"[Click here to authenticate]({auth_url})")
-        
-        code = st.text_input("Enter the authorization code:")
-        
-        if code:
-            flow.fetch_token(code=code)
-            credentials = flow.credentials
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": st.secrets["client_id"],
+                "project_id": st.secrets["project_id"],
+                "auth_uri": st.secrets["auth_uri"],
+                "token_uri": st.secrets["token_uri"],
+                "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+                "client_secret": st.secrets["client_secret"],
+                "redirect_uris": ["http://localhost:8888/", f"https://{st.secrets.get('external_url', '')}/"]
+            }
+        },
+        scopes=scopes,
+        redirect_uri="http://localhost:8888/"
+    )
 
+    auth_url, _ = flow.authorization_url(prompt='consent')
+    st.markdown(f"[Click here to authenticate]({auth_url})")
+
+    code = st.text_input("Paste the authorization code here:")
+
+    if code:
+        flow.fetch_token(code=code)
+        credentials = flow.credentials
         return credentials
+
+    return None
+
+def send_email(creds, to_email, subject, message_text):
+    service = build('gmail', 'v1', credentials=creds)
+    message = {
+        "raw": create_message("me", to_email, subject, message_text)
+    }
+    service.users().messages().send(userId="me", body=message).execute()
+
+def create_message(sender, to, subject, message_text):
+    import base64
+    from email.mime.text import MIMEText
+
+    message = MIMEText(message_text)
+    message['to'] = to
+    message['from'] = sender
+    message['subject'] = subject
+    raw = base64.urlsafe_b64encode(message.as_bytes())
+    return raw.decode()
+
+# UI
+st.title("Send Gmail from Streamlit")
+creds = authenticate_user()
+
+if creds:
+    to = st.text_input("To:")
+    subject = st.text_input("Subject:")
+    body = st.text_area("Body:")
+
+    if st.button("Send Email"):
+        send_email(creds, to, subject, body)
+        st.success("Email sent!")
 
     # except Exception as e:
     #     st.error(f"Error during OAuth flow: {e}")
@@ -162,10 +190,6 @@ def load_credentials():
     #         with open(token_file, 'wb') as token:
     #             pickle.dump(creds, token)
     #         return creds
-
-    except Exception as e:
-        st.error(f"❌ Failed to load Gmail API credentials: {e}")
-        return None
 
 
 

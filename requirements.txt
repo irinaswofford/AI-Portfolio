@@ -36,6 +36,7 @@ pandas
 # Google API
 google-api-core
 google-cloud-texttospeech
+git+https://github.com/hunkim/streamlit-google-oauth
 
 google-api-python-client
 

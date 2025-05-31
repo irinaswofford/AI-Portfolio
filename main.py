@@ -67,8 +67,10 @@ selected_page = st.sidebar.radio(
 )
 st.session_state.page = selected_page          
 
-# Function to load and execute a page script
 def load_page(page_name):
+    if not os.path.exists(page_name):
+        st.error(f"Page not found: {page_name}")
+        return
     with open(page_name, "r") as f:
         code = compile(f.read(), page_name, 'exec')
         exec(code, globals())

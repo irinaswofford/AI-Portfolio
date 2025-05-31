@@ -275,13 +275,18 @@ if st.session_state.page == "Home":
         My portfolio assistant, powered by AI, helps navigate through the various sections of this portfolio.
         """)
         
-        st.markdown("""
-        ### How  generative AI agent  works:
-        - **In-Scope Questions:** The AI directly responds with an answer displayed in the UI.
-        - **Out-of-Scope Questions:**
-            - Prompts the user for an email.
-            - Captures the email and generates a Gmail draft with the AI's response and Google search results.
-            - I review the draft and send you an email.(Human-in-the-Loop)
+         st.markdown("""
+        ### How my portfolio AI assistent works:
+
+        - **In-Scope Questions:**  
+        Example: If you ask me questions related to my portfolio, like **"How do you stay organized as a project manager?"**,  
+        the AI directly responds with an answer displayed in the UI.
+
+        - **Out-of-Scope Questions:**  
+        Example: **"How do I build a rocket?"**  
+        - Prompts the user for an email.  
+        - Captures the email and generates a Gmail draft with the AI's response and Google search results.  
+        - I review the draft and send you an email. (Human-in-the-Loop)
         """)
         
         user_query = st.text_input("Ask me anything about skills, my management experience, or my AI projects:")

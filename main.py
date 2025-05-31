@@ -109,7 +109,6 @@ load_dotenv()
 CSE_ID = os.getenv('CSE_ID')
 
 
- --- Authentication Function ---
 def authenticate_user():
     creds = None
     logging.info("Attempting to authenticate user.")

@@ -112,7 +112,16 @@ GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 def load_credentials():
     try:
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
-        redirect_uri = "http://your-username-your-app-name.streamlit.app"
+
+     "redirect_uris": [
+      "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
+      "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/",
+      "http://localhost:8501"
+    ],
+    "javascript_origins": [
+      "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
+      "http://localhost:8501"
+    ]
     
         flow = Flow.from_client_config(
             {
@@ -123,11 +132,11 @@ def load_credentials():
                     "token_uri": st.secrets["token_uri"],
                     "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
                     "client_secret": st.secrets["client_secret"],
-                    "redirect_uris": [redirect_uri],
                 }
             },
             scopes=scopes,
             redirect_uri=redirect_uri
+            javascript_origins = javascript_origins
         )
         auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', flowName='GeneralOAuthFlow', include_granted_scopes='true')
         st.info(f"Please authenticate [by clicking here]({auth_url})")

@@ -12,7 +12,7 @@ from langgraph.graph import StateGraph, END
 from portfolio_data import portfolio_data 
 from dotenv import load_dotenv
 import os
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google_auth_oauthlib.flow import Flow
 os.environ["STREAMLIT_WATCH_FILE_SYSTEM"] = "false"
 
 # Import torch explicitly (transformers will import it implicitly)

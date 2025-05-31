@@ -184,7 +184,7 @@ def authenticate_user():
                         creds = flow.credentials
                         
                         # Save the newly acquired credentials (including refresh token)
-                        with open(token.pickle", 'wb') as token:
+                        with open(token", 'wb') as token:
                             pickle.dump(creds, token)
                         st.success("Authentication successful! Credentials saved.")
                         logging.info("Credentials successfully acquired and saved.")

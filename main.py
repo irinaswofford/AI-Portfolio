@@ -174,16 +174,18 @@ def load_credentials():
             redirect_uri="http://localhost:8501/google_auth_callback"
         )
 
-        auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', include_granted_scopes='true')
-        st.info(f"Please authenticate [by clicking here]({auth_url})")
 
-        code = st.text_input("Enter the authorization code from the browser:")
+        st.markdown(f"### 🔐 Please authenticate:\n[Click here to sign in with Google]({auth_url})")
+        code = st.text_input("Paste the authorization code below:")
+
         if code:
             flow.fetch_token(code=code)
             creds = flow.credentials
             with open(token_file, 'wb') as token:
                 pickle.dump(creds, token)
             return creds
+
+        return None
 
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")

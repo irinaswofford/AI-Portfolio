@@ -188,10 +188,11 @@ def create_gmail_draft(creds, recipient, subject, body):
         message.attach(MIMEText(body, "plain"))
 
         encoded_message = {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode("utf-8")}
-        draft = service.users().drafts().create(userId="me", body={"message": encoded_message}).execute()
+        draft = service.users().drafts().send(userId="me", body={"message": encoded_message}).execute()
         return "Draft created successfully! Please check your Gmail drafts."
     except Exception as e:
         return f"Error creating draft: {e}"
+
 
 # Handle User Query
 def handle_user_query(user_query, user_email, email_sent=False):

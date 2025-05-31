@@ -136,21 +136,6 @@ def generate_ai_answer(query):
 
         # Load Gmail API Credentials
 
-import streamlit as st
-import os
-import pickle
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
-import os
-import pickle
-import streamlit as st
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
-
-from google_auth_oauthlib.flow import Flow
-import os
-import pickle
-import streamlit as st
 
 def load_credentials():
     try:
@@ -178,7 +163,7 @@ def load_credentials():
                 "token_uri": st.secrets["token_uri"],
                 "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
                 "client_secret": st.secrets["client_secret"],
-                "redirect_uris": ["https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"]
+                "redirect_uris": ["http://localhost:8501/google_auth_callback"]
             }
         }
 

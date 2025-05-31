@@ -107,12 +107,7 @@ load_dotenv()
 
 # Get the environment variables
 CSE_ID = os.getenv('CSE_ID')
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
-import streamlit as st
-from google_auth_oauthlib.flow import Flow
-from googleapiclient.discovery import build
-import os
 
 def authenticate_user():
     scopes = ["https://www.googleapis.com/auth/gmail.send"]
@@ -264,7 +259,7 @@ def handle_user_query(user_query, user_email, email_sent=False):
         combined_response = f"AI Answer:\n{ai_answer}\n\nRelevant Search Results:\n{search_result}"
 
         if user_email and not email_sent:
-            creds = load_credentials()
+            creds = authenticate_user()
             if creds is None:
                 return {
                     "input": user_query,

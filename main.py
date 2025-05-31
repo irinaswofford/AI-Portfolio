@@ -139,11 +139,15 @@ def generate_ai_answer(query):
         # Load Gmail API Credentials
 from google_auth_oauthlib.flow import Flow
 
-def load_credentials():
-    try:
-        scopes = ['https://www.googleapis.com/auth/gmail.compose']
 
-        client_secrets_dict = {
+
+def authenticate_google():
+    try:
+    scopes = ['https://www.googleapis.com/auth/gmail.compose']
+    redirect_uri = "https://your-app.streamlit.app"
+
+    flow = Flow.from_client_config(
+        {
             "web": {
                 "client_id": st.secrets["client_id"],
                 "project_id": st.secrets["project_id"],
@@ -151,25 +155,26 @@ def load_credentials():
                 "token_uri": st.secrets["token_uri"],
                 "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
                 "client_secret": st.secrets["client_secret"],
-                "redirect_uris": ["https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"]
+                "redirect_uris": [redirect_uri],
             }
-        }
+        },
+        scopes=scopes,
+        redirect_uri=redirect_uri
+    )
 
-        flow = Flow.from_client_config(
-            client_secrets_dict,
-            scopes=scopes,
-            redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"
-        )
+    auth_url, _ = flow.authorization_url(prompt='consent')
 
-        auth_url, _ = flow.authorization_url(prompt='consent')
-        st.info(f"Please authenticate [by clicking here]({auth_url})")
-        code = st.text_input("Enter the authorization code:")
+    st.info(f"Please [click here to authenticate with Google]({auth_url})")
+    code = st.text_input("Paste the authorization code:")
 
-        if code:
-            flow.fetch_token(code=code)
-            creds = flow.credentials
-            return creds
+    if code:
+        flow.fetch_token(code=code)
+        creds = flow.credentials
+        with open("token.pickle", "wb") as token:
+            pickle.dump(creds, token)
+        st.success("✅ Authenticated with Google!")
 
+        return creds
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")
         return None

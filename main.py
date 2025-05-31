@@ -252,6 +252,7 @@ def generate_ai_answer(query):
     except Exception as e:
         return f"Error generating AI answer: {e}"
 
+
 # --- Create Gmail Draft ---
 def create_gmail_draft(creds, recipient, subject, body):
     try:
@@ -260,12 +261,16 @@ def create_gmail_draft(creds, recipient, subject, body):
         message["to"] = recipient
         message["subject"] = subject
         message.attach(MIMEText(body, "plain"))
-
-        encoded_message = {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode("utf-8")}
-        draft = service.users().drafts().create(userId="me", body={"message": encoded_message}).execute()
-        return "Draft created successfully! Please check your Gmail drafts."
+        
+        raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+        draft_body = {"message": {"raw": raw_message}}
+        
+        draft = service.users().drafts().create(userId="me", body=draft_body).execute()
+        logging.info(f"Draft created with ID: {draft['id']}")
+        return f"Draft created successfully with ID: {draft['id']}"
     except Exception as e:
-        return f"Error creating draft: {e}"
+        logging.error(f"Error creating draft: {e}", exc_info=True)
+        return f"❌ Failed to create draft: {e}"
 
 # --- Handle User Query ---
 def handle_user_query(user_query, user_email, email_sent=False):

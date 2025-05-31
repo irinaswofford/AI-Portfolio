@@ -128,13 +128,15 @@ def load_credentials():
             scopes=scopes,
             redirect_uri=redirect_uri
         )
-        auth_url, _ = flow.authorization_url(prompt='consent')
+        auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', include_granted_scopes='true')
         st.info(f"Please authenticate [by clicking here]({auth_url})")
-        code = st.text_input("Enter the authorization code:")
 
+        code = st.text_input("Enter the authorization code from the browser:")
         if code:
             flow.fetch_token(code=code)
             creds = flow.credentials
+            with open(token_file, 'wb') as token:
+                pickle.dump(creds, token)
             return creds
 
     except Exception as e:

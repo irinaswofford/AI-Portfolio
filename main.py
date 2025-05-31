@@ -125,7 +125,7 @@ def authenticate_user():
             }
         },
         scopes=scopes,
-        redirect_uri="http://localhost:8888/"
+        redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"
     )
 
     auth_url, _ = flow.authorization_url(prompt='consent')

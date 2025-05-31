@@ -121,12 +121,40 @@ def generate_ai_answer(query):
                 return f"Error generating AI answer: {e}"
 
         # Load Gmail API Credentials
-def load_credentials():
-    """Handles OAuth2 authentication and returns credentials."""
-    creds = None
-    token_file = 'token.pickle'
+# def load_credentials():
+#     """Handles OAuth2 authentication and returns credentials."""
+#     creds = None
+#     token_file = 'token.pickle'
 
-    # Check if the token.pickle file exists
+#     # Check if the token.pickle file exists
+#     if os.path.exists(token_file):
+#         with open(token_file, 'rb') as token:
+#             creds = pickle.load(token)
+#         if creds and creds.valid:
+#             return creds
+#         elif creds and creds.expired and creds.refresh_token:
+#             creds.refresh(Request())
+#             with open(token_file, 'wb') as token:
+#                 pickle.dump(creds, token)
+#             return creds
+#     else:
+#         # If no valid credentials are found, perform OAuth
+#         flow = InstalledAppFlow.from_client_secrets_file(
+#             'credentials.json', ['https://www.googleapis.com/auth/gmail.compose']
+#         )
+#         creds = flow.run_local_server(port=0)
+        
+#         # Save the credentials for the next run
+#         with open(token_file, 'wb') as token:
+#             pickle.dump(creds, token)
+
+#         return creds
+
+def load_credentials():
+    token_file = "token.pickle"
+    scopes = ['https://www.googleapis.com/auth/gmail.compose']
+
+    # Try loading cached credentials first
     if os.path.exists(token_file):
         with open(token_file, 'rb') as token:
             creds = pickle.load(token)
@@ -137,18 +165,28 @@ def load_credentials():
             with open(token_file, 'wb') as token:
                 pickle.dump(creds, token)
             return creds
-    else:
-        # If no valid credentials are found, perform OAuth
-        flow = InstalledAppFlow.from_client_secrets_file(
-            'credentials.json', ['https://www.googleapis.com/auth/gmail.compose']
-        )
-        creds = flow.run_local_server(port=0)
-        
-        # Save the credentials for the next run
-        with open(token_file, 'wb') as token:
-            pickle.dump(creds, token)
 
-        return creds
+    # No valid credentials found, create flow from secrets dict
+    client_secrets_dict = {
+        "installed": {
+            "client_id": st.secrets["google_credentials"]["client_id"],
+            "project_id": st.secrets["google_credentials"]["project_id"],
+            "auth_uri": st.secrets["google_credentials"]["auth_uri"],
+            "token_uri": st.secrets["google_credentials"]["token_uri"],
+            "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
+            "client_secret": st.secrets["google_credentials"]["client_secret"],
+            "redirect_uris": st.secrets["google_credentials"]["redirect_uris"]
+        }
+    }
+
+    flow = InstalledAppFlow.from_client_config(client_secrets_dict, scopes=scopes)
+    creds = flow.run_local_server(port=0)
+
+    # Save credentials for next time
+    with open(token_file, 'wb') as token:
+        pickle.dump(creds, token)
+
+    return creds
 
         # Create Gmail Draft
 def create_gmail_draft(creds, recipient, subject, body):

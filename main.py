@@ -158,18 +158,7 @@ def create_message(sender, to, subject, message_text):
     raw = base64.urlsafe_b64encode(message.as_bytes())
     return raw.decode()
 
-# UI
-st.title("Send Gmail from Streamlit")
-creds = authenticate_user()
 
-if creds:
-    to = st.text_input("To:")
-    subject = st.text_input("Subject:")
-    body = st.text_area("Body:")
-
-    if st.button("Send Email"):
-        send_email(creds, to, subject, body)
-        st.success("Email sent!")
 
     # except Exception as e:
     #     st.error(f"Error during OAuth flow: {e}")

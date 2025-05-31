@@ -26,7 +26,7 @@ TOKEN_FILE = "/tmp/token.pickle" # FIX: Changed path to /tmp/
 # This MUST EXACTLY MATCH one of the "Authorized redirect URIs" in your
 # Google Cloud Console "Web application" OAuth 2.0 Client ID settings.
 # The trailing slash is often crucial for consistency.
-REDIRECT_URI = "https://localhost:8888"
+REDIRECT_URI = "http://localhost:8888"
 
 # Define the required OAuth scopes
 # Use 'gmail.compose' if you only create drafts, 'gmail.send' if you actually send emails.

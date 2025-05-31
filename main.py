@@ -113,20 +113,20 @@ def authenticate_user():
     creds = None
     logging.info("Attempting to authenticate user.")
 
-    # 1. Try loading cached credentials from token.pickle
-    if os.path.exists(token.pickle):
+    # 1. Try loading cached credentials from token
+    if os.path.exists(token):
         try:
             with open(token.pickle, 'rb') as token:
                 creds = pickle.load(token)
             logging.info("Cached token loaded successfully.")
         except Exception as e:
-            logging.error(f"Error loading token.pickle: {e}. Removing corrupted file.")
+            logging.error(f"Error loading token: {e}. Removing corrupted file.")
             st.warning("Could not load cached credentials. Will re-authenticate.")
             # Optionally remove corrupted file to force fresh authentication
             try:
-                os.remove(token.pickle)
+                os.remove(token)
             except OSError:
-                logging.warning(f"Could not remove corrupted token file: {token.pickle}")
+                logging.warning(f"Could not remove corrupted token file: {token}")
             creds = None # Reset creds to force re-authentication
 
     # 2. Refresh or re-authenticate if credentials are not valid/expired

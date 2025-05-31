@@ -161,7 +161,9 @@ def load_credentials():
                 "auth_uri": st.secrets["auth_uri"],
                 "token_uri": st.secrets["token_uri"],
                 "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-                "client_secret": st.secrets["client_secret"]
+                "client_secret": st.secrets["client_secret"],
+                "redirect_uri"="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/"
+)
             }
         }
 

@@ -14,6 +14,8 @@ from dotenv import load_dotenv
 import os
 from google_auth_oauthlib.flow import Flow
 os.environ["STREAMLIT_WATCH_FILE_SYSTEM"] = "false"
+from google_auth_oauthlib.flow import Flow
+
 
 # Import torch explicitly (transformers will import it implicitly)
 import torch
@@ -137,18 +139,12 @@ def generate_ai_answer(query):
         # Load Gmail API Credentials
 
 
-import os
-import pickle
-import streamlit as st
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import Flow
 
 def load_credentials():
     try:
         token_file = "token.pickle"
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
 
-        # Load existing token
         if os.path.exists(token_file):
             with open(token_file, 'rb') as token:
                 creds = pickle.load(token)
@@ -160,7 +156,6 @@ def load_credentials():
                     pickle.dump(creds, token)
                 return creds
 
-        # Define client config
         client_secrets_dict = {
             "web": {
                 "client_id": st.secrets["client_id"],
@@ -173,18 +168,16 @@ def load_credentials():
             }
         }
 
-        # Build OAuth flow with redirect URI
         flow = Flow.from_client_config(
-            client_config=client_secrets_dict,
+            client_secrets_dict,
             scopes=scopes,
             redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"
         )
 
-        # Generate auth URL
-        auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', include_granted_scopes='true')
+        auth_url, _ = flow.authorization_url(prompt='consent')
 
-        st.markdown(f"### 🔐 Please authenticate:\n[Click here to sign in with Google]({auth_url})")
-        code = st.text_input("Paste the authorization code here:")
+        st.info(f"Please authenticate [by clicking here]({auth_url})")
+        code = st.text_input("Enter the authorization code:")
 
         if code:
             flow.fetch_token(code=code)
@@ -198,6 +191,7 @@ def load_credentials():
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")
         return None
+
 
 # Create Gmail Draft
 def create_gmail_draft(creds, recipient, subject, body):

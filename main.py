@@ -121,7 +121,7 @@ def authenticate_user():
                 "token_uri": st.secrets["token_uri"],
                 "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
                 "client_secret": st.secrets["client_secret"],
-                "redirect_uris": ["http://localhost:8888/", f"https://{st.secrets.get('external_url', '')}/"]
+                "redirect_uris": ["https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/", f"https://{st.secrets.get('external_url', '')}/"]
             }
         },
         scopes=scopes,

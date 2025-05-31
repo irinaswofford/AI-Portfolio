@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 import os
 
 os.environ["STREAMLIT_WATCH_FILE_SYSTEM"] = "false"
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google_auth_oauthlib.flow import Flow
 
 
 

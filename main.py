@@ -125,11 +125,7 @@ def google_search(query):
         else:
             return f"Error performing search: {e}"
 
-import os
-import pickle
-import streamlit as st
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
+
 
 def load_credentials():
     try:

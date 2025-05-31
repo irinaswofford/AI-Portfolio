@@ -221,7 +221,7 @@ def create_message(sender, to, subject, message_text):
     return raw.decode()
 
 # --- Google Custom Search Function ---
-def Google Search(query):
+def GoogleSearch(query):
     try:
         service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
         results = service.cse().list(q=query, cx=CSE_ID, num=3).execute()
@@ -281,7 +281,7 @@ def handle_user_query(user_query, user_email, email_sent=False):
         }
     else:
         ai_answer = generate_ai_answer(user_query)
-        search_result = Google Search(user_query)
+        search_result = GoogleSearch(user_query)
         combined_response = f"AI Answer:\n{ai_answer}\n\nRelevant Search Results:\n{search_result}"
 
         if user_email and not email_sent:

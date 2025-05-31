@@ -11,8 +11,8 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 from langgraph.graph import StateGraph, END
 from portfolio_data import portfolio_data
 from dotenv import load_dotenv
-from urllib.parse import urlparse, parse_qs
-from langgraph.graph import StateGraph
+
+
 import os
 graph = StateGraph(state_schema=state_schema)
 

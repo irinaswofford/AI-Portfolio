@@ -278,11 +278,11 @@ if st.session_state.page == "Home":
         st.markdown("""
         ### How my portfolio AI assistent works:
 
-        - **In-Scope Questions:**  
+        **In-Scope Questions:**  
         Example: If you ask me questions related to my portfolio, like **"How do you stay organized as a project manager?"**,  
         the AI directly responds with an answer displayed in the UI.
 
-        - **Out-of-Scope Questions:**  
+        **Out-of-Scope Questions:**  
         Example: **"How do I build a rocket?"**  
         - Prompts the user for an email.  
         - Captures the email and generates a Gmail draft with the AI's response and Google search results.  

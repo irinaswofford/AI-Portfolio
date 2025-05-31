@@ -260,53 +260,128 @@ class PortfolioAssistant:
                     if user_query.lower() in question_data["question"].lower():
                         return question_data["response"]
 
-if st.session_state.page == "Home":
-        # Streamlit Interface
-    def create_streamlit_interface():
+# if st.session_state.page == "Home":
+#         # Streamlit Interface
+#     def create_streamlit_interface():
 
+#         st.title("Hi, I am Irina Swofford, and this is Alessandra, my portfolio assistant")
+#         st.write("""
+#         I specialize in both AI engineering and project management, with a strong ability to communicate complex AI/ML concepts in an understandable way for both technical and non-technical stakeholders. 
+#         My goal is to turn challenges into actionable insights by focusing on problem-solving, improving operational efficiency, and staying ahead of emerging AI trends.
+#         By combining my technical expertise with strategic project management, I ensure that both AI and business objectives are successfully achieved.
+#         """)
+#         st.markdown("""
+#         My portfolio assistant, powered by AI, helps navigate through the various sections of this portfolio.
+#         """)
+        
+#         st.markdown("""
+#         ### How my portfolio AI assistant works:
+
+#         **In-Scope Questions:**  
+#         Example: If you ask me questions related to my portfolio, like **"How do you stay organized as a project manager?"**,  
+#         the AI directly responds with an answer displayed in the UI.
+
+#         **Out-of-Scope Questions:**  
+#         Example: **"How do you build a rocket?"**  
+#         - Prompts the user for an email.  
+#         - Captures the email and generates a Gmail draft with the AI's response and Google search results.  
+#         - I review the draft and send you an email. (Human-in-the-Loop)
+#         """)
+        
+#         user_query = st.text_input("Ask me anything about skills, my management experience, or my AI projects:")
+
+#         email_sent = False
+#         user_email = None
+
+#         if user_query:
+#             response_data = handle_user_query(user_query, user_email, email_sent)
+#             st.write(response_data["output"])
+
+#             if response_data.get("prompt_email"):
+#                 user_email = st.text_input("Enter your email for follow-up:")
+#                 if user_email:
+#                     response_data = handle_user_query(user_query, user_email, email_sent)
+#                     st.write(response_data["output"])
+#                     email_sent = response_data["email_sent"]
+#                     # Main
+#                     # Sample data (sales pipeline data)
+#     if __name__ == "__main__":
+#         create_streamlit_interface()
+if st.session_state.page == "Home":
+    def create_streamlit_interface():
         st.title("Hi, I am Irina Swofford, and this is Alessandra, my portfolio assistant")
+
         st.write("""
         I specialize in both AI engineering and project management, with a strong ability to communicate complex AI/ML concepts in an understandable way for both technical and non-technical stakeholders. 
         My goal is to turn challenges into actionable insights by focusing on problem-solving, improving operational efficiency, and staying ahead of emerging AI trends.
         By combining my technical expertise with strategic project management, I ensure that both AI and business objectives are successfully achieved.
         """)
+
         st.markdown("""
         My portfolio assistant, powered by AI, helps navigate through the various sections of this portfolio.
         """)
-        
+
         st.markdown("""
         ### How my portfolio AI assistant works:
 
-        **In-Scope Questions:**  
-        Example: If you ask me questions related to my portfolio, like **"How do you stay organized as a project manager?"**,  
-        the AI directly responds with an answer displayed in the UI.
+        - **In-Scope Questions:**  
+          Example: If you ask me questions related to my portfolio, like **"How do you stay organized as a project manager?"**,  
+          the AI directly responds with an answer displayed in the UI.
 
-        **Out-of-Scope Questions:**  
-        Example: **"How do you build a rocket?"**  
-        - Prompts the user for an email.  
-        - Captures the email and generates a Gmail draft with the AI's response and Google search results.  
-        - I review the draft and send you an email. (Human-in-the-Loop)
+        - **Out-of-Scope Questions:**  
+          Example: **"How do you build a rocket?"**  
+          - Prompts the user for an email.  
+          - Captures the email and generates a Gmail draft with the AI's response and Google search results.  
+          - I review the draft and send you an email. (Human-in-the-Loop)
         """)
-        
+
+        # Initialize session state for user interaction
+        if "user_query" not in st.session_state:
+            st.session_state.user_query = ""
+        if "user_email" not in st.session_state:
+            st.session_state.user_email = ""
+        if "email_sent" not in st.session_state:
+            st.session_state.email_sent = False
+        if "response_data" not in st.session_state:
+            st.session_state.response_data = None
+
+        # Input from user
         user_query = st.text_input("Ask me anything about skills, my management experience, or my AI projects:")
 
-        email_sent = False
-        user_email = None
-
         if user_query:
-            response_data = handle_user_query(user_query, user_email, email_sent)
-            st.write(response_data["output"])
+            st.session_state.user_query = user_query
+            st.session_state.response_data = handle_user_query(
+                user_query,
+                st.session_state.user_email,
+                st.session_state.email_sent
+            )
 
-            if response_data.get("prompt_email"):
-                user_email = st.text_input("Enter your email for follow-up:")
-                if user_email:
-                    response_data = handle_user_query(user_query, user_email, email_sent)
-                    st.write(response_data["output"])
-                    email_sent = response_data["email_sent"]
-                    # Main
-                    # Sample data (sales pipeline data)
-    if __name__ == "__main__":
-        create_streamlit_interface()
+        # Handle response
+        if st.session_state.response_data:
+            st.write(st.session_state.response_data["output"])
+
+            if st.session_state.response_data.get("prompt_email"):
+                st.session_state.user_email = st.text_input("Enter your email for follow-up:")
+
+                if st.session_state.user_email:
+                    st.session_state.response_data = handle_user_query(
+                        st.session_state.user_query,
+                        st.session_state.user_email,
+                        st.session_state.email_sent
+                    )
+                    st.write(st.session_state.response_data["output"])
+                    st.session_state.email_sent = st.session_state.response_data["email_sent"]
+
+        # Option to reset interaction
+        if st.session_state.response_data and not st.session_state.response_data["prompt_email"]:
+            if st.button("Ask another question"):
+                st.session_state.user_query = ""
+                st.session_state.user_email = ""
+                st.session_state.email_sent = False
+                st.session_state.response_data = None
+
+    # Call the interface function
+    create_streamlit_interface()
 elif  st.session_state.page =="AI Project Mangement experience":
         load_page("pages/project_roadmap.py")
 elif  st.session_state.page =="Robotic Process Automation and Natural Language Processing":

@@ -125,25 +125,6 @@ def handle_oauth2_redirect():
     return None
 
 
-
-
-
-
-
-login_info = oauth.login(
-        client_id=client_id,
-        client_secret=client_secret,
-        redirect_uri=redirect_uri,
-        login_button_text="Continue with Google",
-        logout_button_text="Logout",
-    )
-
-if login_info:
-        user_id, user_email = login_info
-        st.write(f"Welcome {user_email}")
-else:
-        st.write("Please login")
-
 # --- Authentication Function ---
 def authenticate_user():
     creds = None

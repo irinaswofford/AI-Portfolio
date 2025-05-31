@@ -136,7 +136,7 @@ def load_credentials():
             redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/oauth2callback"
         )
 
-        credentials = flow.run_local_server(port=8501)
+        credentials = flow.run_local_server(port=8888)
         return credentials
 
     # except Exception as e:

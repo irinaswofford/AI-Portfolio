@@ -134,18 +134,13 @@ def generate_ai_answer(query):
         return ai_answer
     except Exception as e:
         return f"Error generating AI answer: {e}"
-
 # Load Gmail API Credentials with error handling and Streamlit secrets check
 def load_credentials():
     try:
         token_file = "token.pickle"
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
 
-        # Debug: print loaded secrets (comment out in production)
-        # st.write("Loaded client_id:", st.secrets.get("client_id"))
-        # st.write("Loaded client_secret:", st.secrets.get("client_secret"))
-
-        # Load cached token if available and valid
+        # 1. Try loading cached token
         if os.path.exists(token_file):
             with open(token_file, 'rb') as token:
                 creds = pickle.load(token)
@@ -157,7 +152,7 @@ def load_credentials():
                     pickle.dump(creds, token)
                 return creds
 
-        # Prepare client secrets dict from Streamlit secrets
+        # 2. Build client config from Streamlit secrets
         client_secrets_dict = {
             "installed": {
                 "client_id": st.secrets["client_id"],
@@ -169,16 +164,21 @@ def load_credentials():
             }
         }
 
+        # 3. Start OAuth2 flow
+        st.info("Please authenticate with Google to continue.")
         flow = InstalledAppFlow.from_client_config(client_secrets_dict, scopes=scopes)
-        creds = flow.run_local_server(port=0)
 
+        # Use run_console instead of run_local_server for Streamlit compatibility
+        creds = flow.run_console()
+
+        # 4. Save credentials to token file
         with open(token_file, 'wb') as token:
             pickle.dump(creds, token)
 
         return creds
 
     except Exception as e:
-        st.error(f"Failed to load credentials: {e}")
+        st.error(f"❌ Failed to load Gmail API credentials: {e}")
         return None
 
 # Create Gmail Draft

@@ -276,7 +276,7 @@ if st.session_state.page == "Home":
         """)
         
         st.markdown("""
-        ### How my portfolio AI assistent works:
+        ### How my portfolio AI assistant works:
 
         **In-Scope Questions:**  
         Example: If you ask me questions related to my portfolio, like **"How do you stay organized as a project manager?"**,  

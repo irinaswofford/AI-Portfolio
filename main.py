@@ -198,12 +198,13 @@ def create_gmail_draft(creds, recipient, subject, body):
 
 
 # Handle User Query
+
+
 def handle_user_query(user_query, user_email, email_sent=False):
     assistant = PortfolioAssistant(portfolio_data)
     response = assistant.get_response(user_query)
 
     if response:
-        # In-scope query: Show only portfolio response
         return {
             "input": user_query,
             "output": f"Portfolio Response: {response}",
@@ -211,7 +212,6 @@ def handle_user_query(user_query, user_email, email_sent=False):
             "email_sent": email_sent
         }
     else:
-        # Out-of-scope query: Generate AI Answer and include search results
         ai_answer = generate_ai_answer(user_query)
         search_result = google_search(user_query)
         combined_response = f"AI Answer:\n{ai_answer}\n\nRelevant Search Results:\n{search_result}"
@@ -228,12 +228,12 @@ def handle_user_query(user_query, user_email, email_sent=False):
             subject = f"Response to your query: {user_query}"
             body = f"Your query: {user_query}\n\n{combined_response}"
             email_status = create_gmail_draft(creds, user_email, subject, body)
-            
+
             if "Error" not in email_status:
                 st.success(email_status)
             else:
                 st.error(email_status)
-            
+
             return {
                 "input": user_query,
                 "output": email_status,

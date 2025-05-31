@@ -125,7 +125,7 @@ def authenticate_user():
             }
         },
         scopes=scopes,
-        redirect_uris:["https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/", f"https://{st.secrets.get('external_url', '')}/"]
+        redirect_uris = ["https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/", f"https://{st.secrets.get('external_url', '')}/"]
     )
 
     auth_url, _ = flow.authorization_url(prompt='consent')

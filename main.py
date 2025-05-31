@@ -174,8 +174,7 @@ def load_credentials():
             "auth_uri": st.secrets["google_credentials"]["auth_uri"],
             "token_uri": st.secrets["google_credentials"]["token_uri"],
             "auth_provider_x509_cert_url": st.secrets["google_credentials"]["auth_provider_x509_cert_url"],
-            "client_secret": st.secrets["google_credentials"]["client_secret"],
-            "redirect_uris": st.secrets["google_credentials"]["redirect_uris"]
+            "client_secret": st.secrets["google_credentials"]["client_secret"]
         }
     }
 

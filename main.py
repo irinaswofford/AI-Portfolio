@@ -114,9 +114,9 @@ def authenticate_user():
     logging.info("Attempting to authenticate user.")
 
     # 1. Try loading cached credentials from token.pickle
-    if os.path.exists(TOKEN_FILE):
+    if os.path.exists(token.pickle):
         try:
-            with open(TOKEN_FILE, 'rb') as token:
+            with open(token.pickle, 'rb') as token:
                 creds = pickle.load(token)
             logging.info("Cached token loaded successfully.")
         except Exception as e:
@@ -124,9 +124,9 @@ def authenticate_user():
             st.warning("Could not load cached credentials. Will re-authenticate.")
             # Optionally remove corrupted file to force fresh authentication
             try:
-                os.remove(TOKEN_FILE)
+                os.remove(token.pickle)
             except OSError:
-                logging.warning(f"Could not remove corrupted token file: {TOKEN_FILE}")
+                logging.warning(f"Could not remove corrupted token file: {token.pickle}")
             creds = None # Reset creds to force re-authentication
 
     # 2. Refresh or re-authenticate if credentials are not valid/expired
@@ -184,7 +184,7 @@ def authenticate_user():
                         creds = flow.credentials
                         
                         # Save the newly acquired credentials (including refresh token)
-                        with open(TOKEN_FILE, 'wb') as token:
+                        with open(token.pickle", 'wb') as token:
                             pickle.dump(creds, token)
                         st.success("Authentication successful! Credentials saved.")
                         logging.info("Credentials successfully acquired and saved.")

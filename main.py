@@ -14,7 +14,8 @@ from dotenv import load_dotenv
 import os
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-
+# Import torch explicitly (transformers will import it implicitly)
+import torch
 
 # THE FIX: Workaround for Streamlit/Torch file watcher conflict
 # This line should be placed after 'import torch'

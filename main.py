@@ -283,7 +283,7 @@ if st.session_state.page == "Home":
         the AI directly responds with an answer displayed in the UI.
 
         **Out-of-Scope Questions:**  
-        Example: **"How do I build a rocket?"**  
+        Example: **"How do you build a rocket?"**  
         - Prompts the user for an email.  
         - Captures the email and generates a Gmail draft with the AI's response and Google search results.  
         - I review the draft and send you an email. (Human-in-the-Loop)

@@ -169,8 +169,8 @@ def load_credentials():
 
         # Use run_local_server (Streamlit will show a link and handle it well on localhost)
         st.info("Please authenticate by clicking the link in the browser window.")
-        #creds = flow.run_local_server(port=0)  # Use Streamlit default port to avoid conflict
-        creds = flow.run_console()
+        flow.run_local_server(port=8088)
+
 
         # Save token
         with open(token_file, 'wb') as token:

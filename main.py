@@ -125,7 +125,16 @@ def google_search(query):
         else:
             return f"Error performing search: {e}"
 
+def generate_ai_answer(query):
+            try:
+                inputs = tokenizer(query, return_tensors="pt", padding=True, truncation=True)
+                outputs = model.generate(**inputs, max_length=150, num_return_sequences=1)
+                ai_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
+                return ai_answer
+            except Exception as e:
+                return f"Error generating AI answer: {e}"
 
+        # Load Gmail API Credentials
 
 def load_credentials():
     try:

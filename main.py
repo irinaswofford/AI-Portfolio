@@ -112,7 +112,7 @@ GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 def load_credentials():
     try:
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
-        redirect_uri = "http://localhost:8080/oauth2callback"
+        redirect_uri = "http://localhost:8080"
     
         flow = Flow.from_client_config(
             {

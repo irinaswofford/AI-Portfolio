@@ -62,8 +62,18 @@ def load_page(page_name):
         exec(code, globals())
 
 # Initialize T5 Model and Tokenizer
-tokenizer = T5Tokenizer.from_pretrained("t5-small")
-model = T5ForConditionalGeneration.from_pretrained("t5-small")
+# tokenizer = T5Tokenizer.from_pretrained("t5-small")
+# model = T5ForConditionalGeneration.from_pretrained("t5-small")
+
+
+
+# Initialize T5 Model and Tokenizer
+# It's good practice to cache these heavy objects if they don't change
+@st.cache_resource
+def get_t5_model():
+    tokenizer = T5Tokenizer.from_pretrained("t5-small")
+    model = T5ForConditionalGeneration.from_pretrained("t5-small")
+    return tokenizer, model
 
 state_schema = frozenset([
     ("start", "user_query"),

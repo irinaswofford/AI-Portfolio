@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 
 import os
-graph = StateGraph(state_schema=state_schema)
+
 
 # --- Global Configurations ---
 # Configure logging for better debugging
@@ -115,7 +115,7 @@ state_schema = frozenset([
     ("file_upload", END)
 ])
 
-
+graph = StateGraph(state_schema=state_schema)
 def handle_oauth2_redirect():
     query_params = st.experimental_get_query_params()
     if "code" in query_params:

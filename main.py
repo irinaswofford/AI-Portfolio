@@ -330,12 +330,6 @@ if st.session_state.page == "Home":
                     st.write(st.session_state.response_data["output"])
                     st.session_state.email_sent = st.session_state.response_data["email_sent"]
 
-        if st.session_state.response_data and not st.session_state.response_data["prompt_email"]:
-            if st.button("Ask another question"):
-                st.session_state.user_query = ""
-                st.session_state.user_email = ""
-                st.session_state.email_sent = False
-                st.session_state.response_data = None
 
     create_streamlit_interface()
 

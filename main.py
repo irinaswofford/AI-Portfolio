@@ -143,38 +143,38 @@ from google_auth_oauthlib.flow import Flow
 
 def authenticate_google():
     try:
-    scopes = ['https://www.googleapis.com/auth/gmail.compose']
-    redirect_uri = "https://your-app.streamlit.app"
-
-    flow = Flow.from_client_config(
-        {
-            "web": {
-                "client_id": st.secrets["client_id"],
-                "project_id": st.secrets["project_id"],
-                "auth_uri": st.secrets["auth_uri"],
-                "token_uri": st.secrets["token_uri"],
-                "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-                "client_secret": st.secrets["client_secret"],
-                "redirect_uris": [redirect_uri],
-            }
-        },
-        scopes=scopes,
-        redirect_uri=redirect_uri
-    )
-
-    auth_url, _ = flow.authorization_url(prompt='consent')
-
-    st.info(f"Please [click here to authenticate with Google]({auth_url})")
-    code = st.text_input("Paste the authorization code:")
-
-    if code:
-        flow.fetch_token(code=code)
-        creds = flow.credentials
-        with open("token.pickle", "wb") as token:
-            pickle.dump(creds, token)
-        st.success("✅ Authenticated with Google!")
-
-        return creds
+        scopes = ['https://www.googleapis.com/auth/gmail.compose']
+        redirect_uri = "https://your-app.streamlit.app"
+    
+        flow = Flow.from_client_config(
+            {
+                "web": {
+                    "client_id": st.secrets["client_id"],
+                    "project_id": st.secrets["project_id"],
+                    "auth_uri": st.secrets["auth_uri"],
+                    "token_uri": st.secrets["token_uri"],
+                    "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+                    "client_secret": st.secrets["client_secret"],
+                    "redirect_uris": [redirect_uri],
+                }
+            },
+            scopes=scopes,
+            redirect_uri=redirect_uri
+        )
+    
+        auth_url, _ = flow.authorization_url(prompt='consent')
+    
+        st.info(f"Please [click here to authenticate with Google]({auth_url})")
+        code = st.text_input("Paste the authorization code:")
+    
+        if code:
+            flow.fetch_token(code=code)
+            creds = flow.credentials
+            with open("token.pickle", "wb") as token:
+                pickle.dump(creds, token)
+            st.success("✅ Authenticated with Google!")
+    
+            return creds
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")
         return None

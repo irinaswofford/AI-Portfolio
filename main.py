@@ -70,9 +70,10 @@ selected_page = st.sidebar.radio(
 st.session_state.page = selected_page          
 
 def load_page(page_name):
-    if not os.path.exists(page_name):
-        st.error(f"Page not found: {page_name}")
-        return
+     if os.path.exists(token_file):
+            with open(token_file, 'rb') as token:
+                creds = pickle.load(token)
+            return creds
     with open(page_name, "r") as f:
         code = compile(f.read(), page_name, 'exec')
         exec(code, globals())

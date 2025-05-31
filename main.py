@@ -14,6 +14,16 @@ from dotenv import load_dotenv
 import os
 from google_auth_oauthlib.flow import InstalledAppFlow
 
+
+
+# THE FIX: Workaround for Streamlit/Torch file watcher conflict
+# This line should be placed after 'import torch'
+try:
+    torch.classes.__path__ = []
+except AttributeError:
+    # Handle cases where __path__ might not be modifiable or present
+    # (though it usually is the problem in these errors)
+    pass
 # Hide Streamlit sidebar elements
 hide_elements = """
 <style>

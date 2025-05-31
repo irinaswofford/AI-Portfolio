@@ -137,24 +137,12 @@ def generate_ai_answer(query):
                 return f"Error generating AI answer: {e}"
 
         # Load Gmail API Credentials
+from google_auth_oauthlib.flow import Flow
+
 def load_credentials():
     try:
-        token_file = "token.pickle"
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
 
-        # Try loading cached token
-        if os.path.exists(token_file):
-            with open(token_file, 'rb') as token:
-                creds = pickle.load(token)
-            if creds and creds.valid:
-                return creds
-            elif creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-                with open(token_file, 'wb') as token:
-                    pickle.dump(creds, token)
-                return creds
-
-        # Build client config
         client_secrets_dict = {
             "web": {
                 "client_id": st.secrets["client_id"],
@@ -163,35 +151,29 @@ def load_credentials():
                 "token_uri": st.secrets["token_uri"],
                 "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
                 "client_secret": st.secrets["client_secret"],
+                "redirect_uris": ["https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"]
             }
         }
 
-        # Initialize OAuth flow
         flow = Flow.from_client_config(
             client_secrets_dict,
             scopes=scopes,
             redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"
         )
 
-
-  # Generate auth URL
-        auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', include_granted_scopes='true')
-
-        st.markdown(f"### 🔐 Please authenticate:\n[Click here to sign in with Google]({auth_url})")
-        code = st.text_input("Paste the authorization code here:")
+        auth_url, _ = flow.authorization_url(prompt='consent')
+        st.info(f"Please authenticate [by clicking here]({auth_url})")
+        code = st.text_input("Enter the authorization code:")
 
         if code:
             flow.fetch_token(code=code)
             creds = flow.credentials
-            with open(token_file, 'wb') as token:
-                pickle.dump(creds, token)
             return creds
-
-        return None
 
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")
         return None
+
 
 # Create Gmail Draft
 def create_gmail_draft(creds, recipient, subject, body):

@@ -114,14 +114,14 @@ def load_credentials():
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
 
          "redirect_uris": [
-          "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
-          "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/",
-          "http://localhost:8501"
-        ],
+              "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
+              "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/",
+              "http://localhost:8501"
+            ],
         "javascript_origins": [
-          "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
-          "http://localhost:8501"
-        ]
+              "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
+              "http://localhost:8501"
+            ]
     
         flow = Flow.from_client_config(
             {

@@ -137,6 +137,15 @@ def load_credentials():
         )
 
         credentials = flow.run_local_server(port=8888)
+        auth_url, _ = flow.authorization_url(prompt='consent')
+        st.markdown(f"[Click here to authenticate]({auth_url})")
+        
+        code = st.text_input("Enter the authorization code:")
+        
+        if code:
+            flow.fetch_token(code=code)
+            credentials = flow.credentials
+
         return credentials
 
     # except Exception as e:

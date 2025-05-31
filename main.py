@@ -11,9 +11,10 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 from langgraph.graph import StateGraph, END
 from portfolio_data import portfolio_data
 from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qs
 import os
 graph = StateGraph(state_schema=state_schema)
-from urllib.parse import urlparse, parse_qs
+
 # --- Global Configurations ---
 # Configure logging for better debugging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

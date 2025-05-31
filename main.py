@@ -117,12 +117,13 @@ state_schema = frozenset([
 
 graph = StateGraph(state_schema=state_schema)
 def handle_oauth2_redirect():
-    query_params = st.experimental_get_query_params()
+    query_params = st.query_params
     if "code" in query_params:
         auth_code = query_params["code"][0]
         logging.info("Authorization code received via URL parameter.")
         return auth_code
     return None
+
 
 # --- Authentication Function ---
 def authenticate_user():

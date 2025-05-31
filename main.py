@@ -171,7 +171,7 @@ def load_credentials():
         flow = Flow.from_client_config(
             client_secrets_dict,
             scopes=scopes,
-            redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"
+            redirect_uri="http://localhost:8501/google_auth_callback"
         )
 
         auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', include_granted_scopes='true')

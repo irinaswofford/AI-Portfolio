@@ -173,24 +173,25 @@ def load_credentials():
             redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app"
         )
 
-        auth_url, _ = flow.authorization_url(prompt='consent')
 
-        st.info(f"Please authenticate [by clicking here]({auth_url})")
-        code = st.text_input("Enter the authorization code:")
+  # Generate auth URL
+        auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', include_granted_scopes='true')
+
+        st.markdown(f"### 🔐 Please authenticate:\n[Click here to sign in with Google]({auth_url})")
+        code = st.text_input("Paste the authorization code here:")
 
         if code:
             flow.fetch_token(code=code)
             creds = flow.credentials
-
             with open(token_file, 'wb') as token:
                 pickle.dump(creds, token)
-
             return creds
+
+        return None
 
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")
         return None
-
 
 # Create Gmail Draft
 def create_gmail_draft(creds, recipient, subject, body):

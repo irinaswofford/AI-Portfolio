@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Define a token file name for persistence.
 # IMPORTANT: On Streamlit Cloud's ephemeral filesystem, this file might not persist
 # across deployments or prolonged inactivity. It's stored in /tmp/ which is writable.
-TOKEN_FILE = "/tmp/token.pickle" # FIX: Changed path to /tmp/
+TOKEN_FILE = st.secrets["GOOGLE_TOKEN_PATH"] # FIX: Changed path to /tmp/
 
 # Define the exact redirect URI your Streamlit app uses.
 # This MUST EXACTLY MATCH one of the "Authorized redirect URIs" in your

@@ -9,14 +9,39 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 from langgraph.graph import StateGraph, END
-from portfolio_data import portfolio_data 
+from portfolio_data import portfolio_data
 from dotenv import load_dotenv
 import os
 
+# --- Global Configurations ---
+# Configure logging for better debugging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Define a token file name for persistence.
+# IMPORTANT: On Streamlit Cloud's ephemeral filesystem, this file might not persist
+# across deployments or prolonged inactivity. It's stored in /tmp/ which is writable.
+TOKEN_FILE = "/tmp/token.pickle" # FIX: Changed path to /tmp/
+
+# Define the exact redirect URI your Streamlit app uses.
+# This MUST EXACTLY MATCH one of the "Authorized redirect URIs" in your
+# Google Cloud Console "Web application" OAuth 2.0 Client ID settings.
+# The trailing slash is often crucial for consistency.
+REDIRECT_URI = "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/"
+
+# Define the required OAuth scopes
+# Use 'gmail.compose' if you only create drafts, 'gmail.send' if you actually send emails.
+SCOPES = ["https://www.googleapis.com/auth/gmail.send"] # Or "https://www.googleapis.com/auth/gmail.compose"
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get the environment variables
+# Ensure GOOGLE_API_KEY is also loaded if used in Google Search
+CSE_ID = os.getenv('CSE_ID')
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY') # Assuming you have this for Google Search
+
 os.environ["STREAMLIT_WATCH_FILE_SYSTEM"] = "false"
-from google_auth_oauthlib.flow import Flow
-
-
+from google_auth_oauthlib.flow import Flow # Already imported, moving up for clarity
 
 # Import torch explicitly (transformers will import it implicitly)
 import torch
@@ -27,8 +52,8 @@ try:
     torch.classes.__path__ = []
 except AttributeError:
     # Handle cases where __path__ might not be modifiable or present
-    # (though it usually is the problem in these errors)
     pass
+
 # Hide Streamlit sidebar elements
 hide_elements = """
 <style>
@@ -68,31 +93,17 @@ selected_page = st.sidebar.radio(
     ],
     key="unique_radio_key",
 )
-st.session_state.page = selected_page          
-
-def load_page(page_name):
-    if os.path.exists(token_file):
-            with open(token_file, 'rb') as token:
-                creds = pickle.load(token)
-            return creds
-    with open(page_name, "r") as f:
-        code = compile(f.read(), page_name, 'exec')
-        exec(code, globals())
+st.session_state.page = selected_page
 
 # Initialize T5 Model and Tokenizer
-# tokenizer = T5Tokenizer.from_pretrained("t5-small")
-# model = T5ForConditionalGeneration.from_pretrained("t5-small")
-
-
-
-# Initialize T5 Model and Tokenizer
-# It's good practice to cache these heavy objects if they don't change
 @st.cache_resource
 def get_t5_model():
     tokenizer = T5Tokenizer.from_pretrained("t5-small")
     model = T5ForConditionalGeneration.from_pretrained("t5-small")
     return tokenizer, model
-# tokenizer, model = get_t5_model() # 
+# Only initialize if needed, potentially within a page where it's used
+# tokenizer, model = get_t5_model()
+
 state_schema = frozenset([
     ("start", "user_query"),
     ("user_query", "response"),
@@ -102,31 +113,24 @@ state_schema = frozenset([
 ])
 graph = StateGraph(state_schema=state_schema)
 
-# Load environment variables from .env file
-load_dotenv()
-
-# Get the environment variables
-CSE_ID = os.getenv('CSE_ID')
-
-
+# --- Authentication Function ---
 def authenticate_user():
     creds = None
     logging.info("Attempting to authenticate user.")
 
-    # 1. Try loading cached credentials from token
-    if os.path.exists(token):
+    # 1. Try loading cached credentials from token.pickle
+    if os.path.exists(TOKEN_FILE): # FIX: Use TOKEN_FILE variable
         try:
-            with open(token.pickle, 'rb') as token:
-                creds = pickle.load(token)
+            with open(TOKEN_FILE, 'rb') as token_file_obj: # FIX: Use TOKEN_FILE variable, rename file handle
+                creds = pickle.load(token_file_obj)
             logging.info("Cached token loaded successfully.")
         except Exception as e:
-            logging.error(f"Error loading token: {e}. Removing corrupted file.")
+            logging.error(f"Error loading token.pickle: {e}. Removing corrupted file.")
             st.warning("Could not load cached credentials. Will re-authenticate.")
-            # Optionally remove corrupted file to force fresh authentication
             try:
-                os.remove(token)
+                os.remove(TOKEN_FILE) # FIX: Use TOKEN_FILE variable
             except OSError:
-                logging.warning(f"Could not remove corrupted token file: {token}")
+                logging.warning(f"Could not remove corrupted token file: {TOKEN_FILE}")
             creds = None # Reset creds to force re-authentication
 
     # 2. Refresh or re-authenticate if credentials are not valid/expired
@@ -160,10 +164,9 @@ def authenticate_user():
                 flow = Flow.from_client_config(
                     client_config,
                     scopes=SCOPES,
-                    # Pass redirect_uri here for consistency with the flow
-                    redirect_uri=REDIRECT_URI
+                    redirect_uri=REDIRECT_URI # Pass redirect_uri here for consistency with the flow
                 )
-                
+
                 # Generate authorization URL
                 auth_url, _ = flow.authorization_url(
                     prompt='consent',
@@ -182,10 +185,10 @@ def authenticate_user():
                         logging.info("Authorization code received, fetching token.")
                         flow.fetch_token(code=auth_code)
                         creds = flow.credentials
-                        
+
                         # Save the newly acquired credentials (including refresh token)
-                        with open(token", 'wb') as token:
-                            pickle.dump(creds, token)
+                        with open(TOKEN_FILE, 'wb') as token_file_obj: # FIX: Use TOKEN_FILE variable, rename file handle
+                            pickle.dump(creds, token_file_obj)
                         st.success("Authentication successful! Credentials saved.")
                         logging.info("Credentials successfully acquired and saved.")
                         st.rerun() # Rerun the app to use the new credentials
@@ -201,7 +204,7 @@ def authenticate_user():
     # Return the valid credentials or None if authentication failed
     return creds
 
-
+# --- Helper Functions for Gmail ---
 def send_email(creds, to_email, subject, message_text):
     service = build('gmail', 'v1', credentials=creds)
     message = {
@@ -210,9 +213,6 @@ def send_email(creds, to_email, subject, message_text):
     service.users().messages().send(userId="me", body=message).execute()
 
 def create_message(sender, to, subject, message_text):
-    import base64
-    from email.mime.text import MIMEText
-
     message = MIMEText(message_text)
     message['to'] = to
     message['from'] = sender
@@ -220,27 +220,8 @@ def create_message(sender, to, subject, message_text):
     raw = base64.urlsafe_b64encode(message.as_bytes())
     return raw.decode()
 
-
-
-    # except Exception as e:
-    #     st.error(f"Error during OAuth flow: {e}")
-    #     return None
-
-    #     auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', flowName='GeneralOAuthFlow', include_granted_scopes='true')
-    #     st.info(f"Please authenticate [by clicking here]({auth_url})")
-
-    #     code = st.text_input("Enter the authorization code from the browser:")
-    #     if code:
-    #         flow.fetch_token(code=code)
-    #         creds = flow.credentials
-    #         with open(token_file, 'wb') as token:
-    #             pickle.dump(creds, token)
-    #         return creds
-
-
-
-# Google Custom Search Function
-def google_search(query):
+# --- Google Custom Search Function ---
+def Google Search(query):
     try:
         service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
         results = service.cse().list(q=query, cx=CSE_ID, num=3).execute()
@@ -259,22 +240,19 @@ def google_search(query):
         else:
             return f"Error performing search: {e}"
 
+# --- AI Answer Generation ---
 def generate_ai_answer(query):
-            try:
-                inputs = tokenizer(query, return_tensors="pt", padding=True, truncation=True)
-                outputs = model.generate(**inputs, max_length=150, num_return_sequences=1)
-                ai_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
-                return ai_answer
-            except Exception as e:
-                return f"Error generating AI answer: {e}"
+    # Ensure tokenizer and model are loaded only when needed
+    tokenizer, model = get_t5_model()
+    try:
+        inputs = tokenizer(query, return_tensors="pt", padding=True, truncation=True)
+        outputs = model.generate(**inputs, max_length=150, num_return_sequences=1)
+        ai_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        return ai_answer
+    except Exception as e:
+        return f"Error generating AI answer: {e}"
 
-        # Load Gmail API Credentials
-from google_auth_oauthlib.flow import Flow
-
-
-
-
-# Create Gmail Draft
+# --- Create Gmail Draft ---
 def create_gmail_draft(creds, recipient, subject, body):
     try:
         service = build("gmail", "v1", credentials=creds)
@@ -289,10 +267,7 @@ def create_gmail_draft(creds, recipient, subject, body):
     except Exception as e:
         return f"Error creating draft: {e}"
 
-
-# Handle User Query
-
-
+# --- Handle User Query ---
 def handle_user_query(user_query, user_email, email_sent=False):
     assistant = PortfolioAssistant(portfolio_data)
     response = assistant.get_response(user_query)
@@ -306,7 +281,7 @@ def handle_user_query(user_query, user_email, email_sent=False):
         }
     else:
         ai_answer = generate_ai_answer(user_query)
-        search_result = google_search(user_query)
+        search_result = Google Search(user_query)
         combined_response = f"AI Answer:\n{ai_answer}\n\nRelevant Search Results:\n{search_result}"
 
         if user_email and not email_sent:
@@ -348,7 +323,7 @@ def handle_user_query(user_query, user_email, email_sent=False):
                 "email_sent": email_sent
             }
 
-# Portfolio Assistant Class
+# --- Portfolio Assistant Class ---
 class PortfolioAssistant:
     def __init__(self, portfolio_data):
         self.portfolio_data = portfolio_data
@@ -359,13 +334,20 @@ class PortfolioAssistant:
                 return question_data["response"]
         return None
 
-# Main app pages
+# --- Page Loading Function (Simplified) ---
+# Removed authentication logic from here as it's handled by authenticate_user()
+def load_page(page_name):
+    with open(page_name, "r") as f:
+        code = compile(f.read(), page_name, 'exec')
+        exec(code, globals())
+
+# --- Main app pages ---
 if st.session_state.page == "Home":
     def create_streamlit_interface():
         st.title("Hi, I am Irina Swofford, and this is Alessandra, my portfolio assistant")
 
         st.write("""
-        I specialize in both AI engineering and project management, with a strong ability to communicate complex AI/ML concepts in an understandable way for both technical and non-technical stakeholders. 
+        I specialize in both AI engineering and project management, with a strong ability to communicate complex AI/ML concepts in an understandable way for both technical and non-technical stakeholders.
         My goal is to turn challenges into actionable insights by focusing on problem-solving, improving operational efficiency, and staying ahead of emerging AI trends.
         By combining my technical expertise with strategic project management, I ensure that both AI and business objectives are successfully achieved.
         """)
@@ -377,14 +359,14 @@ if st.session_state.page == "Home":
         st.markdown("""
         ### How my portfolio AI assistant works:
 
-        - **In-Scope Questions:**  
-          Example: If you ask me questions related to my portfolio, like **"How do you stay organized as a project manager?"**,  
+        - **In-Scope Questions:**
+          Example: If you ask me questions related to my portfolio, like **"How do you stay organized as a project manager?"**,
           the AI directly responds with an answer displayed in the UI.
 
-        - **Out-of-Scope Questions:**  
-          Example: **"How do you build a rocket?"**  
-          - Prompts the user for an email.  
-          - Captures the email and generates a Gmail draft with the AI's response and Google search results.  
+        - **Out-of-Scope Questions:**
+          Example: **"How do you build a rocket?"**
+          - Prompts the user for an email.
+          - Captures the email and generates a Gmail draft with the AI's response and Google search results.
           - I review the draft and send you an email. (Human-in-the-Loop)
         """)
 
@@ -422,7 +404,6 @@ if st.session_state.page == "Home":
                     )
                     st.write(st.session_state.response_data["output"])
                     st.session_state.email_sent = st.session_state.response_data["email_sent"]
-
 
     create_streamlit_interface()
 

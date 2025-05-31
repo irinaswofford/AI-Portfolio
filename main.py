@@ -12,7 +12,8 @@ from langgraph.graph import StateGraph, END
 from portfolio_data import portfolio_data
 from dotenv import load_dotenv
 import os
-
+graph = StateGraph(state_schema=state_schema)
+from urllib.parse import urlparse, parse_qs
 # --- Global Configurations ---
 # Configure logging for better debugging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -111,7 +112,15 @@ state_schema = frozenset([
     ("start", "file_upload"),
     ("file_upload", END)
 ])
-graph = StateGraph(state_schema=state_schema)
+
+
+def handle_oauth2_redirect():
+    query_params = st.experimental_get_query_params()
+    if "code" in query_params:
+        auth_code = query_params["code"][0]
+        logging.info("Authorization code received via URL parameter.")
+        return auth_code
+    return None
 
 # --- Authentication Function ---
 def authenticate_user():
@@ -178,7 +187,8 @@ def authenticate_user():
                 st.markdown("---") # Visual separator
 
                 # Text input for user to paste the authorization code
-                auth_code = st.text_input("After signing in in your browser, paste the authorization code here:")
+                #auth_code = st.text_input("After signing in in your browser, paste the authorization code here:")
+                auth_code = handle_oauth2_redirect()
 
                 if auth_code:
                     try:

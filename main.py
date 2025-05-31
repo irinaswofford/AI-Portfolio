@@ -275,7 +275,7 @@ if st.session_state.page == "Home":
         My portfolio assistant, powered by AI, helps navigate through the various sections of this portfolio.
         """)
         
-         st.markdown("""
+        st.markdown("""
         ### How my portfolio AI assistent works:
 
         - **In-Scope Questions:**  

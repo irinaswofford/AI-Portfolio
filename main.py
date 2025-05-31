@@ -141,7 +141,7 @@ from google_auth_oauthlib.flow import Flow
 
 
 
-def authenticate_google():
+def load_credentials()
     try:
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
         redirect_uri = "https://your-app.streamlit.app"

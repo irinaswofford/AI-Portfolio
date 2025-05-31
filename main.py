@@ -26,7 +26,7 @@ TOKEN_FILE = st.secrets["GOOGLE_TOKEN_PATH"] # FIX: Changed path to /tmp/
 # This MUST EXACTLY MATCH one of the "Authorized redirect URIs" in your
 # Google Cloud Console "Web application" OAuth 2.0 Client ID settings.
 # The trailing slash is often crucial for consistency.
-REDIRECT_URI = "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/oauth2callback/"
+REDIRECT_URI = "http://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/oauth2callback/"
 
 # Define the required OAuth scopes
 # Use 'gmail.compose' if you only create drafts, 'gmail.send' if you actually send emails.

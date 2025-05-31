@@ -107,39 +107,6 @@ load_dotenv()
 CSE_ID = os.getenv('CSE_ID')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
-# Google Custom Search Function
-def google_search(query):
-    try:
-        service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
-        results = service.cse().list(q=query, cx=CSE_ID, num=3).execute()
-        snippets = []
-        if "items" in results:
-            for item in results["items"]:
-                snippets.append(
-                    f"{item.get('title', 'No title')} - {item.get('snippet', 'No snippet available.')}\nURL: {item.get('link', 'No URL')}"
-                )
-            return "\n\n".join(snippets)
-        else:
-            return "No results found for your query."
-    except Exception as e:
-        if 'rateLimitExceeded' in str(e):
-            return "Search service is temporarily unavailable due to quota limits. Please try again later."
-        else:
-            return f"Error performing search: {e}"
-
-def generate_ai_answer(query):
-            try:
-                inputs = tokenizer(query, return_tensors="pt", padding=True, truncation=True)
-                outputs = model.generate(**inputs, max_length=150, num_return_sequences=1)
-                ai_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
-                return ai_answer
-            except Exception as e:
-                return f"Error generating AI answer: {e}"
-
-        # Load Gmail API Credentials
-from google_auth_oauthlib.flow import Flow
-
-
 
 def load_credentials():
     try:
@@ -173,6 +140,42 @@ def load_credentials():
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")
         return None
+
+
+
+# Google Custom Search Function
+def google_search(query):
+    try:
+        service = build("customsearch", "v1", developerKey=GOOGLE_API_KEY)
+        results = service.cse().list(q=query, cx=CSE_ID, num=3).execute()
+        snippets = []
+        if "items" in results:
+            for item in results["items"]:
+                snippets.append(
+                    f"{item.get('title', 'No title')} - {item.get('snippet', 'No snippet available.')}\nURL: {item.get('link', 'No URL')}"
+                )
+            return "\n\n".join(snippets)
+        else:
+            return "No results found for your query."
+    except Exception as e:
+        if 'rateLimitExceeded' in str(e):
+            return "Search service is temporarily unavailable due to quota limits. Please try again later."
+        else:
+            return f"Error performing search: {e}"
+
+def generate_ai_answer(query):
+            try:
+                inputs = tokenizer(query, return_tensors="pt", padding=True, truncation=True)
+                outputs = model.generate(**inputs, max_length=150, num_return_sequences=1)
+                ai_answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
+                return ai_answer
+            except Exception as e:
+                return f"Error generating AI answer: {e}"
+
+        # Load Gmail API Credentials
+from google_auth_oauthlib.flow import Flow
+
+
 
 
 # Create Gmail Draft

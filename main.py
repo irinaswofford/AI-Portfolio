@@ -161,20 +161,15 @@ def authenticate_google():
             scopes=scopes,
             redirect_uri=redirect_uri
         )
-    
         auth_url, _ = flow.authorization_url(prompt='consent')
-    
-        st.info(f"Please [click here to authenticate with Google]({auth_url})")
-        code = st.text_input("Paste the authorization code:")
-    
+        st.info(f"Please authenticate [by clicking here]({auth_url})")
+        code = st.text_input("Enter the authorization code:")
+
         if code:
             flow.fetch_token(code=code)
             creds = flow.credentials
-            with open("token.pickle", "wb") as token:
-                pickle.dump(creds, token)
-            st.success("✅ Authenticated with Google!")
-    
             return creds
+
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")
         return None

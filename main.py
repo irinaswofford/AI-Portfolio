@@ -13,6 +13,7 @@ from portfolio_data import portfolio_data
 from dotenv import load_dotenv
 import os
 from google_auth_oauthlib.flow import InstalledAppFlow
+os.environ["STREAMLIT_WATCH_FILE_SYSTEM"] = "false"
 
 # Import torch explicitly (transformers will import it implicitly)
 import torch
@@ -188,7 +189,7 @@ def create_gmail_draft(creds, recipient, subject, body):
         message.attach(MIMEText(body, "plain"))
 
         encoded_message = {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode("utf-8")}
-        draft = service.users().drafts().send(userId="me", body={"message": encoded_message}).execute()
+        draft = service.users().drafts().create(userId="me", body={"message": encoded_message}).execute()
         return "Draft created successfully! Please check your Gmail drafts."
     except Exception as e:
         return f"Error creating draft: {e}"

@@ -128,7 +128,7 @@ def handle_oauth2_redirect():
 
 
 
-Then add login code:
+
 
 login_info = oauth.login(
         client_id=client_id,

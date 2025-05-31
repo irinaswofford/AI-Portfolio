@@ -12,9 +12,10 @@ from langgraph.graph import StateGraph, END
 from portfolio_data import portfolio_data 
 from dotenv import load_dotenv
 import os
-from google_auth_oauthlib.flow import Flow
+
 os.environ["STREAMLIT_WATCH_FILE_SYSTEM"] = "false"
-from google_auth_oauthlib.flow import Flow
+from google_auth_oauthlib.flow import InstalledAppFlow
+
 
 
 # Import torch explicitly (transformers will import it implicitly)
@@ -112,7 +113,7 @@ def load_credentials():
     try:
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
 
-        flow = Flow.from_client_config(
+        flow = InstalledAppFlow.from_client_config(
             {
                 "web": {
                     "client_id": st.secrets["client_id"],

@@ -109,36 +109,99 @@ load_dotenv()
 CSE_ID = os.getenv('CSE_ID')
 
 
+ --- Authentication Function ---
 def authenticate_user():
-    scopes = ["https://www.googleapis.com/auth/gmail.send"]
+    creds = None
+    logging.info("Attempting to authenticate user.")
 
-    flow = Flow.from_client_config(
-        {
-            "web": {
-                "client_id": st.secrets["client_id"],
-                "project_id": st.secrets["project_id"],
-                "auth_uri": st.secrets["auth_uri"],
-                "token_uri": st.secrets["token_uri"],
-                "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-                "client_secret": st.secrets["client_secret"],
-                "redirect_uris": ["https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/", f"https://{st.secrets.get('external_url', '')}/"]
-            }
-        },
-        scopes=scopes,
-        redirect_uris = ["https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/", f"https://{st.secrets.get('external_url', '')}/"]
-    )
+    # 1. Try loading cached credentials from token.pickle
+    if os.path.exists(TOKEN_FILE):
+        try:
+            with open(TOKEN_FILE, 'rb') as token:
+                creds = pickle.load(token)
+            logging.info("Cached token loaded successfully.")
+        except Exception as e:
+            logging.error(f"Error loading token.pickle: {e}. Removing corrupted file.")
+            st.warning("Could not load cached credentials. Will re-authenticate.")
+            # Optionally remove corrupted file to force fresh authentication
+            try:
+                os.remove(TOKEN_FILE)
+            except OSError:
+                logging.warning(f"Could not remove corrupted token file: {TOKEN_FILE}")
+            creds = None # Reset creds to force re-authentication
 
-    auth_url, _ = flow.authorization_url(prompt='consent')
-    st.markdown(f"[Click here to authenticate]({auth_url})")
+    # 2. Refresh or re-authenticate if credentials are not valid/expired
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            logging.info("Cached credentials expired, attempting to refresh.")
+            try:
+                creds.refresh(Request())
+                logging.info("Credentials refreshed successfully.")
+            except Exception as e:
+                logging.error(f"Error refreshing credentials: {e}. Forcing full re-authentication.")
+                st.warning("Your saved credentials could not be refreshed. Please re-authenticate.")
+                creds = None # Force re-authentication if refresh fails
 
-    code = st.text_input("Paste the authorization code here:")
+        if not creds: # No valid or refreshed credentials, start a new authentication flow
+            logging.info("Starting new authentication flow.")
+            try:
+                # Build client configuration from Streamlit secrets
+                client_config = {
+                    "web": {
+                        "client_id": st.secrets["client_id"],
+                        "project_id": st.secrets["project_id"],
+                        "auth_uri": st.secrets["auth_uri"],
+                        "token_uri": st.secrets["token_uri"],
+                        "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+                        "client_secret": st.secrets["client_secret"],
+                        "redirect_uris": [REDIRECT_URI] # This list MUST EXACTLY MATCH Google Cloud Console
+                    }
+                }
 
-    if code:
-        flow.fetch_token(code=code)
-        credentials = flow.credentials
-        return credentials
+                flow = Flow.from_client_config(
+                    client_config,
+                    scopes=SCOPES,
+                    # Pass redirect_uri here for consistency with the flow
+                    redirect_uri=REDIRECT_URI
+                )
+                
+                # Generate authorization URL
+                auth_url, _ = flow.authorization_url(
+                    prompt='consent',
+                    access_type='offline', # Important: Request a refresh token for long-lived access
+                    include_granted_scopes='true' # Ensure all granted scopes are included
+                )
 
-    return None
+                st.info(f"### 🔐 Google Authentication Required:\n\nPlease click [here to sign in with Google]({auth_url})")
+                st.markdown("---") # Visual separator
+
+                # Text input for user to paste the authorization code
+                auth_code = st.text_input("After signing in in your browser, paste the authorization code here:")
+
+                if auth_code:
+                    try:
+                        logging.info("Authorization code received, fetching token.")
+                        flow.fetch_token(code=auth_code)
+                        creds = flow.credentials
+                        
+                        # Save the newly acquired credentials (including refresh token)
+                        with open(TOKEN_FILE, 'wb') as token:
+                            pickle.dump(creds, token)
+                        st.success("Authentication successful! Credentials saved.")
+                        logging.info("Credentials successfully acquired and saved.")
+                        st.rerun() # Rerun the app to use the new credentials
+                    except Exception as e:
+                        st.error(f"❌ Error fetching token: {e}. Please ensure the code is correct and try again.")
+                        logging.error(f"Token fetching error: {e}", exc_info=True)
+                        creds = None # Indicate authentication failed
+            except Exception as e:
+                st.error(f"❌ Failed to set up authentication flow: {e}. Please check your Streamlit secrets and Google Cloud Console settings carefully.")
+                logging.error(f"Authentication flow setup error: {e}", exc_info=True)
+                return None # Indicate failure
+
+    # Return the valid credentials or None if authentication failed
+    return creds
+
 
 def send_email(creds, to_email, subject, message_text):
     service = build('gmail', 'v1', credentials=creds)

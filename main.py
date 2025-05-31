@@ -108,21 +108,10 @@ load_dotenv()
 CSE_ID = os.getenv('CSE_ID')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
-
 def load_credentials():
     try:
         scopes = ['https://www.googleapis.com/auth/gmail.compose']
 
-         "redirect_uris": [
-              "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
-              "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/",
-              "http://localhost:8501"
-            ],
-        "javascript_origins": [
-              "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
-              "http://localhost:8501"
-            ]
-    
         flow = Flow.from_client_config(
             {
                 "web": {
@@ -132,22 +121,37 @@ def load_credentials():
                     "token_uri": st.secrets["token_uri"],
                     "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
                     "client_secret": st.secrets["client_secret"],
+                    "redirect_uris": [
+                        "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/oauth2callback",
+                        "http://localhost:8501/oauth2callback"
+                    ],
+                    "javascript_origins": [
+                        "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app",
+                        "http://localhost:8501"
+                    ]
                 }
             },
             scopes=scopes,
-            redirect_uri=redirect_uri
-            javascript_origins = javascript_origins
+            redirect_uri="https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/oauth2callback"
         )
-        auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', flowName='GeneralOAuthFlow', include_granted_scopes='true')
-        st.info(f"Please authenticate [by clicking here]({auth_url})")
 
-        code = st.text_input("Enter the authorization code from the browser:")
-        if code:
-            flow.fetch_token(code=code)
-            creds = flow.credentials
-            with open(token_file, 'wb') as token:
-                pickle.dump(creds, token)
-            return creds
+        credentials = flow.run_local_server(port=8501)
+        return credentials
+
+    # except Exception as e:
+    #     st.error(f"Error during OAuth flow: {e}")
+    #     return None
+
+    #     auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', flowName='GeneralOAuthFlow', include_granted_scopes='true')
+    #     st.info(f"Please authenticate [by clicking here]({auth_url})")
+
+    #     code = st.text_input("Enter the authorization code from the browser:")
+    #     if code:
+    #         flow.fetch_token(code=code)
+    #         creds = flow.credentials
+    #         with open(token_file, 'wb') as token:
+    #             pickle.dump(creds, token)
+    #         return creds
 
     except Exception as e:
         st.error(f"❌ Failed to load Gmail API credentials: {e}")

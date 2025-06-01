@@ -189,6 +189,7 @@ def get_user_credentials():
                 prompt='consent',
                 access_type='offline', # Request refresh token
                 include_granted_scopes='true'
+                grant_type=authorization_code
             )
 
             # st.info(f"### 🔐 Google Authentication Required:\n\nPlease click [here to sign in with Google]({auth_url})")
@@ -213,19 +214,7 @@ def get_user_credentials():
                     st.success("✅ Authentication successful! Credentials saved.")
                     logging.info("Authentication successful. Rerunning app.")
 
-                    # --- CRITICAL ADDITION: Clear the 'code' from query parameters ---
-                    # This prevents the app from trying to reuse the same code on rerun
-                    # and helps with the "Malformed auth code" error.
-                    current_query_params = st.query_params.to_dict()
-                    if "code" in current_query_params:
-                        del current_query_params["code"]
-                        # To apply changes, you need to set st.query_params
-                        # Streamlit 1.31+ allows direct assignment to st.query_params
-                        st.query_params.clear() # Clear all existing
-                        for k, v in current_query_params.items():
-                            # Handle cases where query param value might be a list (e.g., from .get())
-                            st.query_params[k] = v[0] if isinstance(v, list) else v
-                    # --- END CRITICAL ADDITION ---
+                   
 
                 except Exception as e:
                     st.error(f"❌ Failed to fetch token: {e}")

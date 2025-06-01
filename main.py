@@ -102,8 +102,6 @@ client_config = {
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/userinfo.email", "openid"]
 
-
-
 # --- Get code from query params
 def get_auth_code_from_url():
     try:
@@ -116,12 +114,13 @@ def get_auth_code_from_url():
         return None
 
 # --- Load credentials if they exist
+# --- Load credentials if they exist
 creds = None
 if os.path.exists(TOKEN_FILE):
-    with open(TOKEN_FILE, "wb") as f:
-
+    st.write("📂 Checking for existing token at:", TOKEN_FILE)
+    with open(TOKEN_FILE, "rb") as f:  # ✅ FIXED: Open in read-binary
         creds = pickle.load(f)
-        st.write("📂 Checking for existing token at:", creds)
+    st.write("🔄 Token file loaded:", creds.to_json())
 
     if creds and creds.expired and creds.refresh_token:
         try:
@@ -134,7 +133,6 @@ if os.path.exists(TOKEN_FILE):
             creds = None
 
     if creds and creds.valid:
-        # st.success("✅ You are signed in with Google!")
         st.toast("🎉 Logged in successfully with Google!", icon="✅")
         st.json({
             "token": creds.token,
@@ -142,6 +140,7 @@ if os.path.exists(TOKEN_FILE):
             "valid": creds.valid,
             "expired": creds.expired
         })
+        st.stop()
 
 
 # --- Handle manual code from query or text input

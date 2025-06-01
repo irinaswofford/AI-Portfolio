@@ -225,7 +225,7 @@ def authenticate_user():
                 flow = Flow.from_client_config(
                     client_config,
                     scopes=SCOPES,
-                    redirect_uri: st.secrets["redirect_uri"]
+                    redirect_uri=st.secrets["redirect_uri"]
                 )
 
                 auth_url, _ = flow.authorization_url(

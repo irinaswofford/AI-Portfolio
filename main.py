@@ -23,6 +23,9 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 TOKEN_FILE = st.secrets["GOOGLE_TOKEN_PATH"]
+if os.path.exists(GOOGLE_TOKEN_PATH):
+    with open(GOOGLE_TOKEN_PATH, "wb") as f:
+
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 load_dotenv()

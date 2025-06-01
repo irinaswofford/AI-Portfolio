@@ -91,13 +91,6 @@ state_schema = frozenset([
 graph = StateGraph(state_schema=state_schema)
 
 
-def st_redirect(url: str) -> None:
-    nav_script = f"""
-        <meta http-equiv="refresh" content="0; url='{url}'">
-    """
-    st.markdown(nav_script, unsafe_allow_html=True)
-    return None
-
 def login_callback():
     credentials = get_user_credentials(
         client_id=st.secrets.client_id,

@@ -179,17 +179,7 @@ def create_gmail_draft(creds, recipient, subject, body):
         st.error(f"❌ Failed to create draft: {e}")
 
 
-# === MAIN APP ===
-st.title("📨 Gmail Draft Creator")
 
-creds = get_credentials()
-if creds and creds.valid:
-    recipient = st.text_input("To")
-    subject = st.text_input("Subject")
-    body = st.text_area("Email Body")
-
-    if st.button("Create Draft"):
-        create_gmail_draft(creds, recipient, subject, body)
 
 def authenticate_user():
     creds = None

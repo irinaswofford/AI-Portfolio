@@ -216,7 +216,7 @@ def get_user_credentials():
                         pickle.dump(creds, f)
                     st.success("✅ Authentication successful! Credentials saved.")
                     logging.info("Authentication successful. Rerunning app.")
-                    st.experimental_rerun() # Force a rerun to use new credentials
+                    st.rerun() # Force a rerun to use new credentials
 
                 except Exception as e:
                     st.error(f"❌ Failed to fetch token: {e}")
@@ -228,7 +228,7 @@ def get_user_credentials():
                 logging.info("No auth code found in URL. Waiting for user interaction or re-authentication.")
                 # If no auth code is found, force a rerun to re-evaluate the URL after redirect
                 # This helps if Streamlit doesn't immediately pick up the query params.
-                st.experimental_rerun()
+                st.rerun()
 
 
         except Exception as e:

@@ -126,18 +126,18 @@ def handle_oauth2_redirect():
 
 from StreamlitGauth.google_auth import Google_auth
 
-# Initialize the authentication object
-auth = Google_auth(
-    clientId=st.secrets.client_id, 
-    clientSecret=st.secrets.client_secret,
-    redirect_uri=st.secrets.redirect_uri
+# Authenticate using secrets stored in .streamlit/secrets.toml
+login = Google_auth(
+    clientId=st.secrets["client_id"], 
+    clientSecret=st.secrets["client_secret"], 
+    redirect_uri=redirect_uri  # or st.secrets["redirect_uri"]
 )
 
+# Display login result
 if login == "authenticated":
-   st.success("hello")
-   pass
+    st.success("Welcome! You are logged in.")
 else:
-    st.warning("login failed")
+    st.warning("Login failed. Please try again.")
 
 
 def authenticate_user():

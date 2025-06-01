@@ -110,7 +110,7 @@ client_config = {
         "client_secret": st.secrets["client_secret"],
         "auth_uri": st.secrets["auth_uri"],
         "token_uri": st.secrets["token_uri"],
-        "redirect_uris": st.secrets["redirect_uris"]
+        "redirect_uris": st.secrets["redirect_uri"]
     }
 }
 

@@ -114,6 +114,9 @@ def get_auth_code_from_url():
         return None
 
 
+
+
+
 # --- Load credentials if they exist
 creds = None
 if os.path.exists(TOKEN_FILE):
@@ -159,8 +162,8 @@ if code:
         st.rerun()
     except Exception as e:
         st.error(f"❌ Failed to fetch token from code: {e}")
-
-       
+        st.exception(e)
+        st.stop()
 
 def authenticate_user():
     creds = None

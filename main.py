@@ -115,6 +115,7 @@ client_config = {
 # Define the OAuth 2.0 scopes (permissions) your application requests
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose", "https://www.googleapis.com/auth/userinfo.email", "openid"]
 
+
 def get_auth_code_from_url():
     """
     Extracts the 'code' query parameter from the current URL.
@@ -122,9 +123,22 @@ def get_auth_code_from_url():
     """
     try:
         query_params = st.query_params
-        code = query_params.get("code", [None])[0]
-        st.write(f"📦 Query code: {code}") # Debugging: Show the extracted code
-        st.write(f"DEBUG: Full st.query_params: {query_params}") # Added to see all params
+        st.write(f"DEBUG: Raw st.query_params content: {query_params}") # Keep this for full context
+
+        # Get the value associated with the 'code' parameter
+        code_value = query_params.get("code")
+
+        st.write(f"DEBUG: Type of query_params.get('code'): {type(code_value)}")
+        st.write(f"DEBUG: Value of query_params.get('code'): {code_value}")
+
+        # Check if code_value is a list (standard behavior for multiple params or newer Streamlit)
+        if isinstance(code_value, list):
+            code = code_value[0] if code_value else None # Get the first element if the list is not empty
+        else:
+            # If it's not a list, it must be the raw string (e.g., '4/0AUJR...') or None
+            code = code_value
+
+        st.write(f"📦 Query code after processing: {code}") # Changed debug message for clarity
         return code
     except Exception as e:
         st.error(f"❌ Error extracting code from query params: {e}")

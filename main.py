@@ -140,7 +140,7 @@ REDIRECT_URI = client_config["web"]["redirect_uris"][0]
 #                 return None
 #     return creds
 
-def load_credentials():
+def get_credentials():
     """Handles OAuth2 authentication and returns credentials."""
     creds = None
     token_file = 'token.pickle'

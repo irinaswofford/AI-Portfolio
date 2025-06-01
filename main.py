@@ -23,8 +23,7 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 TOKEN_FILE = st.secrets["GOOGLE_TOKEN_PATH"]
-if os.path.exists(GOOGLE_TOKEN_PATH):
-    with open(GOOGLE_TOKEN_PATH, "wb") as f
+
 
 
 
@@ -124,9 +123,9 @@ def get_auth_code_from_url():
 # --- Load credentials if they exist
 creds = None
 if os.path.exists(TOKEN_FILE):
-    with open(TOKEN_FILE, "rb") as f:
+    with open(GOOGLE_TOKEN_PATH, "wb") as f
         creds = pickle.load(f)
-    st.write("🔄 Token file loaded")
+    st.write("🔄 Token file loaded", creds)
 
     if creds and creds.expired and creds.refresh_token:
         try:

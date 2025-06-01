@@ -139,7 +139,24 @@ def get_credentials():
                 st.error(f"Error during authentication: {e}")
                 return None
     return creds
-
+def st_redirect(url):
+    source = f"location.href = '{url}'"
+    wrapped_source = f"(async () => {{{source}}})()"
+    st.markdown(
+        f"""
+        <div style="display:none" id="stredirect">
+            <iframe src="javascript: \
+                var script = document.createElement('script'); \
+                script.type = 'text/javascript'; \
+                script.text = {html.escape(repr(wrapped_source))}; \
+                var thisDiv = window.parent.document.getElementById('stredirect'); \
+                var rootDiv = window.parent.parent.parent.parent.document.getElementById('root'); \
+                rootDiv.appendChild(script); \
+                thisDiv.parentElement.parentElement.parentElement.style.display = 'none'; \
+            "/>
+        </div>
+        """, unsafe_allow_html=True
+    )
 
 def create_gmail_draft(creds, recipient, subject, body):
     try:

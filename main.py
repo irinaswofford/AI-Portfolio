@@ -24,9 +24,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 TOKEN_FILE = st.secrets["GOOGLE_TOKEN_PATH"]
 if os.path.exists(GOOGLE_TOKEN_PATH):
-    with open(GOOGLE_TOKEN_PATH, "wb") as f:
+    with open(GOOGLE_TOKEN_PATH, "wb") as f
 
-SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
+
 
 load_dotenv()
 CSE_ID = os.getenv('CSE_ID')

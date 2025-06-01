@@ -210,8 +210,7 @@ if not creds:
 
     if st.button("🔐 Sign in with Google"):
         st_redirect(auth_url)
-    if st.button("🔐 Sign in with Google"):
-        st_redirect(auth_url)
+ 
 
     st.write("— OR —")
     st.write("If you’ve already granted consent, paste the `code=` value from the URL below:")

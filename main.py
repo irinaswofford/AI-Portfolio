@@ -146,23 +146,23 @@ if os.path.exists(TOKEN_FILE):
 
 
 # --- Handle manual code from query or text input
-code = get_auth_code_from_url()
-if code:
-    try:
-        flow = Flow.from_client_config(
-            client_config,
-            scopes=SCOPES,
-        )
-        flow.fetch_token(code=code)
-        creds = flow.credentials
-        with open(TOKEN_FILE, "wb") as f:
-            pickle.dump(creds, f)
-        st.success("🎉 Google Sign-In successful!")
-        st.rerun()
-    except Exception as e:
-        st.error(f"❌ Failed to fetch token from code: {e}")
-        st.exception(e)
-        st.stop()
+# code = get_auth_code_from_url()
+# if code:
+#     try:
+#         flow = Flow.from_client_config(
+#             client_config,
+#             scopes=SCOPES,
+#         )
+#         flow.fetch_token(code=code)
+#         creds = flow.credentials
+#         with open(TOKEN_FILE, "wb") as f:
+#             pickle.dump(creds, f)
+#         st.success("🎉 Google Sign-In successful!")
+#         st.rerun()
+#     except Exception as e:
+#         st.error(f"❌ Failed to fetch token from code: {e}")
+#         st.exception(e)
+#         st.stop()
 
 def authenticate_user():
     creds = None
@@ -206,11 +206,6 @@ def authenticate_user():
                 
                 if auth_code:
                     try:
-                        
-                        # --- DEBUGGING STATEMENTS ADDED HERE ---
-                        st.write(f"DEBUG: client_config used: {client_config}")
-                        st.write(f"DEBUG: Code received: {code}")
-                        st.write(f"DEBUG: Redirect URI being used by Flow: {client_config['web']['redirect_uri']}")
                         # --- END DEBUGGING STATEMENTS ---
 
                         flow.fetch_token(code=auth_code)

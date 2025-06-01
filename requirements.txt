@@ -37,8 +37,8 @@ google-api-core
 google-cloud-texttospeech
 StreamlitGAuth
 
-streamlit==1.37.1
-google-auth-oauthlib==1.2.1
+streamlit
+
 
 
 google-api-python-client

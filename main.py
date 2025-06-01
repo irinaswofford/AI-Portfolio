@@ -123,7 +123,7 @@ def get_auth_code_from_url():
 # --- Load credentials if they exist
 creds = None
 if os.path.exists(TOKEN_FILE):
-    with open(GOOGLE_TOKEN_PATH, "wb") as f
+    with open(GOOGLE_TOKEN_PATH, "wb") as f:
         creds = pickle.load(f)
     st.write("🔄 Token file loaded", creds)
 

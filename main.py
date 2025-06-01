@@ -160,7 +160,7 @@ def st_redirect(url):
         """, unsafe_allow_html=True
     )
 # ✅ Trigger the redirect from a button
-# if st.button("Login with Google"):
+if st.button("Login with Google"):
     auth_url = (
         f"https://accounts.google.com/o/oauth2/v2/auth"
         f"?client_id={st.secrets['client_id']}"

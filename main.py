@@ -90,8 +90,8 @@ state_schema = frozenset([
 
 graph = StateGraph(state_schema=state_schema)
 
-def handle_oauth2_redirect():
-    def st_redirect(url: str) -> None:
+
+def st_redirect(url: str) -> None:
     nav_script = f"""
         <meta http-equiv="refresh" content="0; url='{url}'">
     """

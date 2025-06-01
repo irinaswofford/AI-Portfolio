@@ -89,14 +89,7 @@ state_schema = frozenset([
 ])
 
 graph = StateGraph(state_schema=state_schema)
-import streamlit as st
 
-def st_redirect_js(url: str):
-   st.markdown("""
-    <a href="https://mail.google.com/" target="_blank">
-        <button style="font-size:16px;padding:10px 20px;border:none;background-color:#4CAF50;color:white;border-radius:5px;">Login to Gmail</button>
-    </a>
-""", unsafe_allow_html=True)
 
 # Button to trigger redirect
 if st.button("Login to Gmail"):

@@ -230,37 +230,37 @@ if not creds:
     
 
 
-import html
-def st_redirect(url):
-    source = f"location.href = '{url}'"
-    wrapped_source = f"(async () => {{{source}}})()"
-    st.markdown(
-        f"""
-        <div style="display:none" id="stredirect">
-            <iframe src="javascript: \
-                var script = document.createElement('script'); \
-                script.type = 'text/javascript'; \
-                script.text = {html.escape(repr(wrapped_source))}; \
-                var thisDiv = window.parent.document.getElementById('stredirect'); \
-                var rootDiv = window.parent.parent.parent.parent.document.getElementById('root'); \
-                rootDiv.appendChild(script); \
-                thisDiv.parentElement.parentElement.parentElement.style.display = 'none'; \
-            "/>
-        </div>
-        """, unsafe_allow_html=True
-    )
-# ✅ Trigger the redirect from a button
-if st.button("Login with Google"):
-    auth_url = (
-        f"https://accounts.google.com/o/oauth2/v2/auth"
-        f"?client_id={st.secrets['client_id']}"
-        f"&redirect_uri={st.secrets['redirect_uri']}"
-        f"&response_type=code"
-        f"&scope=https://www.googleapis.com/auth/gmail.compose"
-        f"&access_type=offline"
-        f"&prompt=consent"
-    )
-    st_redirect(auth_url)
+# import html
+# def st_redirect(url):
+#     source = f"location.href = '{url}'"
+#     wrapped_source = f"(async () => {{{source}}})()"
+#     st.markdown(
+#         f"""
+#         <div style="display:none" id="stredirect">
+#             <iframe src="javascript: \
+#                 var script = document.createElement('script'); \
+#                 script.type = 'text/javascript'; \
+#                 script.text = {html.escape(repr(wrapped_source))}; \
+#                 var thisDiv = window.parent.document.getElementById('stredirect'); \
+#                 var rootDiv = window.parent.parent.parent.parent.document.getElementById('root'); \
+#                 rootDiv.appendChild(script); \
+#                 thisDiv.parentElement.parentElement.parentElement.style.display = 'none'; \
+#             "/>
+#         </div>
+#         """, unsafe_allow_html=True
+#     )
+# # ✅ Trigger the redirect from a button
+# if st.button("Login with Google"):
+#     auth_url = (
+#         f"https://accounts.google.com/o/oauth2/v2/auth"
+#         f"?client_id={st.secrets['client_id']}"
+#         f"&redirect_uri={st.secrets['redirect_uri']}"
+#         f"&response_type=code"
+#         f"&scope=https://www.googleapis.com/auth/gmail.compose"
+#         f"&access_type=offline"
+#         f"&prompt=consent"
+#     )
+#     st_redirect(auth_url)
 def create_gmail_draft(creds, recipient, subject, body):
     try:
         service = build("gmail", "v1", credentials=creds)

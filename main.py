@@ -103,7 +103,8 @@ client_config = {
     }
 }
 
-SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
+SCOPES = ["https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/userinfo.email", "openid"]
+
 REDIRECT_URI = st.secrets["redirect_uri"]
 
 

@@ -111,26 +111,30 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 REDIRECT_URI = st.secrets["redirect_uri"]
 # --- Utility: Detect OAuth2 “code” in URL ---
 
+import os
+import pickle
+import streamlit as st
+from google_auth_oauthlib.flow import Flow
+from google.auth.transport.requests import Request
 
-def st_redirect(url: str):
-    """Client-side redirect using JavaScript inside Streamlit."""
-    st.markdown(
-        f'<script>window.location.href="{url}";</script>',
-        unsafe_allow_html=True
-    )
-
+# Constants (make sure these are defined)
+TOKEN_FILE = "token.pkl"
+SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+REDIRECT_URI = "http://localhost:8501"
+client_config = {
+    # Your Google client config goes here
+}
 def get_auth_code_from_url():
-    """Extract ?code= from URL params."""
-    params = st.query_params
-    if "code" in params:
-        return params["code"][0]
-    return None
+    query_params = st.experimental_get_query_params()
+    return query_params.get("code", [None])[0]
 
-# === App ===
+def st_redirect(url):
+    st.markdown(f'<meta http-equiv="refresh" content="0; url={url}">', unsafe_allow_html=True)
 
+# UI Title
 st.title("📧 Gmail OAuth2 Streamlit Demo")
 
-# 1. Load token if available
+# 1. Load existing credentials
 creds = None
 if os.path.exists(TOKEN_FILE):
     with open(TOKEN_FILE, "rb") as f:
@@ -149,14 +153,12 @@ if os.path.exists(TOKEN_FILE):
         st.success("✅ You are signed in with Google!")
         st.stop()
 
-# 2. Check for code in URL to fetch token
+# 2. Handle redirect with code in URL
 code = get_auth_code_from_url()
 if code:
     try:
         flow = Flow.from_client_config(
-            client_config,
-            scopes=SCOPES,
-            redirect_uri=REDIRECT_URI
+            client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
         )
         flow.fetch_token(code=code)
         creds = flow.credentials
@@ -166,31 +168,25 @@ if code:
 
         st.success("🎉 Google Sign-In successful!")
         st.experimental_rerun()
-
     except Exception as e:
         st.error(f"❌ Failed to complete sign-in: {e}")
         st.stop()
 
-# 3. Show sign-in button
+# 3. Show Google sign-in option
 if not creds:
     flow = Flow.from_client_config(
-        client_config,
-        scopes=SCOPES,
-        redirect_uri=REDIRECT_URI
+        client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
     )
-
     auth_url, _ = flow.authorization_url(
-        prompt="consent",
-        access_type="offline",
-        include_granted_scopes="true",
+        prompt="consent", access_type="offline", include_granted_scopes="true"
     )
 
-    if st.button("🔐 Sign in with Google"):
+    if st.button("🔐 Sign in with Google", key="google_signin_button"):
         st_redirect(auth_url)
 
     st.write("— OR —")
     st.write("If redirected already, paste `code=` query parameter here:")
-    manual_code = st.text_input("Paste code from URL")
+    manual_code = st.text_input("Paste code from URL", key="manual_code_input")
 
     if manual_code:
         try:
@@ -203,31 +199,10 @@ if not creds:
         except Exception as e:
             st.error(f"❌ Manual code failed: {e}")
 
-
-    
-    flow = Flow.from_client_config(client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI)
-    auth_url, _ = flow.authorization_url(prompt="consent", access_type="offline", include_granted_scopes="true")
-
-    if st.button("🔐 Sign in with Google", key="google_signin_btn_1"):
-        st_redirect(auth_url)
+  
 
 
 
-
-    st.write("— OR —")
-    st.write("If you’ve already granted consent, paste the `code=` value from the URL below:")
-    manual_code = st.text_input("Paste the `code` query parameter here")
-    if manual_code:
-        try:
-            flow.fetch_token(code=manual_code)
-            creds = flow.credentials
-            with open(TOKEN_FILE, "wb") as f:
-                pickle.dump(creds, f)
-            st.success("🎉 You have successfully signed in with Google!")
-            st.experimental_rerun()
-        except Exception as e:
-            st.error(f"❌ Failed to exchange code manually: {e}")
-            st.stop()
     
 
 

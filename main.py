@@ -142,6 +142,18 @@ if login == "authenticated":
 else:
     st.warning("login failed")
 # --- Authentication Function ---
+
+
+
+import streamlit as st
+from streamlit_google_auth import Authenticate
+
+authenticator = Authenticate(
+    secret_credentials_path='google_credentials.json',
+    cookie_name='my_cookie_name',
+    cookie_key='this_is_secret',
+    redirect_uri='http://localhost:8501',
+)
 def authenticate_user():
     creds = None
     logging.info("Attempting to authenticate user.")

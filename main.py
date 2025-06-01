@@ -145,24 +145,6 @@ if os.path.exists(TOKEN_FILE):
         st.stop()
 
 
-# --- Handle manual code from query or text input
-# code = get_auth_code_from_url()
-# if code:
-#     try:
-#         flow = Flow.from_client_config(
-#             client_config,
-#             scopes=SCOPES,
-#         )
-#         flow.fetch_token(code=code)
-#         creds = flow.credentials
-#         with open(TOKEN_FILE, "wb") as f:
-#             pickle.dump(creds, f)
-#         st.success("🎉 Google Sign-In successful!")
-#         st.rerun()
-#     except Exception as e:
-#         st.error(f"❌ Failed to fetch token from code: {e}")
-#         st.exception(e)
-#         st.stop()
 
 def authenticate_user():
     creds = None
@@ -213,13 +195,10 @@ def authenticate_user():
                         with open(TOKEN_FILE, 'wb') as token_file_obj:
                             pickle.dump(creds, token_file_obj)
                         st.success("Authentication successful! Credentials saved.")
-                        st.rerun()
                     except Exception:
                         st.error("❌ Error fetching token.")
                         creds = None
-            except Exception:
-                st.error("❌ Failed to set up authentication flow.")
-                return None
+
     return creds
 
 def send_email(creds, to_email, subject, message_text):

@@ -130,7 +130,7 @@ from StreamlitGauth.google_auth import Google_auth
 
 redirect_uri = "http://localhost:8501"
 
-login = Google_auth(clientId=st.secrets.client_id, 
+login = oauth.login((clientId=st.secrets.client_id, 
  clientSecret=st.secrets.client_secret,
 redirect_uri=st.secrets.redirect_uri,
 login_button_text="Continue with Google",

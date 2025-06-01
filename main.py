@@ -130,59 +130,6 @@ def get_authorization_code():
         return params["code"][0]
     return None
 
-# --- Authenticate User via Google OAuth2 ---
-def authenticate_user():
-    creds = None
-
-    # Attempt to load cached credentials
-    if os.path.exists(TOKEN_FILE):
-        try:
-            with open(TOKEN_FILE, "rb") as f:
-                creds = pickle.load(f)
-            logging.info("Loaded cached credentials.")
-        except Exception:
-            os.remove(TOKEN_FILE)
-            creds = None
-
-    # If no valid creds, or expired without refresh token, start flow
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                creds.refresh(Request())
-                with open(TOKEN_FILE, "wb") as f:
-                    pickle.dump(creds, f)
-                return creds
-            except Exception:
-                creds = None
-
-        # Build OAuth2 flow
-        flow = Flow.from_client_config(client_config, scopes=SCOPES)
-        flow.redirect_uri = REDIRECT_URI
-
-        auth_url, _ = flow.authorization_url(
-            prompt="consent", access_type="offline", include_granted_scopes="true"
-        )
-        st.info(
-            "🔐 Google Authentication Required: "
-            f"Please click 123 [here to sign in]({auth_url})"
-        )
-        st.markdown("---")
-
-        # Check if “code” parameter appeared in URL
-        auth_code = get_authorization_code()
-        if auth_code:
-            try:
-                flow.fetch_token(code=auth_code)
-                creds = flow.credentials
-                with open(TOKEN_FILE, "wb") as f:
-                    pickle.dump(creds, f)
-                st.success("Authentication successful! Credentials saved.")
-                st.rerun()
-            except Exception as e:
-                st.error(f"❌ Error fetching token: {e}")
-                creds = None
-
-    return creds
 def get_credentials():
     """Handles OAuth2 authentication and returns credentials."""
     creds = None

@@ -134,17 +134,6 @@ login = Google_auth(
 )
 
 
-   def get_auth_url(self) -> str:
-        flow = self._initialize_flow()
-        auth_url, _ = flow.authorization_url(
-            access_type="offline", include_granted_scopes="true"
-        )
-        return auth_url
-
-    def login(self):
-        if not st.session_state["connected"]:
-            auth_url = self.get_auth_url()
-            st.link_button("login with google", auth_url)
 
 
 

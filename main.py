@@ -133,14 +133,11 @@ auth = Google_auth(
     redirect_uri=st.secrets.redirect_uri
 )
 
-# Trigger login
-login_status = auth.authenticate()  # or `auth.authenticate()` depending on the actual method name
-
-# Check if login was successful
-if login_status == "authenticated":
-    st.success("Hello, you're logged in!")
+if login == "authenticated":
+   st.success("hello")
+   pass
 else:
-    st.warning("Login failed. Please try again.")
+    st.warning("login failed")
 
 
 def authenticate_user():

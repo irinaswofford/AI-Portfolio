@@ -3,6 +3,7 @@ import os
 import pickle
 import base64
 import torch
+from portfolio_data import portfolio_data 
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request

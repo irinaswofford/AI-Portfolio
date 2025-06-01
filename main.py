@@ -127,8 +127,6 @@ def handle_oauth2_redirect():
 from google.oauth2 import id_token
 from google_auth_oauthlib import get_user_credentials
 
-st.title(':closed_lock_with_key: Prueba Autenticación con Google')
-
 
 def login_callback():
     credentials = get_user_credentials(

@@ -134,7 +134,7 @@ auth = Google_auth(
 )
 
 # Trigger login
-login_status = auth.login()  # or `auth.authenticate()` depending on the actual method name
+login_status = auth.authenticate()  # or `auth.authenticate()` depending on the actual method name
 
 # Check if login was successful
 if login_status == "authenticated":

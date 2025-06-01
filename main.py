@@ -136,7 +136,8 @@ if os.path.exists(TOKEN_FILE):
             creds = None
 
     if creds and creds.valid:
-        st.success("✅ You are signed in with Google!")
+        # st.success("✅ You are signed in with Google!")
+        st.toast("🎉 Logged in successfully with Google!", icon="✅")
         st.json({
             "token": creds.token,
             "refresh_token": creds.refresh_token,

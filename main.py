@@ -92,10 +92,6 @@ state_schema = frozenset([
 
 graph = StateGraph(state_schema=state_schema)
 
-
-
-
-
 # === Get Google Client Info from Streamlit Secrets ===
 client_config = {
     "web": {
@@ -111,9 +107,8 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 REDIRECT_URI = st.secrets["redirect_uri"]
 
 
-
 def get_auth_code_from_url():
-    query_params = st.st.query_params()
+    query_params = st.query_params()
     return query_params.get("code", [None])[0]
 
 def st_redirect(url):

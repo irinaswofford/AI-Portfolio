@@ -91,6 +91,11 @@ state_schema = frozenset([
 graph = StateGraph(state_schema=state_schema)
 
 def handle_oauth2_redirect():
+    def st_redirect(url: str) -> None:
+    nav_script = f"""
+        <meta http-equiv="refresh" content="0; url='{url}'">
+    """
+    st.markdown(nav_script, unsafe_allow_html=True)
     return None
 
 def login_callback():
@@ -115,7 +120,7 @@ def st_redirect(url: str) -> None:
     """
     st.markdown(nav_script, unsafe_allow_html=True)
 
-st.button(':key: Login', type='primary', on_click=login_callback)
+st.button(':key: Login', type='primary', on_click=st_redirect)
 
 if 'credentials' in st.session_state:
     id_info = id_token.verify_token(

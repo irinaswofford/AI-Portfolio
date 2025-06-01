@@ -170,7 +170,7 @@ if st.button("Login with Google"):
         f"&access_type=offline"
         f"&prompt=consent"
     )
-    st_redirect(auth_url)
+      st_redirect(auth_url)
 def create_gmail_draft(creds, recipient, subject, body):
     try:
         service = build("gmail", "v1", credentials=creds)

@@ -241,6 +241,8 @@ if code and not creds:
         st.stop()
 
 # 3c) If we still don’t have creds, show “Sign in with Google” button
+import os
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 if not creds:
     flow = Flow.from_client_config(
         {

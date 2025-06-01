@@ -281,7 +281,7 @@ if not creds:
         except Exception as e:
             st.error(f"❌ Failed to exchange code manually: {e}")
             st.stop()
-    return creds
+    
 
 
 import html

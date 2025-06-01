@@ -203,6 +203,9 @@ def get_user_credentials():
             # --- END DEBUGGING STATEMENTS ---
 
             if auth_code:
+                if auth_code and not st.session_state.get("auth_code_used"):
+                st.session_state["auth_code_used"] = True  # Prevent reuse
+
                 try:
                     logging.info(f"Attempting to fetch token with code: {auth_code[:10]}...") # Log first 10 chars
                     flow.fetch_token(code=auth_code.strip()) # Use 'code' parameter for fetch_token

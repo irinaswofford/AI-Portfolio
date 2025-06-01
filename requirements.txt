@@ -24,7 +24,6 @@ opencv-contrib-python-headless==4.5.5.64
 pytesseract
 imutils
 
-
 # Audio & Speech
 speechrecognition
 gtts
@@ -37,10 +36,6 @@ pandas
 google-api-core
 google-cloud-texttospeech
 StreamlitGAuth
-
-
-
-
 
 google-api-python-client
 

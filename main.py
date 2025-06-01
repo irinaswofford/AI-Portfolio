@@ -198,11 +198,6 @@ def get_user_credentials():
 
             # --- DEBUGGING STATEMENTS ---
             
-            st.write(f"DEBUG: Redirect URI being used by Flow for token exchange: {st.secrets['redirect_uri']}")
-            st.write(f"DEBUG: Code received for token exchange: {auth_code}")
-            
-            # --- DEBUGGING STATEMENTS ---
-            st.write(f"DEBUG: client_config used: {client_config}")
             st.write(f"DEBUG: Code received for token exchange: {auth_code}")
             st.write(f"DEBUG: Redirect URI being used by Flow for token exchange: {st.secrets['redirect_uri']}")
        

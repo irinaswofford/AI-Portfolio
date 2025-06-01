@@ -90,11 +90,6 @@ state_schema = frozenset([
 
 graph = StateGraph(state_schema=state_schema)
 
-
-
-
-
-
 if 'credentials' in st.session_state:
     id_info = id_token.verify_token(
         st.session_state.credentials.id_token,
@@ -115,9 +110,6 @@ client_config = {
 }
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
-
-
-
 def get_credentials():
     """Handles OAuth2 authentication and returns credentials."""
     creds = None
@@ -168,7 +160,7 @@ def st_redirect(url):
         """, unsafe_allow_html=True
     )
 # ✅ Trigger the redirect from a button
-if st.button("Login with Google"):
+# if st.button("Login with Google"):
     auth_url = (
         f"https://accounts.google.com/o/oauth2/v2/auth"
         f"?client_id={st.secrets['client_id']}"

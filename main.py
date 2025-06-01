@@ -192,15 +192,7 @@ st.write("🚧 Debug mode active")
 
 # --- Load client config (replace with your actual dict or load from file)
 try:
-    import json
-    with open("client_secret.json") as f:
-        flow = Flow.from_client_config(
-        client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
 
-    st.write("✅ Client config loaded" flow )
-except Exception as e:
-    st.error(f"❌ Failed to load client config: {e}")
-    st.stop()
 
 # --- Get code from query params
 def get_auth_code_from_url():

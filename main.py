@@ -138,6 +138,8 @@ login = Google_auth(clientId=st.secrets.client_id,
 if login == "authenticated":
    st.success("hello")
    pass
+else:
+    st.warning("login failed")
 # --- Authentication Function ---
 def authenticate_user():
     creds = None

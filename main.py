@@ -113,7 +113,7 @@ def get_auth_code_from_url():
         st.error(f"❌ Error extracting code from query params: {e}")
         return None
 
-# --- Load credentials if they exist
+
 # --- Load credentials if they exist
 creds = None
 if os.path.exists(TOKEN_FILE):

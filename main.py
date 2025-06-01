@@ -201,8 +201,7 @@ def get_user_credentials():
             st.write(f"DEBUG: Redirect URI being used by Flow for token exchange: {st.secrets['redirect_uri']}")
             st.write(f"DEBUG: Code received for token exchange: {auth_code}")
             # --- END DEBUGGING STATEMENTS ---
-            if auth_code and not st.session_state.get("auth_code_used"):
-                st.session_state["auth_code_used"] = True  # Prevent reuse
+         
             if auth_code:
 
                 try:

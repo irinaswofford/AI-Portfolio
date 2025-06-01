@@ -159,10 +159,9 @@ def authenticate_user():
                 st.info(f"### 🔐 Google Authentication Required:\n\nPlease click [here to sign in with Google]({auth_url})")
                 st.markdown("---")
 
-                #auth_code = get_auth_code_from_url()
-                query_params = st.query_params
-                code = query_params.get("code", [None])[0]
-                st.write("📦 Query code:", query_params)
+                auth_code = get_auth_code_from_url()
+              
+                st.write("📦 Query code:", auth_code)
             
 
                 if auth_code:

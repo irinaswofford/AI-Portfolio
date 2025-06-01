@@ -130,7 +130,7 @@ from StreamlitGauth.google_auth import Google_auth
 login = Google_auth(
     clientId=st.secrets["client_id"], 
     clientSecret=st.secrets["client_secret"], 
-    redirect_uri=redirect_uri  # or st.secrets["redirect_uri"]
+    redirect_uri=st.secrets.redirect_uri  # or st.secrets["redirect_uri"]
 )
 
 # Display login result

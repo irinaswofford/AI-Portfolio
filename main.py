@@ -115,30 +115,8 @@ client_config = {
 }
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
-REDIRECT_URI = client_config["web"]["redirect_uris"][0]
 
 
-# def get_credentials():
-#     creds = None
-#     if "token" in st.session_state:
-#         creds = Credentials.from_authorized_user_info(st.session_state["token"], SCOPES)
-
-#     if not creds or not creds.valid:
-#         flow = Flow.from_client_config(client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI)
-#         auth_url, _ = flow.authorization_url(prompt='consent')
-
-#         st.markdown(f"[Click here to authorize Gmail]({auth_url})", unsafe_allow_html=True)
-#         code = st.text_input("Enter authorization code")
-
-#         if code:
-#             try:
-#                 flow.fetch_token(code=code)
-#                 creds = flow.credentials
-#                 st.session_state["token"] = json.loads(creds.to_json())
-#             except Exception as e:
-#                 st.error(f"Error during authentication: {e}")
-#                 return None
-#     return creds
 
 def get_credentials():
     """Handles OAuth2 authentication and returns credentials."""

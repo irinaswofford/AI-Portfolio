@@ -117,11 +117,16 @@ state_schema = frozenset([
 
 graph = StateGraph(state_schema=state_schema)
 def handle_oauth2_redirect():
-    query_params = st.query_params
-    if "code" in query_params:
-        auth_code = query_params["code"][0]
-        logging.info("Authorization code received via URL parameter.")
-        return auth_code
+    # query_params = st.query_params
+    # if "code" in query_params:
+    #     auth_code = query_params["code"][0]
+    #     logging.info("Authorization code received via URL parameter.")
+    #     return auth_code
+
+        flow = InstalledAppFlow.from_client_secrets_file(
+            'credentials.json', ['https://www.googleapis.com/auth/gmail.compose']
+        )
+      creds = flow.run_local_server(port=0)
     return None
 
 from google.oauth2 import id_token

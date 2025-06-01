@@ -112,26 +112,6 @@ REDIRECT_URI = st.secrets["redirect_uri"]
 # --- Utility: Detect OAuth2 “code” in URL ---
 
 
-# === Secrets & Config ===
-TOKEN_FILE = "token.pickle"
-SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
-
-REDIRECT_URI = st.secrets["redirect_uri"]
-
-client_config = {
-    "web": {
-        "client_id": st.secrets["client_id"],
-        "project_id": st.secrets["project_id"],
-        "auth_uri": st.secrets["auth_uri"],
-        "token_uri": st.secrets["token_uri"],
-        "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-        "client_secret": st.secrets["client_secret"],
-        "redirect_uris": [st.secrets["redirect_uri"]]  # ✅ MUST be a list
-    }
-}
-
-# === Utils ===
-
 def st_redirect(url: str):
     """Client-side redirect using JavaScript inside Streamlit."""
     st.markdown(

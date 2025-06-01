@@ -15,6 +15,7 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 from langgraph.graph import StateGraph, END
 from portfolio_data import portfolio_data
 from dotenv import load_dotenv
+from email.mime.multipart import MIMEMultipart
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 

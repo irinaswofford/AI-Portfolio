@@ -37,7 +37,7 @@ pandas
 google-api-core
 google-cloud-texttospeech
 StreamlitGAuth
-google-auth-oauthlib==1.2.1
+google-auth-oauthlib
 
 google-api-python-client
 

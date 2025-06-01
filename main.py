@@ -110,7 +110,7 @@ client_config = {
 }
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
-
+REDIRECT_URI = st.secrets["redirect_uri"]
 # --- Utility: Detect OAuth2 “code” in URL ---
 def get_authorization_code():
     params = st.query_params

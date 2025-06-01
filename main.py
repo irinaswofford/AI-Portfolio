@@ -236,7 +236,7 @@ def authenticate_user():
                 st.info(f"### 🔐 Google Authentication Required:\n\nPlease click [here to sign in with Google]({auth_url})")
                 st.markdown("---")
 
-                auth_code = handle_oauth2_redirect()
+                auth_code = get_auth_code_from_url()
 
                 if auth_code:
                     try:

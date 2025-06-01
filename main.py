@@ -89,18 +89,18 @@ state_schema = frozenset([
 ])
 
 graph = StateGraph(state_schema=state_schema)
-
-
 import streamlit as st
 
-def st_redirect(url: str) -> None:
-    nav_script = f"""
-        <meta http-equiv="refresh" content="0; url='{url}'">
-    """
-    st.markdown(nav_script, unsafe_allow_html=True)
+def st_redirect_js(url: str):
+    st.markdown(f"""
+        <script>
+            window.location.href = '{url}';
+        </script>
+    """, unsafe_allow_html=True)
 
-# Use a valid URL
-st.button('Login', type='primary', on_click=lambda: st_redirect("https://mail.google.com/"))
+# Button to trigger redirect
+if st.button("Login to Gmail"):
+    st_redirect_js("https://mail.google.com/")
 
 
 

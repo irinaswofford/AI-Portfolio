@@ -198,6 +198,7 @@ def get_user_credentials():
             # --- DEBUGGING STATEMENTS ---
             
             st.write(f"DEBUG: Redirect URI being used by Flow for token exchange: {st.secrets['redirect_uri']}")
+            st.write(f"DEBUG: Code received for token exchange: {auth_code}")
             # --- END DEBUGGING STATEMENTS ---
 
             if auth_code:
@@ -310,16 +311,7 @@ def create_gmail_draft(creds, recipient, subject, body):
         logging.error(f"Error creating draft: {e}", exc_info=True)
         return f"❌ Failed to create draft: {e}"
 
-# Placeholder for portfolio_data and PortfolioAssistant class
-# You would need to ensure 'portfolio_data' is defined and accessible
-# and 'PortfolioAssistant' class is implemented.
-# For this example, I'll provide a minimal placeholder for PortfolioAssistant.
-portfolio_data = {
-    "portfolio_questions": [
-        {"question": "how do you stay organized as a project manager?", "response": "I use agile methodologies and various project management tools to keep track of tasks and progress."},
-        {"question": "what is your experience with AI projects?", "response": "I have extensive experience in leading AI projects from conception to deployment, focusing on practical applications and measurable results."},
-    ]
-}
+
 
 class PortfolioAssistant:
     def __init__(self, portfolio_data):

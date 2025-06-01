@@ -1,4 +1,5 @@
 # Core Dependencies
+streamlit
 cmake==3.25.2
 protobuf
 
@@ -37,7 +38,10 @@ google-api-core
 google-cloud-texttospeech
 StreamlitGAuth
 
-streamlit
+
+google-auth-httplib2
+google-auth-oauthlib
+streamlit>=1.37
 
 
 

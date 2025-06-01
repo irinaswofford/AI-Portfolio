@@ -112,10 +112,6 @@ def get_auth_code_from_url():
         st.error(f"❌ Error extracting code from query params: {e}")
         return None
 
-
-
-
-
 # --- Load credentials if they exist
 creds = None
 if os.path.exists(TOKEN_FILE):
@@ -198,8 +194,6 @@ def authenticate_user():
                     except Exception:
                         st.error("❌ Error fetching token.")
                         creds = None
-
-
 
 def send_email(creds, to_email, subject, message_text):
     service = build('gmail', 'v1', credentials=creds)

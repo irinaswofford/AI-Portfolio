@@ -126,7 +126,7 @@ if os.path.exists(TOKEN_FILE):
     with open(TOKEN_FILE, "wb") as f:
 
         creds = pickle.load(f)
-        st.write("📂 Checking for existing token at:", TOKEN_FILE)
+        st.write("📂 Checking for existing token at:", creds)
 
     if creds and creds.expired and creds.refresh_token:
         try:

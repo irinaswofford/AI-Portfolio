@@ -127,12 +127,11 @@ def handle_oauth2_redirect():
 import streamlit as st
 from StreamlitGauth.google_auth import Google_auth
 
-client_id = ""
-client_secret = ""
+
 redirect_uri = "http://localhost:8501"
 
-login = Google_auth(clientId=client_id, 
- clientSecret=client_secret,redirect_uri=redirect_uri
+login = Google_auth(clientId=st.client_id, 
+ clientSecret=client_secret,redirect_uri=st.redirect_uri
  )
 
 if login == "authenticated":

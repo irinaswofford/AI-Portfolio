@@ -194,8 +194,10 @@ st.write("🚧 Debug mode active")
 try:
     import json
     with open("client_secret.json") as f:
-        client_config = json.load(f)
-    st.write("✅ Client config loaded")
+        flow = Flow.from_client_config(
+        client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
+
+    st.write("✅ Client config loaded" flow )
 except Exception as e:
     st.error(f"❌ Failed to load client config: {e}")
     st.stop()

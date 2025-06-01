@@ -160,8 +160,8 @@ def st_redirect(url):
         """, unsafe_allow_html=True
     )
 # ✅ Trigger the redirect from a button
-if st.button("Login with Google"):
-    st_redirect("https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=https://your-app.streamlit.app&response_type=code&scope=https://www.googleapis.com/auth/gmail.compose")
+# if st.button("Login with Google"):
+#     st_redirect("https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=https://your-app.streamlit.app&response_type=code&scope=https://www.googleapis.com/auth/gmail.compose")
 auth_url = (
     "https://accounts.google.com/o/oauth2/v2/auth"
     f"?client_id={client_id}"

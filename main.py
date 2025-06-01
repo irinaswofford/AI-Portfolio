@@ -106,11 +106,11 @@ if 'credentials' in st.session_state:
 # === Get Google Client Info from Streamlit Secrets ===
 client_config = {
     "web": {
-        "client_id": st.secrets["google"]["client_id"],
-        "client_secret": st.secrets["google"]["client_secret"],
-        "auth_uri": st.secrets["google"]["auth_uri"],
-        "token_uri": st.secrets["google"]["token_uri"],
-        "redirect_uris": st.secrets["google"]["redirect_uris"]
+        "client_id": st.secrets["client_id"],
+        "client_secret": st.secrets["client_secret"],
+        "auth_uri": st.secrets["auth_uri"],
+        "token_uri": st.secrets["token_uri"],
+        "redirect_uris": st.secrets["redirect_uris"]
     }
 }
 

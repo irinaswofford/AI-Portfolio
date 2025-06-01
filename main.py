@@ -107,92 +107,6 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.compose","https://www.googleapi
 REDIRECT_URI = st.secrets["redirect_uri"]
 
 
-# def get_auth_code_from_url():
-#     query_params = st.query_params
-    
-#     return query_params.get("code", [None])[0]
-
-
-# def st_redirect(url):
-#     st.markdown(f'<meta http-equiv="refresh" content="0; url={url}">', unsafe_allow_html=True)
-
-# # UI Title
-# st.title("📧 Gmail OAuth2 Streamlit Demo")
-
-# # 1. Load existing credentials
-# creds = None
-# if os.path.exists(TOKEN_FILE):
-#     with open(TOKEN_FILE, "rb") as f:
-#         creds = pickle.load(f)
-
-#     if creds and creds.expired and creds.refresh_token:
-#         try:
-#             creds.refresh(Request())
-#             with open(TOKEN_FILE, "wb") as f:
-#                 pickle.dump(creds, f)
-#         except Exception as e:
-#             st.error(f"⚠️ Failed to refresh token: {e}")
-#             creds = None
-
-#     if creds and creds.valid:
-#         st.success("✅ You are signed in with Google!")
-#         st.stop()
-
-# # 2. Handle redirect with code in URL
-# code = get_auth_code_from_url()
-# if code:
-#     try:
-#         flow = Flow.from_client_config(
-#             client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
-#         )
-#         flow.fetch_token(code=code)
-#         creds = flow.credentials
-
-#         with open(TOKEN_FILE, "wb") as f:
-#             pickle.dump(creds, f)
-
-#         st.success("🎉 Google Sign-In successful!")
-#         st.experimental_rerun()
-#     except Exception as e:
-#         st.error(f"❌ Failed to complete sign-in: {e}")
-#         st.stop()
-
-# # 3. Show Google sign-in option
-# if not creds:
-#     flow = Flow.from_client_config(
-#         client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
-#     )
-#     auth_url, _ = flow.authorization_url(
-#         prompt="consent", access_type="offline", include_granted_scopes="true"
-#     )
-
-#     if st.button("🔐 Sign in with Google", key="google_signin_button"):
-#         st_redirect(auth_url)
-
-#     st.write("— OR —")
-#     st.write("If redirected already, paste `code=` query parameter here:")
-#     manual_code = st.text_input("Paste code from URL", key="manual_code_input")
-
-#     if manual_code:
-#         try:
-#             flow.fetch_token(code=manual_code)
-#             creds = flow.credentials
-#             with open(TOKEN_FILE, "wb") as f:
-#                 pickle.dump(creds, f)
-#             st.success("🎉 Signed in successfully!")
-#             st.experimental_rerun()
-#         except Exception as e:
-#             st.error(f"❌ Manual code failed: {e}")
-
-  
-
-# Debug
-st.title("📧 Gmail OAuth2 Streamlit Demo")
-st.write("🚧 Debug mode active")
-
-
-
-
 # --- Get code from query params
 def get_auth_code_from_url():
     try:
@@ -266,7 +180,7 @@ if not creds:
         st.write("🔗 Authorization URL generated")
 
         if st.button("🔐 Sign in with Google", key="google_signin_button"):
-            st.write("➡️ Redirecting to:", auth_url)
+            #st.write("➡️ Redirecting to:", auth_url)
             st.markdown(f"[Click here if not redirected]({auth_url})", unsafe_allow_html=True)
             st.stop()
     except Exception as e:
@@ -286,58 +200,6 @@ if not creds:
             st.experimental_rerun()
         except Exception as e:
             st.error(f"❌ Manual code sign-in failed: {e}")
-
-    
-
-
-# import html
-# def st_redirect(url):
-#     source = f"location.href = '{url}'"
-#     wrapped_source = f"(async () => {{{source}}})()"
-#     st.markdown(
-#         f"""
-#         <div style="display:none" id="stredirect">
-#             <iframe src="javascript: \
-#                 var script = document.createElement('script'); \
-#                 script.type = 'text/javascript'; \
-#                 script.text = {html.escape(repr(wrapped_source))}; \
-#                 var thisDiv = window.parent.document.getElementById('stredirect'); \
-#                 var rootDiv = window.parent.parent.parent.parent.document.getElementById('root'); \
-#                 rootDiv.appendChild(script); \
-#                 thisDiv.parentElement.parentElement.parentElement.style.display = 'none'; \
-#             "/>
-#         </div>
-#         """, unsafe_allow_html=True
-#     )
-# # ✅ Trigger the redirect from a button
-# if st.button("Login with Google"):
-#     auth_url = (
-#         f"https://accounts.google.com/o/oauth2/v2/auth"
-#         f"?client_id={st.secrets['client_id']}"
-#         f"&redirect_uri={st.secrets['redirect_uri']}"
-#         f"&response_type=code"
-#         f"&scope=https://www.googleapis.com/auth/gmail.compose"
-#         f"&access_type=offline"
-#         f"&prompt=consent"
-#     )
-#     st_redirect(auth_url)
-def create_gmail_draft(creds, recipient, subject, body):
-    try:
-        service = build("gmail", "v1", credentials=creds)
-        message = MIMEMultipart()
-        message["to"] = recipient
-        message["subject"] = subject
-        message.attach(MIMEText(body, "plain"))
-
-        raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
-        draft = service.users().drafts().create(userId="me", body={"message": {"raw": raw}}).execute()
-        st.success("✅ Gmail draft created!")
-        return draft
-    except Exception as e:
-        st.error(f"❌ Failed to create draft: {e}")
-
-
-
 
 def authenticate_user():
     creds = None

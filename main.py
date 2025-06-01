@@ -187,7 +187,7 @@ def get_user_credentials():
 
             auth_url, _ = flow.authorization_url(
                 prompt='consent',
-                _external=True
+                _external=True,
                 access_type='offline', # Request refresh token
 
             )

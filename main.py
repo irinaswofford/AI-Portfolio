@@ -108,7 +108,7 @@ def get_auth_code_from_url():
     query_params = st.query_params
     return query_params.get("code")
 
-def authenticate_user():
+def get_user_credentials():
     creds = None
 
     # ✅ Load existing token if available
@@ -267,7 +267,7 @@ def handle_user_query(user_query, user_email, email_sent=False):
         combined_response = f"AI Answer:\n{ai_answer}\n\nRelevant Search Results:\n{search_result}"
 
         if user_email and not email_sent:
-            creds = authenticate_user()
+            creds = get_user_credentials()
             if creds is None:
                 return {
                     "input": user_query,

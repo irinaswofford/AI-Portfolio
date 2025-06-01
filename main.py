@@ -160,7 +160,7 @@ def st_redirect(url):
         """, unsafe_allow_html=True
     )
 # ✅ Trigger the redirect from a button
- if st.button("Login with Google"):
+if st.button("Login with Google"):
      st_redirect("https://accounts.google.com/o/oauth2/v2/auth?client_id=st.secrets.client_id&redirect_uri=st.secrets.rederect_uri&response_type=code&scope=https://www.googleapis.com/auth/gmail.compose")
 
 def create_gmail_draft(creds, recipient, subject, body):

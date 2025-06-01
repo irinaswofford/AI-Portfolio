@@ -93,22 +93,6 @@ graph = StateGraph(state_schema=state_schema)
 
 
 
-# import streamlit as st
-# from google.oauth2 import service_account
-# from google.cloud import storage
-
-# # Create API client.
-# credentials = service_account.Credentials.from_service_account_info(
-#     st.secrets["gcp_service_account"]
-# )
-# client = storage.Client(credentials=credentials)
-
-# if 'credentials' in st.session_state:
-#     id_info = id_token.verify_token(
-#         st.session_state.credentials.id_token,
-#         Request(),
-#     )
-#     st.json(id_info)
 
 
 # === Get Google Client Info from Streamlit Secrets ===
@@ -136,7 +120,7 @@ def get_authorization_code():
 def get_credentials():
     """Handles OAuth2 authentication and returns credentials."""
     creds = None
-    token_file = 'token.pickle'
+    token_file = st.secrets.GOOGLE_TOKEN_PATH
 
     # Check if the token.pickle file exists
     if os.path.exists(token_file):

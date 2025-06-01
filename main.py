@@ -91,21 +91,6 @@ state_schema = frozenset([
 graph = StateGraph(state_schema=state_schema)
 
 
-def login_callback():
-    credentials = get_user_credentials(
-        client_id=st.secrets.client_id,
-        client_secret=st.secrets.client_secret,
-        scopes=[
-            'openid',
-            'https://www.googleapis.com/auth/userinfo.email',
-            'https://www.googleapis.com/auth/userinfo.profile',
-            "https://www.googleapis.com/auth/calendar.events.readonly",
-        ],
-        minimum_port=9000,
-        maximum_port=9001,
-    )
-    st.session_state.credentials = credentials
-
 
 def st_redirect(url: str) -> None:
     nav_script = f"""

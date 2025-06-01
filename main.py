@@ -205,7 +205,7 @@ def get_user_credentials():
             if auth_code:
                 try:
                     logging.info(f"Attempting to fetch token with code: {auth_code[:10]}...") # Log first 10 chars
-                    flow.fetch_token(code=auth_code) # Use 'code' parameter for fetch_token
+                    flow.fetch_token(code=auth_code.strip() # Use 'code' parameter for fetch_token
                     creds = flow.credentials
                     with open(TOKEN_FILE, 'wb') as f:
                         pickle.dump(creds, f)
@@ -226,12 +226,13 @@ def get_user_credentials():
                             st.query_params[k] = v[0] if isinstance(v, list) else v
                     # --- END CRITICAL ADDITION ---
 
-                    st.experimental_rerun() # Rerun the app to reflect the logged-in state
                 except Exception as e:
                     st.error(f"❌ Failed to fetch token: {e}")
                     st.error(f"Full Exception (from get_user_credentials): {e}") # Provide full exception for more detail
                     logging.error(f"Failed to fetch token: {e}", exc_info=True)
                     creds = None # Ensure creds is None if token fetch fails, allowing re-prompt
+                    
+                    st.experimental_rerun() # Rerun the app to reflect the logged-in state
             else:
                 logging.info("No auth code found in URL. Waiting for user interaction.")
 

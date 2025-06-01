@@ -98,7 +98,7 @@ def st_redirect(url: str) -> None:
     """
     st.markdown(nav_script, unsafe_allow_html=True)
 
-st.button('Login', type='primary', on_click=lambda: st_redirect("https://example.com"))
+st.button('Login', type='primary', on_click=lambda: st_redirect("https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/"))
 
 
 if 'credentials' in st.session_state:

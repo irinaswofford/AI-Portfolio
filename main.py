@@ -164,12 +164,6 @@ if 'credentials' in st.session_state:
 
 
 
-# Display login result
-if login == "authenticated":
-    st.success("Welcome! You are logged in.")
-else:
-    st.warning("Login failed. Please try again.")
-
 
 def authenticate_user():
     creds = None

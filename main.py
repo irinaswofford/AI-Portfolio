@@ -102,11 +102,16 @@ client_config = {
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/userinfo.email", "openid"]
 
-# --- Get code from query params
+
 def get_auth_code_from_url():
-    # Streamlit makes this available via st.query_params
-    query_params = st.query_params
-    return query_params.get("code")
+    try:
+        query_params = st.query_params  # NEW API (Streamlit >=1.31+)
+        code = query_params.get("code", [None])[0]
+        st.write(f"📦 Query code: {code}")
+        return code
+    except Exception as e:
+        st.error(f"❌ Error extracting code from query params: {e}")
+        return None
 
 def get_user_credentials():
     creds = None

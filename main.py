@@ -202,28 +202,14 @@ if not creds:
             st.experimental_rerun()
         except Exception as e:
             st.error(f"❌ Manual code failed: {e}")
-    flow = Flow.from_client_config(
-        {
-            "web": {
-                "client_id": st.secrets["client_id"],
-                "project_id": st.secrets["project_id"],
-                "auth_uri": st.secrets["auth_uri"],
-                "token_uri": st.secrets["token_uri"],
-                "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-                "client_secret": st.secrets["client_secret"],
-                "redirect_uri": st.secrets["redirect_uri"]
-            }
-        },
-        scopes=SCOPES,
-        redirect_uri=REDIRECT_URI,
-    )
 
-    auth_url, _ = flow.authorization_url(
-        prompt="consent",
-        access_type="offline",
-        include_granted_scopes="true",
-    )
 
+    
+    flow = Flow.from_client_config(client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI)
+    auth_url, _ = flow.authorization_url(prompt="consent", access_type="offline", include_granted_scopes="true")
+
+    if st.button("🔐 Sign in with Google"):
+        st_redirect(auth_url)
     if st.button("🔐 Sign in with Google"):
         st_redirect(auth_url)
 

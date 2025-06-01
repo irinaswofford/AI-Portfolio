@@ -208,7 +208,7 @@ if not creds:
     flow = Flow.from_client_config(client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI)
     auth_url, _ = flow.authorization_url(prompt="consent", access_type="offline", include_granted_scopes="true")
 
-       if st.button("🔐 Sign in with Google", key="google_signin_btn_1"):
+    if st.button("🔐 Sign in with Google", key="google_signin_btn_1"):
         st_redirect(auth_url)
 
 

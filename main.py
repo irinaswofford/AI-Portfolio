@@ -192,7 +192,7 @@ def get_user_credentials():
 
             )
 
-            # st.info(f"### 🔐 Google Authentication Required:\n\nPlease click [here to sign in with Google]({auth_url})")
+             st.info(f"### 🔐 Google Authentication Required:\n\nPlease click [here to sign in with Google]({auth_url})")
             
 
             auth_code = get_auth_code_from_url()
@@ -212,6 +212,7 @@ def get_user_credentials():
                     with open(TOKEN_FILE, 'wb') as f:
                         pickle.dump(creds, f)
                     st.success("✅ Authentication successful! Credentials saved.")
+                    
                     logging.info("Authentication successful. Rerunning app.")
 
                    

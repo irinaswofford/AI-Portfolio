@@ -168,6 +168,7 @@ if not creds:
         flow = Flow.from_client_config(
             client_config,
             scopes=SCOPES,
+            redirect_uri = st.secrets["redirect_uri"]
         )
         auth_url, _ = flow.authorization_url(
             prompt="consent",
@@ -223,13 +224,9 @@ def authenticate_user():
 
                 flow = Flow.from_client_config(
                     client_config,
-                    scopes=[
-                        "https://www.googleapis.com/auth/userinfo.profile",
-                        "https://www.googleapis.com/auth/userinfo.email",
-                        "openid"
-                    ]
+                    scopes=SCOPES,
+                    redirect_uri: st.secrets["redirect_uri"]
                 )
-                flow.redirect_uri = REDIRECT_URI
 
                 auth_url, _ = flow.authorization_url(
                     prompt='consent',

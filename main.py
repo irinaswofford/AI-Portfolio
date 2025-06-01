@@ -22,11 +22,6 @@ os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 # --- Global Configurations ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-TOKEN_FILE = st.secrets["GOOGLE_TOKEN_PATH"]
-
-
-
-
 load_dotenv()
 CSE_ID = os.getenv('CSE_ID')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
@@ -93,7 +88,7 @@ state_schema = frozenset([
 ])
 
 graph = StateGraph(state_schema=state_schema)
-
+TOKEN_FILE = st.secrets["GOOGLE_TOKEN_PATH"]
 # === Get Google Client Info from Streamlit Secrets ===
 client_config = {
     "web": {
@@ -106,15 +101,15 @@ client_config = {
 }
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/userinfo.email", "openid"]
-REDIRECT_URI = st.secrets["redirect_uri"]
+
 
 
 # --- Get code from query params
 def get_auth_code_from_url():
     try:
-        query_params = st.query_params  # NEW API (Streamlit >=1.31+)
+        query_params = st.query_params  # 
         code = query_params.get("code", [None])[0]
-        st.write(f"📦 Query code: {code}")
+        st.write(f"📦 Query code: {query_params}")
         return code
     except Exception as e:
         st.error(f"❌ Error extracting code from query params: {e}")
@@ -183,7 +178,7 @@ if not creds:
         )
         st.write("🔗 Authorization URL generated")
 
-        if st.button("🔐 Sign in with Google", key="google_signin_button", auth_url):
+        if st.button("🔐 Sign in with Google", key="google_signin_button"):
             #st.write("➡️ Redirecting to:", auth_url)
             st.markdown(f"[Click here if not redirected]({auth_url})", unsafe_allow_html=True)
             st.stop()

@@ -125,8 +125,8 @@ def handle_oauth2_redirect():
     return None
 
 
-# from StreamlitGauth.google_auth import Google_auth
-from google_auth import Google_auth
+
+from StreamlitGauth.google_auth import Google_auth
 
 redirect_uri = "http://localhost:8501"
 

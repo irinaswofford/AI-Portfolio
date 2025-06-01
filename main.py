@@ -173,7 +173,7 @@ auth_url = (
 )
 
 if st.button("Login with Google23333"):
-    st_redirect(f"<meta http-equiv='refresh' content='0; url={auth_url}'>", unsafe_allow_html=True)
+    st_redirect(auth_url)
 def create_gmail_draft(creds, recipient, subject, body):
     try:
         service = build("gmail", "v1", credentials=creds)

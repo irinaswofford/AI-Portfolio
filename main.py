@@ -147,7 +147,7 @@ if os.path.exists(TOKEN_FILE):
             "valid": creds.valid,
             "expired": creds.expired
         })
-        st.stop()
+
 
 # --- Handle manual code from query or text input
 code = get_auth_code_from_url()
@@ -163,10 +163,10 @@ if code:
         with open(TOKEN_FILE, "wb") as f:
             pickle.dump(creds, f)
         st.success("🎉 Google Sign-In successful!")
-        st.experimental_rerun()
+        st.rerun()
     except Exception as e:
         st.error(f"❌ Failed to fetch token from code: {e}")
-        st.stop()
+
 
 # --- Sign-in button UI
 if not creds:

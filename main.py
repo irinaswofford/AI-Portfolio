@@ -290,7 +290,7 @@ def generate_ai_answer(query):
 def create_gmail_draft(creds, recipient, subject, body):
     """Creates a Gmail draft with the given content."""
     try:
-        st.write(f"DEBUG: Credentials: {cred}")
+        st.write(f"DEBUG: Credentials: {creds}")
         service = build("gmail", "v1", credentials=creds)
         message = MIMEMultipart()
         message["to"] = recipient
@@ -301,6 +301,7 @@ def create_gmail_draft(creds, recipient, subject, body):
         draft_body = {"message": {"raw": raw_message}}
 
         draft = service.users().drafts().create(userId="me", body=draft_body).execute()
+        st.success(f"✅ Email draft successfully created in your Gmail! Draft ID: {draft['id']}")
         logging.info(f"Draft created with ID: {draft['id']}")
         return f"Draft created successfully with ID: {draft['id']}"
     except Exception as e:

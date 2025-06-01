@@ -98,7 +98,8 @@ def st_redirect(url: str) -> None:
     """
     st.markdown(nav_script, unsafe_allow_html=True)
 
-st.button(':key: Login', type='primary', on_click=st_redirect)
+st.button('Login', type='primary', on_click=lambda: st_redirect("https://example.com"))
+
 
 if 'credentials' in st.session_state:
     id_info = id_token.verify_token(

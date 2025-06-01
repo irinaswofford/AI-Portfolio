@@ -160,8 +160,10 @@ def authenticate_user():
                 st.markdown("---")
 
                 #auth_code = get_auth_code_from_url()
-                auth_code = st.query_params.get("code")
-                st.write("🔍 Debug - Auth Code from URL:", auth_code)
+                query_params = st.query_params
+                code = query_params.get("code", [None])[0]
+                st.write("📦 Query code:", query_params)
+            
 
                 if auth_code:
                     try:

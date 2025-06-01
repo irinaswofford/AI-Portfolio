@@ -107,7 +107,6 @@ def get_auth_code_from_url():
     try:
         query_params = st.query_params  # 
         code = query_params.get("code", [None])[0]
-        st.write(f"📦 Query code: {query_params}")
         return code
     except Exception as e:
         st.error(f"❌ Error extracting code from query params: {e}")
@@ -204,9 +203,16 @@ def authenticate_user():
                 st.markdown("---")
 
                 auth_code = get_auth_code_from_url()
-
+                
                 if auth_code:
                     try:
+                        
+                        # --- DEBUGGING STATEMENTS ADDED HERE ---
+                        st.write(f"DEBUG: client_config used: {client_config}")
+                        st.write(f"DEBUG: Code received: {code}")
+                        st.write(f"DEBUG: Redirect URI being used by Flow: {client_config['web']['redirect_uri']}")
+                        # --- END DEBUGGING STATEMENTS ---
+
                         flow.fetch_token(code=auth_code)
                         creds = flow.credentials
                         with open(TOKEN_FILE, 'wb') as token_file_obj:

@@ -109,129 +109,123 @@ client_config = {
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 REDIRECT_URI = st.secrets["redirect_uri"]
 # --- Utility: Detect OAuth2 “code” in URL ---
-def get_authorization_code():
-    params = st.query_params
-    st.write("Query params:", st.query_params)
+import os
+import pickle
+import streamlit as st
+from google.auth.transport.requests import Request
+from google_auth_oauthlib.flow import Flow
 
-    if "code" in params:
-        return params["code"][0]
-    return None
+# === Secrets & Config ===
+TOKEN_FILE = "token.pickle"
+SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 
-def get_credentials():
-    """Handles OAuth2 authentication and returns credentials."""
-    creds = None
-    token_file = st.secrets.GOOGLE_TOKEN_PATH
+REDIRECT_URI = st.secrets["redirect_uri"]
 
-    # Check if the token.pickle file exists
-    if os.path.exists(token_file):
-        with open(token_file, 'rb') as token:
-            creds = pickle.load(token)
-        if creds and creds.valid:
-            return creds
-        elif creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-            with open(token_file, 'wb') as token:
-                pickle.dump(creds, token)
-            return creds
-    else:
-        # If no valid credentials are found, perform OAuth
-        flow = InstalledAppFlow.from_client_secrets_file(
-            'client_config', ['https://www.googleapis.com/auth/gmail.compose']
-        )
-        creds = flow.run_local_server(port=0)
-        
-        # Save the credentials for the next run
-        with open(token_file, 'wb') as token:
-            pickle.dump(creds, token)
-# 2) UTILS: Redirect Helper + Check for “code” in URL
-# ------------------------------------------------------------------------------
+client_config = {
+    "web": {
+        "client_id": st.secrets["client_id"],
+        "project_id": st.secrets["project_id"],
+        "auth_uri": st.secrets["auth_uri"],
+        "token_uri": st.secrets["token_uri"],
+        "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+        "client_secret": st.secrets["client_secret"],
+        "redirect_uris": [st.secrets["redirect_uri"]]  # ✅ MUST be a list
+    }
+}
+
+# === Utils ===
 
 def st_redirect(url: str):
-    """Inject a tiny <script> so that Streamlit navigates to `url`."""
-    # This snippet must run inside Streamlit for Cloud, otherwise window.location doesn’t work.
-    js = f"""
-      <script>
-        window.location.href = "{url}";
-      </script>
-    """
-    st.markdown(js, unsafe_allow_html=True)
+    """Client-side redirect using JavaScript inside Streamlit."""
+    st.markdown(
+        f'<script>window.location.href="{url}";</script>',
+        unsafe_allow_html=True
+    )
 
 def get_auth_code_from_url():
-    """If Google redirected back with ?code=…, grab it from st.query_params."""
+    """Extract ?code= from URL params."""
     params = st.query_params
     if "code" in params:
         return params["code"][0]
     return None
 
-# ------------------------------------------------------------------------------
-# 3) MAIN: “Sign in with Google” button → generate auth_url → handle callback
-# ------------------------------------------------------------------------------
+# === App ===
 
-st.title("Streamlit Gmail OAuth Demo")
+st.title("📧 Gmail OAuth2 Streamlit Demo")
 
-# 3a) If we already have a valid token in TOKEN_FILE, load and show “signed in.”
+# 1. Load token if available
 creds = None
 if os.path.exists(TOKEN_FILE):
     with open(TOKEN_FILE, "rb") as f:
         creds = pickle.load(f)
 
-    # If token is expired but has a refresh_token, refresh it
     if creds and creds.expired and creds.refresh_token:
         try:
             creds.refresh(Request())
             with open(TOKEN_FILE, "wb") as f:
                 pickle.dump(creds, f)
         except Exception as e:
-            st.error(f"⚠️ Could not refresh token: {e}")
+            st.error(f"⚠️ Failed to refresh token: {e}")
             creds = None
 
     if creds and creds.valid:
-        st.success("✅ You are already signed in with Google!")
-        # (Optionally show user info, or allow sending a test draft)
-        # For example:
-        # service = build("gmail", "v1", credentials=creds)
-        # ... use `service` to create a Gmail draft ...
+        st.success("✅ You are signed in with Google!")
         st.stop()
 
-# 3b) Otherwise, check if we have “?code” in the URL
+# 2. Check for code in URL to fetch token
 code = get_auth_code_from_url()
-if code and not creds:
-    # Exchange the code for a token
+if code:
     try:
         flow = Flow.from_client_config(
-            {
-                "web": {
-                    "client_id": CLIENT_ID,
-                    "project_id": st.secrets["project_id"],
-                    "auth_uri": st.secrets["auth_uri"],
-                    "token_uri": st.secrets["token_uri"],
-                    "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-                    "client_secret": CLIENT_SECRET,
-                    "redirect_uris": [REDIRECT_URI],
-                }
-            },
+            client_config,
             scopes=SCOPES,
-            redirect_uri=REDIRECT_URI,
+            redirect_uri=REDIRECT_URI
         )
-
         flow.fetch_token(code=code)
         creds = flow.credentials
 
-        # Save token so that we don’t need to re-consent next time
         with open(TOKEN_FILE, "wb") as f:
             pickle.dump(creds, f)
 
-        st.success("🎉 You have successfully signed in with Google!")
+        st.success("🎉 Google Sign-In successful!")
         st.experimental_rerun()
 
     except Exception as e:
-        st.error(f"❌ Failed to exchange code for token: {e}")
+        st.error(f"❌ Failed to complete sign-in: {e}")
         st.stop()
 
-# 3c) If we still don’t have creds, show “Sign in with Google” button
-
+# 3. Show sign-in button
 if not creds:
     flow = Flow.from_client_config(
+        client_config,
+        scopes=SCOPES,
+        redirect_uri=REDIRECT_URI
+    )
+
+    auth_url, _ = flow.authorization_url(
+        prompt="consent",
+        access_type="offline",
+        include_granted_scopes="true",
+    )
+
+    if st.button("🔐 Sign in with Google"):
+        st_redirect(auth_url)
+
+    st.write("— OR —")
+    st.write("If redirected already, paste `code=` query parameter here:")
+    manual_code = st.text_input("Paste code from URL")
+
+    if manual_code:
+        try:
+            flow.fetch_token(code=manual_code)
+            creds = flow.credentials
+            with open(TOKEN_FILE, "wb") as f:
+                pickle.dump(creds, f)
+            st.success("🎉 Signed in successfully!")
+            st.experimental_rerun()
+        except Exception as e:
+            st.error(f"❌ Manual code failed: {e}")
+ow = Flow.from_client_config(
         {
             "web": {
                 "client_id": st.secrets["client_id"],

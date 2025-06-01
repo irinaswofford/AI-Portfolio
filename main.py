@@ -103,29 +103,17 @@ client_config = {
         "client_secret": st.secrets["client_secret"],
         "auth_uri": st.secrets["auth_uri"],
         "token_uri": st.secrets["token_uri"],
-        "redirect_uris": st.secrets["redirect_uri"]
+        "redirect_uri": st.secrets["redirect_uri"]
     }
 }
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 REDIRECT_URI = st.secrets["redirect_uri"]
-# --- Utility: Detect OAuth2 “code” in URL ---
 
-import os
-import pickle
-import streamlit as st
-from google_auth_oauthlib.flow import Flow
-from google.auth.transport.requests import Request
 
-# Constants (make sure these are defined)
-TOKEN_FILE = "token.pkl"
-SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
-REDIRECT_URI = "http://localhost:8501"
-client_config = {
-    # Your Google client config goes here
-}
+
 def get_auth_code_from_url():
-    query_params = st.experimental_get_query_params()
+    query_params = st.st.query_params()
     return query_params.get("code", [None])[0]
 
 def st_redirect(url):

@@ -3,7 +3,7 @@ import os
 import pickle
 import base64
 import torch
-from portfolio_data import portfolio_data 
+from portfolio_data import portfolio_data # Assuming this file exists and is correct
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
@@ -108,7 +108,7 @@ client_config = {
         "client_secret": st.secrets["client_secret"],
         "auth_uri": st.secrets["auth_uri"],
         "token_uri": st.secrets["token_uri"],
-        "redirect_uri": st.secrets["redirect_uri"]
+        "redirect_uri": st.secrets["redirect_uri"] # Ensure this is the root URL
     }
 }
 
@@ -124,6 +124,7 @@ def get_auth_code_from_url():
         query_params = st.query_params
         code = query_params.get("code", [None])[0]
         st.write(f"📦 Query code: {code}") # Debugging: Show the extracted code
+        st.write(f"DEBUG: Full st.query_params: {query_params}") # Added to see all params
         return code
     except Exception as e:
         st.error(f"❌ Error extracting code from query params: {e}")
@@ -182,29 +183,31 @@ def get_user_credentials():
             flow = Flow.from_client_config(
                 client_config,
                 scopes=SCOPES,
-                redirect_uri=st.secrets["redirect_uri"]
+                redirect_uri=st.secrets["redirect_uri"] # This should be the root URL
             )
 
             auth_url, _ = flow.authorization_url(
                 prompt='consent',
                 _external=True,
                 access_type='offline', # Request refresh token
-
             )
 
-            st.info(f"### 🔐 Google Authentication Required:\n\nPlease click [here to sign in with Google]({auth_url})")
-            
+            st.info(f"""
+                ### 🔐 Google Authentication Required:
+                Please click [here to sign in with Google]({auth_url})
+
+                **IMPORTANT:** After signing in with Google, you will be redirected back to this app.
+                **Please copy the exact URL from your browser's address bar after the redirect**
+                and paste it here if authentication doesn't proceed automatically.
+                """)
 
             auth_code = get_auth_code_from_url()
 
             # --- DEBUGGING STATEMENTS ---
-            
             st.write(f"DEBUG: Code received for token exchange: {auth_code}")
             st.write(f"DEBUG: Redirect URI being used by Flow for token exchange: {st.secrets['redirect_uri']}")
-       
-         
-            if auth_code:
 
+            if auth_code:
                 try:
                     logging.info(f"Attempting to fetch token with code: {auth_code[:10]}...") # Log first 10 chars
                     flow.fetch_token(code=auth_code) # Use 'code' parameter for fetch_token
@@ -212,20 +215,21 @@ def get_user_credentials():
                     with open(TOKEN_FILE, 'wb') as f:
                         pickle.dump(creds, f)
                     st.success("✅ Authentication successful! Credentials saved.")
-                    
                     logging.info("Authentication successful. Rerunning app.")
-
-                   
+                    st.experimental_rerun() # Force a rerun to use new credentials
 
                 except Exception as e:
                     st.error(f"❌ Failed to fetch token: {e}")
                     st.error(f"Full Exception (from get_user_credentials): {e}") # Provide full exception for more detail
                     logging.error(f"Failed to fetch token: {e}", exc_info=True)
                     creds = None # Ensure creds is None if token fetch fails, allowing re-prompt
-                    
-                    
+
             else:
-                logging.info("No auth code found in URL. Waiting for user interaction.")
+                logging.info("No auth code found in URL. Waiting for user interaction or re-authentication.")
+                # If no auth code is found, force a rerun to re-evaluate the URL after redirect
+                # This helps if Streamlit doesn't immediately pick up the query params.
+                st.experimental_rerun()
+
 
         except Exception as e:
             st.error(f"❌ Error initiating auth flow: {e}")
@@ -235,16 +239,7 @@ def get_user_credentials():
     return creds
 
 # def send_email(creds, to_email, subject, message_text):
-     
 #     """Sends an email using the Gmail API."""
-
-#     st.write(f"DEBUG: Credentials: {cred}")
-#     service = build('gmail', 'v1', credentials=creds)
-#     message = {
-#         "raw": create_message("me", to_email, subject, message_text)
-#     }
-#     # Using drafts instead of direct send for human-in-the-loop
-#     # service.users().messages().send(userId="me", body=message).execute()
 #     # This function is not used in the current flow where create_gmail_draft is used.
 #     pass
 
@@ -289,9 +284,9 @@ def generate_ai_answer(query):
         return f"Error generating AI answer: {e}"
 
 def create_gmail_draft(creds, recipient, subject, body):
-    """Creates a Gmail draft with the given content."""
+    """Creates a Gmail draft with the given content and displays a success message."""
     try:
-        st.write(f"DEBUG: Credentials: {creds}")
+        # st.write(f"DEBUG: Credentials: {creds}") # Using 'creds' now, not 'cred'
         service = build("gmail", "v1", credentials=creds)
         message = MIMEMultipart()
         message["to"] = recipient
@@ -302,13 +297,13 @@ def create_gmail_draft(creds, recipient, subject, body):
         draft_body = {"message": {"raw": raw_message}}
 
         draft = service.users().drafts().create(userId="me", body=draft_body).execute()
-        st.success(f"✅ Email draft successfully created in your Gmail! Draft ID: {draft['id']}")
         logging.info(f"Draft created with ID: {draft['id']}")
+        st.success(f"✅ Email draft successfully created in your Gmail! Draft ID: {draft['id']}")  # Display success message
         return f"Draft created successfully with ID: {draft['id']}"
     except Exception as e:
         logging.error(f"Error creating draft: {e}", exc_info=True)
+        st.error(f"❌ Failed to create draft: {e}") # Display error message
         return f"❌ Failed to create draft: {e}"
-
 
 
 class PortfolioAssistant:
@@ -356,16 +351,14 @@ def handle_user_query(user_query, user_email, email_sent=False):
             body = f"Your query: {user_query}\n\n{combined_response}"
             email_status = create_gmail_draft(creds, user_email, subject, body)
 
-            if "Error" not in email_status:
-                st.success(email_status)
-            else:
-                st.error(email_status)
+            # st.success/st.error are now handled inside create_gmail_draft
+            # No need for the if/else block here for displaying messages
 
             return {
                 "input": user_query,
-                "output": email_status,
+                "output": email_status, # This will contain the success/failure message string
                 "prompt_email": False,
-                "email_sent": True
+                "email_sent": True # Assuming the attempt to send means email_sent is now true for this interaction
             }
         elif not user_email:
             # Prompt for email if it's an out-of-scope question and no email provided yet

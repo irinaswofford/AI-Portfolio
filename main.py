@@ -233,19 +233,19 @@ def get_user_credentials():
 
     return creds
 
-def send_email(creds, to_email, subject, message_text):
+# def send_email(creds, to_email, subject, message_text):
      
-    """Sends an email using the Gmail API."""
+#     """Sends an email using the Gmail API."""
 
-    st.write(f"DEBUG: Credentials: {cred}")
-    service = build('gmail', 'v1', credentials=creds)
-    message = {
-        "raw": create_message("me", to_email, subject, message_text)
-    }
-    # Using drafts instead of direct send for human-in-the-loop
-    # service.users().messages().send(userId="me", body=message).execute()
-    # This function is not used in the current flow where create_gmail_draft is used.
-    pass
+#     st.write(f"DEBUG: Credentials: {cred}")
+#     service = build('gmail', 'v1', credentials=creds)
+#     message = {
+#         "raw": create_message("me", to_email, subject, message_text)
+#     }
+#     # Using drafts instead of direct send for human-in-the-loop
+#     # service.users().messages().send(userId="me", body=message).execute()
+#     # This function is not used in the current flow where create_gmail_draft is used.
+#     pass
 
 def create_message(sender, to, subject, message_text):
     """Creates a MIMEText message for Gmail API."""
@@ -290,6 +290,7 @@ def generate_ai_answer(query):
 def create_gmail_draft(creds, recipient, subject, body):
     """Creates a Gmail draft with the given content."""
     try:
+        st.write(f"DEBUG: Credentials: {cred}")
         service = build("gmail", "v1", credentials=creds)
         message = MIMEMultipart()
         message["to"] = recipient

@@ -108,6 +108,13 @@ def login_callback():
     )
     st.session_state.credentials = credentials
 
+
+def st_redirect(url: str) -> None:
+    nav_script = f"""
+        <meta http-equiv="refresh" content="0; url='{url}'">
+    """
+    st.markdown(nav_script, unsafe_allow_html=True)
+
 st.button(':key: Login', type='primary', on_click=login_callback)
 
 if 'credentials' in st.session_state:

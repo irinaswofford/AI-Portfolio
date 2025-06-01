@@ -91,9 +91,7 @@ state_schema = frozenset([
 graph = StateGraph(state_schema=state_schema)
 
 
-# Button to trigger redirect
-if st.button("Login to Gmail"):
-    st_redirect_js("https://mail.google.com/")
+
 
 
 
@@ -103,6 +101,73 @@ if 'credentials' in st.session_state:
         Request(),
     )
     st.json(id_info)
+
+
+# === Get Google Client Info from Streamlit Secrets ===
+client_config = {
+    "web": {
+        "client_id": st.secrets["google"]["client_id"],
+        "client_secret": st.secrets["google"]["client_secret"],
+        "auth_uri": st.secrets["google"]["auth_uri"],
+        "token_uri": st.secrets["google"]["token_uri"],
+        "redirect_uris": st.secrets["google"]["redirect_uris"]
+    }
+}
+
+SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
+REDIRECT_URI = client_config["web"]["redirect_uris"][0]
+
+
+def get_credentials():
+    creds = None
+    if "token" in st.session_state:
+        creds = Credentials.from_authorized_user_info(st.session_state["token"], SCOPES)
+
+    if not creds or not creds.valid:
+        flow = Flow.from_client_config(client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI)
+        auth_url, _ = flow.authorization_url(prompt='consent')
+
+        st.markdown(f"[Click here to authorize Gmail]({auth_url})", unsafe_allow_html=True)
+        code = st.text_input("Enter authorization code")
+
+        if code:
+            try:
+                flow.fetch_token(code=code)
+                creds = flow.credentials
+                st.session_state["token"] = json.loads(creds.to_json())
+            except Exception as e:
+                st.error(f"Error during authentication: {e}")
+                return None
+    return creds
+
+
+def create_gmail_draft(creds, recipient, subject, body):
+    try:
+        service = build("gmail", "v1", credentials=creds)
+        message = MIMEMultipart()
+        message["to"] = recipient
+        message["subject"] = subject
+        message.attach(MIMEText(body, "plain"))
+
+        raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
+        draft = service.users().drafts().create(userId="me", body={"message": {"raw": raw}}).execute()
+        st.success("✅ Gmail draft created!")
+        return draft
+    except Exception as e:
+        st.error(f"❌ Failed to create draft: {e}")
+
+
+# === MAIN APP ===
+st.title("📨 Gmail Draft Creator")
+
+creds = get_credentials()
+if creds and creds.valid:
+    recipient = st.text_input("To")
+    subject = st.text_input("Subject")
+    body = st.text_area("Email Body")
+
+    if st.button("Create Draft"):
+        create_gmail_draft(creds, recipient, subject, body)
 
 def authenticate_user():
     creds = None

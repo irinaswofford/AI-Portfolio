@@ -124,14 +124,41 @@ def handle_oauth2_redirect():
         return auth_code
     return None
 
-from StreamlitGauth.google_auth import Google_auth
+from google.oauth2 import id_token
+from google_auth_oauthlib import get_user_credentials
 
-# Authenticate using secrets stored in .streamlit/secrets.toml
-login = Google_auth(
-    clientId=st.secrets["client_id"], 
-    clientSecret=st.secrets["client_secret"], 
-    redirect_uri=st.secrets.redirect_uri  # or st.secrets["redirect_uri"]
-)
+st.title(':closed_lock_with_key: Prueba Autenticación con Google')
+
+
+def login_callback():
+    credentials = get_user_credentials(
+        client_id=st.secrets.client_id,
+        client_secret=st.secrets.client_secret,
+        scopes=[
+            'openid',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile',
+            "https://www.googleapis.com/auth/calendar.events.readonly",
+        ],
+        minimum_port=9000,
+        maximum_port=9001,
+    )
+    print(f"credentials; {credentials}")
+    st.session_state.credentials = credentials
+
+
+st.button(':key: Login',
+          type='primary',
+          on_click=login_callback)
+
+print(f'st.session_state: {st.session_state}')
+
+if 'credentials' in st.session_state:
+    id_info = id_token.verify_token(
+        st.session_state.credentials.id_token,
+        requests.Request(),
+    )
+    st.json(id_info)
 
 
 

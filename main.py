@@ -127,6 +127,8 @@ REDIRECT_URI = st.secrets["redirect_uri"]
 # --- Utility: Detect OAuth2 “code” in URL ---
 def get_authorization_code():
     params = st.query_params
+    st.write("Query params:", st.query_params)
+
     if "code" in params:
         return params["code"][0]
     return None

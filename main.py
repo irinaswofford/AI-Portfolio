@@ -131,7 +131,7 @@ from StreamlitGauth.google_auth import Google_auth
 redirect_uri = "http://localhost:8501"
 
 login = Google_auth(clientId=st.secrets.client_id, 
- clientSecret=client_secret,redirect_uri=st.secrets.redirect_uri
+ clientSecret=st.secret.client_secret,redirect_uri=st.secrets.redirect_uri
  )
 
 if login == "authenticated":

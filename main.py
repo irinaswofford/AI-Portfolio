@@ -245,13 +245,13 @@ if not creds:
     flow = Flow.from_client_config(
         {
             "web": {
-                "client_id": CLIENT_ID,
+                "client_id": st.secrets["client_id"],
                 "project_id": st.secrets["project_id"],
                 "auth_uri": st.secrets["auth_uri"],
                 "token_uri": st.secrets["token_uri"],
                 "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-                "client_secret": CLIENT_SECRET,
-                "redirect_uris": [REDIRECT_URI],
+                "client_secret": st.secrets["client_secret"],
+                "redirect_uris": st.secrets["redirect_uri"]
             }
         },
         scopes=SCOPES,

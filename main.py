@@ -16,6 +16,8 @@ from langgraph.graph import StateGraph, END
 from portfolio_data import portfolio_data
 from dotenv import load_dotenv
 
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
 # --- Global Configurations ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -241,8 +243,7 @@ if code and not creds:
         st.stop()
 
 # 3c) If we still don’t have creds, show “Sign in with Google” button
-import os
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
 if not creds:
     flow = Flow.from_client_config(
         {

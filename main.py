@@ -162,7 +162,18 @@ def st_redirect(url):
 # ✅ Trigger the redirect from a button
 if st.button("Login with Google"):
     st_redirect("https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_CLIENT_ID&redirect_uri=https://your-app.streamlit.app&response_type=code&scope=https://www.googleapis.com/auth/gmail.compose")
+auth_url = (
+    "https://accounts.google.com/o/oauth2/v2/auth"
+    f"?client_id={client_id}"
+    f"&redirect_uri={redirect_uri}"
+    "&response_type=code"
+    f"&scope={scope}"
+    "&access_type=offline"
+    "&prompt=consent"
+)
 
+if st.button("Login with Google23333"):
+    st.markdown(f"<meta http-equiv='refresh' content='0; url={auth_url}'>", unsafe_allow_html=True)
 def create_gmail_draft(creds, recipient, subject, body):
     try:
         service = build("gmail", "v1", credentials=creds)

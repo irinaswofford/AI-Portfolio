@@ -110,11 +110,7 @@ client_config = {
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 REDIRECT_URI = st.secrets["redirect_uri"]
 # --- Utility: Detect OAuth2 “code” in URL ---
-import os
-import pickle
-import streamlit as st
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import Flow
+
 
 # === Secrets & Config ===
 TOKEN_FILE = "token.pickle"

@@ -20,7 +20,6 @@ from dotenv import load_dotenv
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 TOKEN_FILE = st.secrets["GOOGLE_TOKEN_PATH"]
-REDIRECT_URI = "https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/oauth2callback/"
 SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
 
 load_dotenv()

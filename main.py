@@ -160,7 +160,7 @@ def authenticate_user():
                 st.markdown("---")
 
                 auth_code = get_auth_code_from_url()
-                st.write(auth_code)
+                st.write("🔍 Debug - Auth Code from URL:", auth_code)
 
                 if auth_code:
                     try:

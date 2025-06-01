@@ -124,36 +124,25 @@ def handle_oauth2_redirect():
         return auth_code
     return None
 
-
-
 from StreamlitGauth.google_auth import Google_auth
 
-redirect_uri = "http://localhost:8501"
-
-login = Google_auth(clientId = st.secrets.client_id, 
- clientSecret = st.secrets.client_secret,
-redirect_uri = st.secrets.redirect_uri
- )
-
-
-if login == "authenticated":
-   st.success("hello")
-   pass
-else:
-    st.warning("login failed")
-# --- Authentication Function ---
-
-
-
-import streamlit as st
-from streamlit_google_auth import Authenticate
-
-authenticator = Authenticate(
-    secret_credentials_path='google_credentials.json',
-    cookie_name='my_cookie_name',
-    cookie_key='this_is_secret',
-    redirect_uri='http://localhost:8501',
+# Initialize the authentication object
+auth = Google_auth(
+    clientId=st.secrets.client_id, 
+    clientSecret=st.secrets.client_secret,
+    redirect_uri=st.secrets.redirect_uri
 )
+
+# Trigger login
+login_status = auth.login()  # or `auth.authenticate()` depending on the actual method name
+
+# Check if login was successful
+if login_status == "authenticated":
+    st.success("Hello, you're logged in!")
+else:
+    st.warning("Login failed. Please try again.")
+
+
 def authenticate_user():
     creds = None
     logging.info("Attempting to authenticate user.")

@@ -232,7 +232,7 @@ def get_user_credentials():
                     logging.error(f"Failed to fetch token: {e}", exc_info=True)
                     creds = None # Ensure creds is None if token fetch fails, allowing re-prompt
                     
-                    st.experimental_rerun() # Rerun the app to reflect the logged-in state
+                    
             else:
                 logging.info("No auth code found in URL. Waiting for user interaction.")
 

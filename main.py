@@ -164,7 +164,7 @@ def authenticate_user():
         )
         st.info(
             "🔐 Google Authentication Required: "
-            f"Please click [here to sign in]({auth_url})"
+            f"Please click 123 [here to sign in]({auth_url})"
         )
         st.markdown("---")
 

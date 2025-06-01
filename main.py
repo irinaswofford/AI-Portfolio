@@ -139,6 +139,8 @@ def get_credentials():
                 st.error(f"Error during authentication: {e}")
                 return None
     return creds
+
+import html
 def st_redirect(url):
     source = f"location.href = '{url}'"
     wrapped_source = f"(async () => {{{source}}})()"

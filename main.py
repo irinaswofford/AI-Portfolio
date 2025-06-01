@@ -234,8 +234,10 @@ def get_user_credentials():
     return creds
 
 def send_email(creds, to_email, subject, message_text):
-     st.write(f"DEBUG: Credentials: {cred}")
+     
     """Sends an email using the Gmail API."""
+
+    st.write(f"DEBUG: Credentials: {cred}")
     service = build('gmail', 'v1', credentials=creds)
     message = {
         "raw": create_message("me", to_email, subject, message_text)

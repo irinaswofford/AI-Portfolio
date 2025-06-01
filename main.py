@@ -136,19 +136,10 @@ def get_user_credentials():
             except Exception:
                 creds = None
 
+        
+
         if not creds:
             try:
-                # ✅ Read from Streamlit secrets
-                client_config = {
-                    "web": {
-                        "client_id": st.secrets["client_id"],
-                        "client_secret": st.secrets["client_secret"],
-                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                        "token_uri": "https://oauth2.googleapis.com/token",
-                        "redirect_uris": [st.secrets["redirect_uri"]]
-                    }
-                }
-
                 flow = Flow.from_client_config(
                     client_config,
                     scopes=SCOPES,
@@ -167,18 +158,20 @@ def get_user_credentials():
                 auth_code = get_auth_code_from_url()
               
                 st.write("📦 Query code:", auth_code)
-            
+
+
 
                 if auth_code:
                     try:
-                        flow.fetch_token(code=auth_code)
-                        # creds = flow.credentials
-                        with open(TOKEN_FILE, 'wb') as token_file_obj:
-                            pickle.dump(creds, token_file_obj)
+                        flow.fetch_token(auth_code=auth_code)
+                        creds = flow.credentials
+                        with open(TOKEN_FILE, 'wb') as f:
+                            pickle.dump(creds, f)
                         st.success("✅ Authentication successful! Credentials saved.")
+                       st.experimental_rerun()
                     except Exception as e:
-                        st.error(f"❌ Error fetching token: {e}")
-                        creds = None
+                        st.error(f"❌ Failed to fetch token: {e}")
+                        st.stop()
 
             except Exception as e:
                 st.error(f"❌ Error initiating auth flow: {e}")

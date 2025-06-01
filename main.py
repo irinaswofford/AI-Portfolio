@@ -168,7 +168,7 @@ def get_user_credentials():
                         with open(TOKEN_FILE, 'wb') as f:
                             pickle.dump(creds, f)
                         st.success("✅ Authentication successful! Credentials saved.")
-                       st.experimental_rerun()
+                        st.experimental_rerun()
                     except Exception as e:
                         st.error(f"❌ Failed to fetch token: {e}")
                         st.stop()

@@ -118,27 +118,57 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.compose"]
 REDIRECT_URI = client_config["web"]["redirect_uris"][0]
 
 
-def get_credentials():
+# def get_credentials():
+#     creds = None
+#     if "token" in st.session_state:
+#         creds = Credentials.from_authorized_user_info(st.session_state["token"], SCOPES)
+
+#     if not creds or not creds.valid:
+#         flow = Flow.from_client_config(client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI)
+#         auth_url, _ = flow.authorization_url(prompt='consent')
+
+#         st.markdown(f"[Click here to authorize Gmail]({auth_url})", unsafe_allow_html=True)
+#         code = st.text_input("Enter authorization code")
+
+#         if code:
+#             try:
+#                 flow.fetch_token(code=code)
+#                 creds = flow.credentials
+#                 st.session_state["token"] = json.loads(creds.to_json())
+#             except Exception as e:
+#                 st.error(f"Error during authentication: {e}")
+#                 return None
+#     return creds
+
+def load_credentials():
+    """Handles OAuth2 authentication and returns credentials."""
     creds = None
-    if "token" in st.session_state:
-        creds = Credentials.from_authorized_user_info(st.session_state["token"], SCOPES)
+    token_file = 'token.pickle'
 
-    if not creds or not creds.valid:
-        flow = Flow.from_client_config(client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI)
-        auth_url, _ = flow.authorization_url(prompt='consent')
+    # Check if the token.pickle file exists
+    if os.path.exists(token_file):
+        with open(token_file, 'rb') as token:
+            creds = pickle.load(token)
+        if creds and creds.valid:
+            return creds
+        elif creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+            with open(token_file, 'wb') as token:
+                pickle.dump(creds, token)
+            return creds
+    else:
+        # If no valid credentials are found, perform OAuth
+        flow = InstalledAppFlow.from_client_secrets_file(
+            'client_config', ['https://www.googleapis.com/auth/gmail.compose']
+        )
+        creds = flow.run_local_server(port=0)
+        
+        # Save the credentials for the next run
+        with open(token_file, 'wb') as token:
+            pickle.dump(creds, token)
 
-        st.markdown(f"[Click here to authorize Gmail]({auth_url})", unsafe_allow_html=True)
-        code = st.text_input("Enter authorization code")
+        return creds
 
-        if code:
-            try:
-                flow.fetch_token(code=code)
-                creds = flow.credentials
-                st.session_state["token"] = json.loads(creds.to_json())
-            except Exception as e:
-                st.error(f"Error during authentication: {e}")
-                return None
-    return creds
 
 import html
 def st_redirect(url):

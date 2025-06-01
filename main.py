@@ -163,8 +163,8 @@ def st_redirect(url):
 if st.button("Login with Google"):
     auth_url = (
         f"https://accounts.google.com/o/oauth2/v2/auth"
-        f"?client_id={st.secrets['google']['client_id']}"
-        f"&redirect_uri={st.secrets['google']['redirect_uri']}"
+        f"?client_id={st.secrets['client_id']}"
+        f"&redirect_uri={st.secrets['redirect_uri']}"
         f"&response_type=code"
         f"&scope=https://www.googleapis.com/auth/gmail.compose"
         f"&access_type=offline"

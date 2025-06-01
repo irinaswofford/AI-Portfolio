@@ -36,7 +36,8 @@ pandas
 google-api-core
 google-cloud-texttospeech
 StreamlitGAuth
-
+streamlit-oauth
+streamlit-authenticator
 google-api-python-client
 
 # Miscellaneous

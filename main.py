@@ -243,39 +243,39 @@ def get_user_credentials():
             #     # If no auth code is found, force a rerun to re-evaluate the URL after redirect
             #     # This helps if Streamlit doesn't immediately pick up the query params.
             #     st.rerun()
-           if auth_code:
-            try:
-                logging.info(f"Attempting to fetch token with code: {auth_code[:10]}...") # Log first 10 chars
-                flow.fetch_token(code=auth_code) # Use 'code' parameter for fetch_token
-                creds = flow.credentials
-                with open(TOKEN_FILE, 'wb') as f:
-                    pickle.dump(creds, f)
-                st.success("✅ Authentication successful! Credentials saved.")
-                logging.info("Authentication successful. Rerunning app.")
-
-                # --- IMPORTANT ADDITION ---
-                # Remove the 'code' from query parameters after successful exchange
-                st.query_params.pop("code", None) # Safely remove the 'code' parameter from the URL
-                st.rerun() # Force a rerun with a clean URL
-
-            except Exception as e:
-                st.error(f"❌ Failed to fetch token: {e}")
-                st.error(f"Full Exception (from get_user_credentials): {e}") # Provide full exception for more detail
-                logging.error(f"Failed to fetch token: {e}", exc_info=True)
-                creds = None # Ensure creds is None if token fetch fails, allowing re-prompt
-
-                # --- IMPORTANT ADDITION ---
-                # Remove the 'code' from query parameters even on failure to prevent reuse
-                st.query_params.pop("code", None)
-                # Do NOT call st.rerun() here immediately after failure.
-                # Let the error message remain visible for the user.
-                # They can manually refresh or try the sign-in link again.
-
-        else:
-            logging.info("No auth code found in URL. Waiting for user interaction.")
-            # This st.rerun() is useful here to pick up the code after the first redirect,
-            # especially if Streamlit needs a refresh to see the query params.
-            st.rerun()
+               if auth_code:
+                try:
+                    logging.info(f"Attempting to fetch token with code: {auth_code[:10]}...") # Log first 10 chars
+                    flow.fetch_token(code=auth_code) # Use 'code' parameter for fetch_token
+                    creds = flow.credentials
+                    with open(TOKEN_FILE, 'wb') as f:
+                        pickle.dump(creds, f)
+                    st.success("✅ Authentication successful! Credentials saved.")
+                    logging.info("Authentication successful. Rerunning app.")
+    
+                    # --- IMPORTANT ADDITION ---
+                    # Remove the 'code' from query parameters after successful exchange
+                    st.query_params.pop("code", None) # Safely remove the 'code' parameter from the URL
+                    st.rerun() # Force a rerun with a clean URL
+    
+                except Exception as e:
+                    st.error(f"❌ Failed to fetch token: {e}")
+                    st.error(f"Full Exception (from get_user_credentials): {e}") # Provide full exception for more detail
+                    logging.error(f"Failed to fetch token: {e}", exc_info=True)
+                    creds = None # Ensure creds is None if token fetch fails, allowing re-prompt
+    
+                    # --- IMPORTANT ADDITION ---
+                    # Remove the 'code' from query parameters even on failure to prevent reuse
+                    st.query_params.pop("code", None)
+                    # Do NOT call st.rerun() here immediately after failure.
+                    # Let the error message remain visible for the user.
+                    # They can manually refresh or try the sign-in link again.
+    
+            else:
+                logging.info("No auth code found in URL. Waiting for user interaction.")
+                # This st.rerun() is useful here to pick up the code after the first redirect,
+                # especially if Streamlit needs a refresh to see the query params.
+                st.rerun()
 
 
         except Exception as e:

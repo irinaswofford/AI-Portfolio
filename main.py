@@ -243,7 +243,7 @@ def get_user_credentials():
             #     # If no auth code is found, force a rerun to re-evaluate the URL after redirect
             #     # This helps if Streamlit doesn't immediately pick up the query params.
             #     st.rerun()
-               if auth_code:
+            if auth_code:
                 try:
                     logging.info(f"Attempting to fetch token with code: {auth_code[:10]}...") # Log first 10 chars
                     flow.fetch_token(code=auth_code) # Use 'code' parameter for fetch_token

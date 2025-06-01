@@ -225,7 +225,7 @@ if not creds:
             st.experimental_rerun()
         except Exception as e:
             st.error(f"❌ Manual code failed: {e}")
-ow = Flow.from_client_config(
+fow = Flow.from_client_config(
         {
             "web": {
                 "client_id": st.secrets["client_id"],

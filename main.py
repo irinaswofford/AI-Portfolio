@@ -183,7 +183,7 @@ if not creds:
         )
         st.write("🔗 Authorization URL generated")
 
-        if st.button("🔐 Sign in with Google", key="google_signin_button"):
+        if st.button("🔐 Sign in with Google", key="google_signin_button", auth_url):
             #st.write("➡️ Redirecting to:", auth_url)
             st.markdown(f"[Click here if not redirected]({auth_url})", unsafe_allow_html=True)
             st.stop()

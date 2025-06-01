@@ -160,43 +160,7 @@ if code:
     except Exception as e:
         st.error(f"❌ Failed to fetch token from code: {e}")
 
-
-# --- Sign-in button UI
-if not creds:
-    try:
-        flow = Flow.from_client_config(
-            client_config,
-            scopes=SCOPES,
-            redirect_uri = st.secrets["redirect_uri"]
-        )
-        auth_url, _ = flow.authorization_url(
-            prompt="consent",
-            access_type="offline",
-            include_granted_scopes="true"
-        )
-        st.write("🔗 Authorization URL generated")
-
-        if st.button("🔐 Sign in with Google", key="google_signin_button"):
-            #st.write("➡️ Redirecting to:", auth_url)
-            st.markdown(f"[Click here if not redirected]({auth_url})", unsafe_allow_html=True)
-            st.stop()
-    except Exception as e:
-        st.error(f"❌ Error generating auth URL: {e}")
-        st.stop()
-
-    # Optional manual code entry
-    st.write("Or paste the `?code=` parameter from redirected URL below:")
-    manual_code = st.text_input("Paste code here")
-    if manual_code:
-        try:
-            flow.fetch_token(code=manual_code)
-            creds = flow.credentials
-            with open(TOKEN_FILE, "wb") as f:
-                pickle.dump(creds, f)
-            st.success("🎉 Signed in via manual code!")
-            st.experimental_rerun()
-        except Exception as e:
-            st.error(f"❌ Manual code sign-in failed: {e}")
+       
 
 def authenticate_user():
     creds = None

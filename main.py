@@ -205,7 +205,7 @@ def get_user_credentials():
             if auth_code:
                 try:
                     logging.info(f"Attempting to fetch token with code: {auth_code[:10]}...") # Log first 10 chars
-                    flow.fetch_token(code=auth_code.strip() # Use 'code' parameter for fetch_token
+                    flow.fetch_token(code=auth_code.strip()) # Use 'code' parameter for fetch_token
                     creds = flow.credentials
                     with open(TOKEN_FILE, 'wb') as f:
                         pickle.dump(creds, f)

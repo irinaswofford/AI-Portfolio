@@ -190,8 +190,7 @@ REDIRECT_URI = st.secrets["redirect_uri"]
 st.title("📧 Gmail OAuth2 Streamlit Demo")
 st.write("🚧 Debug mode active")
 
-# --- Load client config (replace with your actual dict or load from file)
-try:
+
 
 
 # --- Get code from query params

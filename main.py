@@ -124,7 +124,20 @@ def handle_oauth2_redirect():
         return auth_code
     return None
 
+import streamlit as st
+from StreamlitGauth.google_auth import Google_auth
 
+client_id = ""
+client_secret = ""
+redirect_uri = "http://localhost:8501"
+
+login = Google_auth(clientId=client_id, 
+ clientSecret=client_secret,redirect_uri=redirect_uri
+ )
+
+if login == "authenticated":
+   st.success("hello")
+   pass
 # --- Authentication Function ---
 def authenticate_user():
     creds = None

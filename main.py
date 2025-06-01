@@ -91,6 +91,7 @@ state_schema = frozenset([
 graph = StateGraph(state_schema=state_schema)
 
 
+import streamlit as st
 
 def st_redirect(url: str) -> None:
     nav_script = f"""
@@ -98,7 +99,9 @@ def st_redirect(url: str) -> None:
     """
     st.markdown(nav_script, unsafe_allow_html=True)
 
-st.button('Login', type='primary', on_click=lambda: st_redirect("https://ai-portfolio-ftadvcasiaw55zhdgujya2.streamlit.app/"))
+# Use a valid URL
+st.button('Login', type='primary', on_click=lambda: st_redirect("https://mail.google.com/"))
+
 
 
 if 'credentials' in st.session_state:

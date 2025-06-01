@@ -108,8 +108,9 @@ REDIRECT_URI = st.secrets["redirect_uri"]
 
 
 def get_auth_code_from_url():
-    query_params = st.query_params()
+    query_params = st.query_params
     return query_params.get("code", [None])[0]
+
 
 def st_redirect(url):
     st.markdown(f'<meta http-equiv="refresh" content="0; url={url}">', unsafe_allow_html=True)

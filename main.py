@@ -104,46 +104,14 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.compose","https://www.googleapi
 
 # --- Get code from query params
 def get_auth_code_from_url():
-    try:
-        query_params = st.query_params  # 
-        code = query_params.get("code", [None])[0]
-        return code
-    except Exception as e:
-        st.error(f"❌ Error extracting code from query params: {e}")
-        return None
-
-# --- Load credentials if they exist
-creds = None
-if os.path.exists(TOKEN_FILE):
-    st.write("📂 Checking for existing token at:", TOKEN_FILE)
-    with open(TOKEN_FILE, "rb") as f:  # ✅ FIXED: Open in read-binary
-        creds = pickle.load(f)
-    st.write("🔄 Token file loaded:", creds.to_json())
-
-    if creds and creds.expired and creds.refresh_token:
-        try:
-            creds.refresh(Request())
-            with open(TOKEN_FILE, "wb") as f:
-                pickle.dump(creds, f)
-            st.success("🔁 Token refreshed")
-        except Exception as e:
-            st.error(f"⚠️ Failed to refresh token: {e}")
-            creds = None
-
-    if creds and creds.valid:
-        st.toast("🎉 Logged in successfully with Google!", icon="✅")
-        st.json({
-            "token": creds.token,
-            "refresh_token": creds.refresh_token,
-            "valid": creds.valid,
-            "expired": creds.expired
-        })
-        st.stop()
-
-
+    # Streamlit makes this available via st.query_params
+    query_params = st.query_params
+    return query_params.get("code")
 
 def authenticate_user():
     creds = None
+
+    # ✅ Load existing token if available
     if os.path.exists(TOKEN_FILE):
         try:
             with open(TOKEN_FILE, 'rb') as token_file_obj:
@@ -155,6 +123,7 @@ def authenticate_user():
                 pass
             creds = None
 
+    # ✅ Refresh or request new credentials
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
@@ -164,6 +133,16 @@ def authenticate_user():
 
         if not creds:
             try:
+                # ✅ Read from Streamlit secrets
+                client_config = {
+                    "web": {
+                        "client_id": st.secrets["client_id"],
+                        "client_secret": st.secrets["client_secret"],
+                        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                        "token_uri": "https://oauth2.googleapis.com/token",
+                        "redirect_uris": [st.secrets["redirect_uri"]]
+                    }
+                }
 
                 flow = Flow.from_client_config(
                     client_config,
@@ -181,19 +160,22 @@ def authenticate_user():
                 st.markdown("---")
 
                 auth_code = get_auth_code_from_url()
-                
+
                 if auth_code:
                     try:
-                        # --- END DEBUGGING STATEMENTS ---
-
                         flow.fetch_token(code=auth_code)
                         creds = flow.credentials
                         with open(TOKEN_FILE, 'wb') as token_file_obj:
                             pickle.dump(creds, token_file_obj)
-                        st.success("Authentication successful! Credentials saved.")
-                    except Exception:
-                        st.error("❌ Error fetching token.")
+                        st.success("✅ Authentication successful! Credentials saved.")
+                    except Exception as e:
+                        st.error(f"❌ Error fetching token: {e}")
                         creds = None
+
+            except Exception as e:
+                st.error(f"❌ Error initiating auth flow: {e}")
+                creds = None
+
     return creds
 
 def send_email(creds, to_email, subject, message_text):

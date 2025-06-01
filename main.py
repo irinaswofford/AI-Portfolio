@@ -164,7 +164,7 @@ def authenticate_user():
                 if auth_code:
                     try:
                         flow.fetch_token(code=auth_code)
-                        creds = flow.credentials
+                        # creds = flow.credentials
                         with open(TOKEN_FILE, 'wb') as token_file_obj:
                             pickle.dump(creds, token_file_obj)
                         st.success("✅ Authentication successful! Credentials saved.")

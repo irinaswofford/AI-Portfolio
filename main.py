@@ -194,7 +194,7 @@ def authenticate_user():
                     except Exception:
                         st.error("❌ Error fetching token.")
                         creds = None
-            return creds
+    return creds
 
 def send_email(creds, to_email, subject, message_text):
     service = build('gmail', 'v1', credentials=creds)

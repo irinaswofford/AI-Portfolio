@@ -161,7 +161,7 @@ def st_redirect(url):
     )
 # ✅ Trigger the redirect from a button
 if st.button("Login with Google"):
-        auth_url = (
+    auth_url = (
         f"https://accounts.google.com/o/oauth2/v2/auth"
         f"?client_id={st.secrets['google']['client_id']}"
         f"&redirect_uri={st.secrets['google']['redirect_uri']}"
@@ -170,7 +170,7 @@ if st.button("Login with Google"):
         f"&access_type=offline"
         f"&prompt=consent"
     )
-      st_redirect(auth_url)
+    st_redirect(auth_url)
 def create_gmail_draft(creds, recipient, subject, body):
     try:
         service = build("gmail", "v1", credentials=creds)

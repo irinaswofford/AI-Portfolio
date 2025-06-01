@@ -189,7 +189,6 @@ def get_user_credentials():
                 prompt='consent',
                 access_type='offline', # Request refresh token
                 # include_granted_scopes='true'
-                grant_type=authorization_code
             )
 
             # st.info(f"### 🔐 Google Authentication Required:\n\nPlease click [here to sign in with Google]({auth_url})")

@@ -240,7 +240,7 @@ if not creds:
                 "token_uri": st.secrets["token_uri"],
                 "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
                 "client_secret": st.secrets["client_secret"],
-                "redirect_uris": st.secrets["redirect_uri"]
+                "redirect_uri": st.secrets["redirect_uri"]
             }
         },
         scopes=SCOPES,

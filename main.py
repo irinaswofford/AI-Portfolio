@@ -104,89 +104,195 @@ client_config = {
 }
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.compose","https://www.googleapis.com/auth/userinfo.email", "openid"]
-
 REDIRECT_URI = st.secrets["redirect_uri"]
 
 
-def get_auth_code_from_url():
-    query_params = st.query_params
-    return query_params.get("code", [None])[0]
+# def get_auth_code_from_url():
+#     query_params = st.query_params
+    
+#     return query_params.get("code", [None])[0]
 
 
-def st_redirect(url):
-    st.markdown(f'<meta http-equiv="refresh" content="0; url={url}">', unsafe_allow_html=True)
+# def st_redirect(url):
+#     st.markdown(f'<meta http-equiv="refresh" content="0; url={url}">', unsafe_allow_html=True)
 
-# UI Title
+# # UI Title
+# st.title("📧 Gmail OAuth2 Streamlit Demo")
+
+# # 1. Load existing credentials
+# creds = None
+# if os.path.exists(TOKEN_FILE):
+#     with open(TOKEN_FILE, "rb") as f:
+#         creds = pickle.load(f)
+
+#     if creds and creds.expired and creds.refresh_token:
+#         try:
+#             creds.refresh(Request())
+#             with open(TOKEN_FILE, "wb") as f:
+#                 pickle.dump(creds, f)
+#         except Exception as e:
+#             st.error(f"⚠️ Failed to refresh token: {e}")
+#             creds = None
+
+#     if creds and creds.valid:
+#         st.success("✅ You are signed in with Google!")
+#         st.stop()
+
+# # 2. Handle redirect with code in URL
+# code = get_auth_code_from_url()
+# if code:
+#     try:
+#         flow = Flow.from_client_config(
+#             client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
+#         )
+#         flow.fetch_token(code=code)
+#         creds = flow.credentials
+
+#         with open(TOKEN_FILE, "wb") as f:
+#             pickle.dump(creds, f)
+
+#         st.success("🎉 Google Sign-In successful!")
+#         st.experimental_rerun()
+#     except Exception as e:
+#         st.error(f"❌ Failed to complete sign-in: {e}")
+#         st.stop()
+
+# # 3. Show Google sign-in option
+# if not creds:
+#     flow = Flow.from_client_config(
+#         client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
+#     )
+#     auth_url, _ = flow.authorization_url(
+#         prompt="consent", access_type="offline", include_granted_scopes="true"
+#     )
+
+#     if st.button("🔐 Sign in with Google", key="google_signin_button"):
+#         st_redirect(auth_url)
+
+#     st.write("— OR —")
+#     st.write("If redirected already, paste `code=` query parameter here:")
+#     manual_code = st.text_input("Paste code from URL", key="manual_code_input")
+
+#     if manual_code:
+#         try:
+#             flow.fetch_token(code=manual_code)
+#             creds = flow.credentials
+#             with open(TOKEN_FILE, "wb") as f:
+#                 pickle.dump(creds, f)
+#             st.success("🎉 Signed in successfully!")
+#             st.experimental_rerun()
+#         except Exception as e:
+#             st.error(f"❌ Manual code failed: {e}")
+
+  
+
+# Debug
 st.title("📧 Gmail OAuth2 Streamlit Demo")
+st.write("🚧 Debug mode active")
 
-# 1. Load existing credentials
+# --- Load client config (replace with your actual dict or load from file)
+try:
+    import json
+    with open("client_secret.json") as f:
+        client_config = json.load(f)
+    st.write("✅ Client config loaded")
+except Exception as e:
+    st.error(f"❌ Failed to load client config: {e}")
+    st.stop()
+
+# --- Get code from query params
+def get_auth_code_from_url():
+    try:
+        query_params = st.query_params  # NEW API (Streamlit >=1.31+)
+        code = query_params.get("code", [None])[0]
+        st.write(f"📦 Query code: {code}")
+        return code
+    except Exception as e:
+        st.error(f"❌ Error extracting code from query params: {e}")
+        return None
+
+# --- Load credentials if they exist
 creds = None
 if os.path.exists(TOKEN_FILE):
     with open(TOKEN_FILE, "rb") as f:
         creds = pickle.load(f)
+    st.write("🔄 Token file loaded")
 
     if creds and creds.expired and creds.refresh_token:
         try:
             creds.refresh(Request())
             with open(TOKEN_FILE, "wb") as f:
                 pickle.dump(creds, f)
+            st.success("🔁 Token refreshed")
         except Exception as e:
             st.error(f"⚠️ Failed to refresh token: {e}")
             creds = None
 
     if creds and creds.valid:
         st.success("✅ You are signed in with Google!")
+        st.json({
+            "token": creds.token,
+            "refresh_token": creds.refresh_token,
+            "valid": creds.valid,
+            "expired": creds.expired
+        })
         st.stop()
 
-# 2. Handle redirect with code in URL
+# --- Handle manual code from query or text input
 code = get_auth_code_from_url()
 if code:
     try:
         flow = Flow.from_client_config(
-            client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
+            client_config,
+            scopes=SCOPES,
+            redirect_uri=REDIRECT_URI
         )
         flow.fetch_token(code=code)
         creds = flow.credentials
-
         with open(TOKEN_FILE, "wb") as f:
             pickle.dump(creds, f)
-
         st.success("🎉 Google Sign-In successful!")
         st.experimental_rerun()
     except Exception as e:
-        st.error(f"❌ Failed to complete sign-in: {e}")
+        st.error(f"❌ Failed to fetch token from code: {e}")
         st.stop()
 
-# 3. Show Google sign-in option
+# --- Sign-in button UI
 if not creds:
-    flow = Flow.from_client_config(
-        client_config, scopes=SCOPES, redirect_uri=REDIRECT_URI
-    )
-    auth_url, _ = flow.authorization_url(
-        prompt="consent", access_type="offline", include_granted_scopes="true"
-    )
+    try:
+        flow = Flow.from_client_config(
+            client_config,
+            scopes=SCOPES,
+            redirect_uri=REDIRECT_URI
+        )
+        auth_url, _ = flow.authorization_url(
+            prompt="consent",
+            access_type="offline",
+            include_granted_scopes="true"
+        )
+        st.write("🔗 Authorization URL generated")
 
-    if st.button("🔐 Sign in with Google", key="google_signin_button"):
-        st_redirect(auth_url)
+        if st.button("🔐 Sign in with Google", key="google_signin_button"):
+            st.write("➡️ Redirecting to:", auth_url)
+            st.markdown(f"[Click here if not redirected]({auth_url})", unsafe_allow_html=True)
+            st.stop()
+    except Exception as e:
+        st.error(f"❌ Error generating auth URL: {e}")
+        st.stop()
 
-    st.write("— OR —")
-    st.write("If redirected already, paste `code=` query parameter here:")
-    manual_code = st.text_input("Paste code from URL", key="manual_code_input")
-
+    # Optional manual code entry
+    st.write("Or paste the `?code=` parameter from redirected URL below:")
+    manual_code = st.text_input("Paste code here")
     if manual_code:
         try:
             flow.fetch_token(code=manual_code)
             creds = flow.credentials
             with open(TOKEN_FILE, "wb") as f:
                 pickle.dump(creds, f)
-            st.success("🎉 Signed in successfully!")
+            st.success("🎉 Signed in via manual code!")
             st.experimental_rerun()
         except Exception as e:
-            st.error(f"❌ Manual code failed: {e}")
-
-  
-
-
+            st.error(f"❌ Manual code sign-in failed: {e}")
 
     
 

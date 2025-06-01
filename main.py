@@ -155,7 +155,132 @@ def get_credentials():
         # Save the credentials for the next run
         with open(token_file, 'wb') as token:
             pickle.dump(creds, token)
+# 2) UTILS: Redirect Helper + Check for “code” in URL
+# ------------------------------------------------------------------------------
 
+def st_redirect(url: str):
+    """Inject a tiny <script> so that Streamlit navigates to `url`."""
+    # This snippet must run inside Streamlit for Cloud, otherwise window.location doesn’t work.
+    js = f"""
+      <script>
+        window.location.href = "{url}";
+      </script>
+    """
+    st.markdown(js, unsafe_allow_html=True)
+
+def get_auth_code_from_url():
+    """If Google redirected back with ?code=…, grab it from st.query_params."""
+    params = st.query_params
+    if "code" in params:
+        return params["code"][0]
+    return None
+
+# ------------------------------------------------------------------------------
+# 3) MAIN: “Sign in with Google” button → generate auth_url → handle callback
+# ------------------------------------------------------------------------------
+
+st.title("Streamlit Gmail OAuth Demo")
+
+# 3a) If we already have a valid token in TOKEN_FILE, load and show “signed in.”
+creds = None
+if os.path.exists(TOKEN_FILE):
+    with open(TOKEN_FILE, "rb") as f:
+        creds = pickle.load(f)
+
+    # If token is expired but has a refresh_token, refresh it
+    if creds and creds.expired and creds.refresh_token:
+        try:
+            creds.refresh(Request())
+            with open(TOKEN_FILE, "wb") as f:
+                pickle.dump(creds, f)
+        except Exception as e:
+            st.error(f"⚠️ Could not refresh token: {e}")
+            creds = None
+
+    if creds and creds.valid:
+        st.success("✅ You are already signed in with Google!")
+        # (Optionally show user info, or allow sending a test draft)
+        # For example:
+        # service = build("gmail", "v1", credentials=creds)
+        # ... use `service` to create a Gmail draft ...
+        st.stop()
+
+# 3b) Otherwise, check if we have “?code” in the URL
+code = get_auth_code_from_url()
+if code and not creds:
+    # Exchange the code for a token
+    try:
+        flow = Flow.from_client_config(
+            {
+                "web": {
+                    "client_id": CLIENT_ID,
+                    "project_id": st.secrets["project_id"],
+                    "auth_uri": st.secrets["auth_uri"],
+                    "token_uri": st.secrets["token_uri"],
+                    "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+                    "client_secret": CLIENT_SECRET,
+                    "redirect_uris": [REDIRECT_URI],
+                }
+            },
+            scopes=SCOPES,
+            redirect_uri=REDIRECT_URI,
+        )
+
+        flow.fetch_token(code=code)
+        creds = flow.credentials
+
+        # Save token so that we don’t need to re-consent next time
+        with open(TOKEN_FILE, "wb") as f:
+            pickle.dump(creds, f)
+
+        st.success("🎉 You have successfully signed in with Google!")
+        st.experimental_rerun()
+
+    except Exception as e:
+        st.error(f"❌ Failed to exchange code for token: {e}")
+        st.stop()
+
+# 3c) If we still don’t have creds, show “Sign in with Google” button
+if not creds:
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": CLIENT_ID,
+                "project_id": st.secrets["project_id"],
+                "auth_uri": st.secrets["auth_uri"],
+                "token_uri": st.secrets["token_uri"],
+                "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+                "client_secret": CLIENT_SECRET,
+                "redirect_uris": [REDIRECT_URI],
+            }
+        },
+        scopes=SCOPES,
+        redirect_uri=REDIRECT_URI,
+    )
+
+    auth_url, _ = flow.authorization_url(
+        prompt="consent",
+        access_type="offline",
+        include_granted_scopes="true",
+    )
+
+    if st.button("🔐 Sign in with Google"):
+        st_redirect(auth_url)
+
+    st.write("— OR —")
+    st.write("If you’ve already granted consent, paste the `code=` value from the URL below:")
+    manual_code = st.text_input("Paste the `code` query parameter here")
+    if manual_code:
+        try:
+            flow.fetch_token(code=manual_code)
+            creds = flow.credentials
+            with open(TOKEN_FILE, "wb") as f:
+                pickle.dump(creds, f)
+            st.success("🎉 You have successfully signed in with Google!")
+            st.experimental_rerun()
+        except Exception as e:
+            st.error(f"❌ Failed to exchange code manually: {e}")
+            st.stop()
         return creds
 
 

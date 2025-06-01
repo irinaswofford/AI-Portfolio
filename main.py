@@ -223,18 +223,6 @@ def authenticate_user():
 
         if not creds:
             try:
-                REDIRECT_URI = st.secrets["redirect_uri"]
-                client_config = {
-                    "web": {
-                        "client_id": st.secrets["client_id"],
-                        "project_id": st.secrets["project_id"],
-                        "auth_uri": st.secrets["auth_uri"],
-                        "token_uri": st.secrets["token_uri"],
-                        "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-                        "client_secret": st.secrets["client_secret"],
-                        "redirect_uris": [REDIRECT_URI]
-                    }
-                }
 
                 flow = Flow.from_client_config(
                     client_config,

@@ -151,7 +151,6 @@ if code:
         flow = Flow.from_client_config(
             client_config,
             scopes=SCOPES,
-            redirect_uri=REDIRECT_URI
         )
         flow.fetch_token(code=code)
         creds = flow.credentials
@@ -169,7 +168,6 @@ if not creds:
         flow = Flow.from_client_config(
             client_config,
             scopes=SCOPES,
-            redirect_uri=REDIRECT_URI
         )
         auth_url, _ = flow.authorization_url(
             prompt="consent",

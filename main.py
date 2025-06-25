@@ -507,29 +507,30 @@ if st.session_state.page == "Home":
     create_streamlit_interface()
 
 # --- Page routing based on sidebar selection ---
-elif st.session_state.page == "AI Project Mangement experience":
-    load_page("pages/project_roadmap.py")
-elif st.session_state.page == "Robotic Process Automation and Natural Language Processing":
-    load_page("pages/analyse_workflow.py")
-elif st.session_state.page == "Recurrent Neural Network-Long Short Term Memory Networks":
-    load_page("pages/lstm.py")
+
+elif  st.session_state.page =="AI Project Mangement experience":
+        load_page("pages/project_roadmap.py")
+elif  st.session_state.page =="Robotic Process Automation and Natural Language Processing":
+        load_page("pages/analyse_workflow.py")
+elif  st.session_state.page =="Recurrent Neural Network-Long Short Term Memory Networks":
+        load_page("pages/lstm.py")
 elif st.session_state.page == "Supervised learning":
-    load_page("pages/features-sales.py")
+        load_page("pages/features-sales.py")
 elif st.session_state.page == "Unsupervised learning":
-    load_page("pages/unfeatures-sales.py")
-elif st.session_state.page == "Conversational AI fine-tuned with Retrieval Augmented Generation":
-    load_page("pages/graph.py")
-elif st.session_state.page == "Natural Language Processing & Generative AI":
-    load_page("pages/llama.py")
-elif st.session_state.page == "Computer Vision - Image Text Extraction":
-    load_page("pages/computer-vision.py")
-elif st.session_state.page == "Computer Vision - Object Detection":
-    load_page("pages/computer-vision-detect.py")
-elif st.session_state.page == "Sales Agent- Agentic Framework":
-    load_page("pages/sales_agent.py")
-elif st.session_state.page == "NLP and Generative AI: Speech-to-Text AI Voice Agent":
-    load_page("pages/speech2text.py")
-elif st.session_state.page == "Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator":
-    load_page("pages/tts-video.py")
-elif st.session_state.page == "Customer Chatbot Fine Tunned with ChatGPT Turbo":
-    load_page("pages/chatbot.py")
+        load_page("pages/segmentation.py")
+elif  st.session_state.page =="Conversational AI fine-tuned with Retrieval Augmented Generation":
+        load_page("pages/conversational_ai.py")
+elif  st.session_state.page =="Natural Language Processing & Generative AI":
+        load_page("pages/survey_proofreading.py")
+elif  st.session_state.page =="Computer Vision - Image Text Extraction":
+        load_page("pages/text-extraction-image.py")
+elif  st.session_state.page =="Computer Vision - Object Detection":
+        load_page("pages/object_detection_size.py")  
+elif  st.session_state.page =="Sales Agent- Agentic Framework":
+        load_page("pages/sales_agent.py") 
+elif  st.session_state.page =="NLP and Generative AI: Speech-to-Text AI Voice Agent":
+        load_page("pages/speach-to-text.py")   
+elif  st.session_state.page =="Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator":
+        load_page("pages/text-to-speach.py")
+elif  st.session_state.page =="Customer Chatbot Fine Tunned with ChatGPT Turbo":
+        load_page("pages/chatbot_fine_tuned.py")  

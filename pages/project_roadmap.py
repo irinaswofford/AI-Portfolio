@@ -2,12 +2,10 @@ import pandas as pd
 import streamlit as st
 
 def main():
-    # Header and Image for AI Project Roadmaps
+    # Header for the page
     st.title("AI Product & Project Leadership Highlights")
 
-    # Project Milestone Planning Description
-    st.title("AI Product & Project Leadership Highlights")
-
+    # Description with bullet points (using markdown)
     st.markdown("""
     - Defined the product vision and roadmap for multiple AI solutions aligned to user needs and business goals (e.g., automation, personalization, fraud detection).
     - Led cross-functional teams (Data Scientists, MLOps, Engineers, UX) through the full lifecycle — from ideation to MVP delivery and iteration.
@@ -18,15 +16,13 @@ def main():
     - Launched internal AI tools to enhance user engagement and demonstrate applied GenAI capabilities.
     """)
 
-st.image("images/Gannt_chart.png", caption="AI Project Roadmap")
-st.image("images/project_roadmap1.png", caption="AI Project Roadmap")
-st.image("images/project_roadmap2.png", caption="AI Project Roadmap")
-
+    # Show images with captions
     st.image("images/Gannt_chart.png", caption="AI Project Roadmap")
     st.image("images/project_roadmap1.png", caption="AI Project Roadmap")
     st.image("images/project_roadmap2.png", caption="AI Project Roadmap")
-    st.write("""
 
+    # Risk Management Matrix explanation
+    st.write("""
     ### Risk Management Matrix:
     To visualize and tackle potential risks, I create a Risk Management Matrix, detailing:
     - Risks such as Data Privacy, Model Bias, and Regulatory Compliance
@@ -34,7 +30,7 @@ st.image("images/project_roadmap2.png", caption="AI Project Roadmap")
     - Assignment of ownership to the responsible teams (e.g., Data Governance, Compliance)
     """)
 
-    # Displaying Risk Matrix in Sidebar
+    # Risk data in a DataFrame
     risk_data = {
         "Risk": ["Data Privacy", "Model Bias", "False Positives/Negatives", "Regulatory Compliance", "Customer Trust"],
         "Likelihood": ["Medium", "Medium", "High", "Low", "Medium"],
@@ -50,9 +46,9 @@ st.image("images/project_roadmap2.png", caption="AI Project Roadmap")
     }
     df = pd.DataFrame(risk_data)
 
+    # Display the risk matrix as a table
     st.subheader("Risk Management Matrix")
     st.dataframe(df)
 
-# Run the Streamlit app
 if __name__ == "__main__":
     main()

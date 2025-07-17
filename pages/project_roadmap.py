@@ -3,17 +3,18 @@ import streamlit as st
 
 def main():
     # Header and Image for AI Project Roadmaps
-    st.title("AI Project Mangement experience")
+    st.title("AI Product & Project Leadership Highlights")
 
     # Project Milestone Planning Description
     st.write("""
-    - **AI Solution Design:** Led teams in designing scalable AI solutions tailored to business objectives.
-    - **Cross-Functional Team Leadership:** Managed and coordinated Data Scientists, Engineers, and stakeholders to ensure alignment and project success.
-    - **Timeline Management:** Developed detailed project timelines with clear milestones, tracking progress and ensuring timely delivery.
-    - **Risk Management:** Created risk matrices and mitigation plans, identifying potential challenges in AI projects (e.g., data quality, model performance).
-    - **Stakeholder Communication:** Facilitated regular updates, ensuring stakeholders were informed and engaged throughout the project lifecycle.
-    - **Resource Allocation:** Effectively managed team resources, balancing workloads to meet deadlines and optimize productivity.
-    """)
+        Defined the product vision and roadmap for multiple AI solutions aligned to user needs and business goals (e.g., automation, personalization, fraud detection).
+        Led cross-functional teams (Data Scientists, MLOps, Engineers, UX) through the full lifecycle — from ideation to MVP delivery and iteration.
+        Scoped and prioritized product features based on technical feasibility, stakeholder input, and ROI using tools like JIRA, ClickUp, and Aha!.
+        Developed AI risk governance frameworks, including Risk Management Matrices (privacy, model bias, regulatory compliance), and assigned ownership for mitigation.
+        Ensured delivery on time and budget, creating Agile timelines with milestone tracking, and proactively managing scope creep.
+        Communicated progress to execs and business stakeholders, tailoring updates to technical and non-technical audiences.       
+        Launched internal AI tools  to enhance user engagement and demonstrate applied GenAI capabilities.
+            """)
     st.image("images/Gannt_chart.png", caption="AI Project Roadmap")
     st.image("images/project_roadmap1.png", caption="AI Project Roadmap")
     st.image("images/project_roadmap2.png", caption="AI Project Roadmap")

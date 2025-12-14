@@ -87,8 +87,13 @@ def get_ai_news_articles(tickers, max_articles=20):
         "apiKey": NEWS_API_KEY,
     }
 
-    resp = httpx.get(url, params=params, timeout=30)
-    resp.raise_for_status()
+    try:
+        resp = httpx.get(url, params=params, timeout=30)
+        resp.raise_for_status()
+    except Exception as ex:
+        st.error(f"Failed to fetch news: {ex}")
+        return []
+
     articles = resp.json().get("articles", [])
     scored = []
 
@@ -201,8 +206,10 @@ else:
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
-                try: entries.append(json.loads(line))
-                except: pass
+                try:
+                    entries.append(json.loads(line))
+                except:
+                    pass
     if not entries:
         st.info("Audit log present but empty.")
     else:
@@ -211,7 +218,7 @@ else:
             sentiment_display = e.get('sentiment', {}).get('label','?')
             st.markdown(
                 f"- **Advisor ID:** {e.get('advisor_id')} | **Recipient:** {e.get('recipient')}  \n"
-                f"  **Subject:** {e.get('subject']} | **Time (UTC):** {e.get('timestamp')} | "
+                f"  **Subject:** {e.get('subject')} | **Time (UTC):** {e.get('timestamp')} | "
                 f"**Draft ID:** {e.get('draft_id')} | **Relevance:** {relevance_display} | **Sentiment:** {sentiment_display}"
             )
         st.caption("Open Gmail to review drafts before sending. This dashboard is read-only.")

@@ -17,7 +17,8 @@ ROOT_DIR = Path(__file__).resolve().parents[1]  # one level above pages/
 sys.path.insert(0, str(ROOT_DIR))
 
 # Import utils
-from utils import load_credentials, create_gmail_draft
+from utils import load_credentials, create_or_send_message
+
 
 # -----------------------------
 # Environment & OpenAI client

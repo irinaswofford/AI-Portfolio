@@ -1,55 +1,34 @@
-# -----------------------------
-# Environment and clients
-# ----------------------------
 
-# -----------------------------
-# Path setup (MUST be first)
-# -----------------------------
 import sys
-import pathlib
-
-ROOT_DIR = pathlib.Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT_DIR))
-print("Python path:", sys.path)
-print("Current dir:", pathlib.Path(__file__).resolve())
-
-
-# -----------------------------
-# Imports
-# -----------------------------
+from pathlib import Path
 import os
 import json
 import httpx
 import torch
 import hashlib
 from datetime import datetime, timedelta
-import streamlit as st
 from transformers import pipeline
 from openai import OpenAI
+import streamlit as st
+
+# -----------------------------
+# Ensure repo root is in sys.path
+# -----------------------------
+ROOT_DIR = Path(__file__).resolve().parents[1]  # one level above pages/
+sys.path.insert(0, str(ROOT_DIR))
+
+# Now import utils safely
 from utils import load_credentials, create_gmail_draft
 
 # -----------------------------
-# Environment & keys (safe)
+# Environment & OpenAI client
 # -----------------------------
-def get_secret(key: str):
-    try:
-        return st.secrets.get(key)
-    except Exception:
-        return None
-
-OPENAI_API_KEY = get_secret("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
-NEWS_API_KEY = get_secret("NEWS_API_KEY") or os.getenv("NEWS_API_KEY")
-
-if not OPENAI_API_KEY:
-    raise RuntimeError("OPENAI_API_KEY not set (Streamlit secrets or env var required)")
-if not NEWS_API_KEY:
-    raise RuntimeError("NEWS_API_KEY not set (Streamlit secrets or env var required)")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+NEWS_API_KEY = os.getenv("NEWS_API_KEY")
+if not OPENAI_API_KEY or not NEWS_API_KEY:
+    raise RuntimeError("OPENAI_API_KEY or NEWS_API_KEY not set in env.")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
-
-
-
-
 
 # -----------------------------
 # Sentiment analyzer (CPU-only)

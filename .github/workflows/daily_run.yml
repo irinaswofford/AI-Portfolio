@@ -46,6 +46,7 @@ jobs:
           EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
         run: |
           python pages/daily_ai_news_agent.py
+        AUTO_RUN: true   # 👈 this line sets AUTO_RUN automatically
 
 
       # 7️⃣ Upload audit log artifact

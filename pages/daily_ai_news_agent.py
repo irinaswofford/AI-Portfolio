@@ -3,6 +3,9 @@
 # -----------------------------
 import streamlit as st
 from openai import OpenAI
+from transformers import pipeline
+import torch
+
 OPENAI_API_KEY =  st.secrets["OPENAI_API_KEY"]
 NEWS_API_KEY =  st.secrets["NEWS_API_KEY"]
 client = OpenAI(api_key=OPENAI_API_KEY)

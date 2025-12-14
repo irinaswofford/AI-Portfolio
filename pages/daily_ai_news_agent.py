@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from transformers import pipeline
 from openai import OpenAI
 import streamlit as st
+from pathlib import Path
 
 # -----------------------------
 # Ensure repo root is in sys.path

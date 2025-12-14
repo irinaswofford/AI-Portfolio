@@ -1,3 +1,5 @@
+name: Daily AI News Agent
+
 on:
   schedule:
     - cron: '0 10 * * *'  # 5 AM ET (10:00 UTC)
@@ -8,34 +10,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repository
       - uses: actions/checkout@v3
 
+      # 2️⃣ Setup Python
       - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # 4️⃣ Configure Gmail OAuth files
       - name: Configure Gmail OAuth files
         env:
           CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
           TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
         run: |
           echo "$CREDENTIALS_JSON" > credentials.json
+          echo "$TOKEN_JSON" > token.json
 
+      # 5️⃣ Ensure audit log exists
+      - name: Ensure audit log exists
+        run: |
+          touch draft_audit_log.json
+
+      # 6️⃣ Run Daily AI News Agent
       - name: Run Daily AI News Agent
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
           EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
-          CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
-          TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
         run: |
           python pages/daily_ai_news_agent.py
 
+      # 7️⃣ Upload audit log artifact
       - name: Upload audit log artifact
         if: always()
         uses: actions/upload-artifact@v4

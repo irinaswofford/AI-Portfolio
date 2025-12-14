@@ -8,18 +8,18 @@ from datetime import datetime, timedelta
 from transformers import pipeline
 from openai import OpenAI
 import streamlit as st
-from pathlib import Path  # import Path once
+from pathlib import Path
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
 
 # -----------------------------
 # Ensure repo root is in sys.path
 # -----------------------------
-ROOT_DIR = Path(__file__).resolve().parents[1]  # one level above pages/
+ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
+from utils import load_credentials, create_or_send_message, create_gmail_draft
 
-# Import utils
-from utils import load_credentials, create_or_send_message
 AUTO_RUN = os.getenv("AUTO_RUN", "false").lower() == "true"
-
 
 # -----------------------------
 # Environment & OpenAI client
@@ -78,7 +78,6 @@ AI_TERMS = [
 def get_ai_news_articles(tickers, max_articles=20):
     yesterday = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
     url = "https://newsapi.org/v2/everything"
-
     query = "(" + " OR ".join(AI_TERMS) + ")"
 
     params = {
@@ -158,72 +157,23 @@ Use cautious language; all output is for human review only.
     return analysis, tokens_used, cost
 
 # -----------------------------
-# Streamlit UI
+# Gmail credentials (headless)
 # -----------------------------
-st.title("AI Market News Agent — Manual + Dashboard")
-
-# Manual run section
-st.header("Manual Analysis & Draft Creation")
-tickers_input = st.text_input("Tickers (comma-separated):", "AAPL,MSFT,GOOG,NVDA,TSLA,AMZN")
-TICKERS = [t.strip().upper() for t in tickers_input.split(",") if t.strip()]
-email_input = st.text_input("Advisor email(s):", "irinaswofford@gmail.com")
-
-if st.button("Fetch & Analyze AI News"):
-    articles = get_ai_news_articles(TICKERS)
-    if not articles:
-        st.error("No articles found.")
+def load_credentials():
+    token_file = "token.json"
+    if os.path.exists(token_file):
+        creds_data = json.load(open(token_file))
+        creds = Credentials.from_authorized_user_info(creds_data, ['https://www.googleapis.com/auth/gmail.compose'])
     else:
-        st.text_area("Top Articles:", format_articles_for_gpt(articles, 20), height=300)
-        analysis, tokens, cost = analyze_news_gpt(format_articles_for_gpt(articles, 10), TICKERS)
-        st.text_area("GPT Draft Analysis:", analysis, height=400)
-        st.info(f"Tokens used: {tokens} • Cost: ${cost:.4f}")
+        raise RuntimeError("token.json missing. Generate locally and set as secret for GitHub Actions.")
 
-        approve = st.checkbox("I understand this is advisory only (required to create draft)")
-        if approve and email_input:
-            creds = load_credentials()
-            recipients = [e.strip() for e in email_input.split(",") if e.strip()]
-            subject = f"[ADVISORY] AI Market Analysis - {datetime.utcnow().strftime('%B %d, %Y')}"
-            for idx, recipient in enumerate(recipients, 1):
-                draft = create_gmail_draft(creds, recipient, subject, analysis, advisor_id=f"advisor{idx}")
-                if isinstance(draft, dict) and draft.get("id"):
-                    st.success(f"Draft created for {recipient} (ID: {draft['id']})")
-                else:
-                    st.error(f"Failed to create draft for {recipient}: {draft}")
-
-st.info("""
-⚠️ Important:
-- Manual runs only create drafts if you check the box above.
-- Automatic job runs daily at 5 AM ET via GitHub Actions.
-- Drafts are advisory only and require human review before any action.
-""")
-
-# Dashboard
-st.header("Advisory Drafts Dashboard (Audit Log)")
-AUDIT_LOG = "draft_audit_log.json"
-path = Path(AUDIT_LOG)
-if not path.exists():
-    st.warning("No audit log found yet. Once the daily job runs, entries will appear here.")
-else:
-    entries = []
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            if line.strip():
-                try:
-                    entries.append(json.loads(line))
-                except:
-                    pass
-    if not entries:
-        st.info("Audit log present but empty.")
-    else:
-        for e in reversed(entries[-50:]):
-            relevance_display = f"{e.get('relevance','?')}"
-            sentiment_display = e.get('sentiment', {}).get('label','?')
-            st.markdown(
-                f"- **Advisor ID:** {e.get('advisor_id')} | **Recipient:** {e.get('recipient')}  \n"
-                f"  **Subject:** {e.get('subject')} | **Time (UTC):** {e.get('timestamp')} | "
-                f"**Draft ID:** {e.get('draft_id')} | **Relevance:** {relevance_display} | **Sentiment:** {sentiment_display}"
-            )
-        st.caption("Open Gmail to review drafts before sending. This dashboard is read-only.")
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+        with open(token_file, "w") as f:
+            f.write(creds.to_json())
+    if not creds.valid:
+        raise RuntimeError("Invalid Gmail credentials. Please refresh token.json locally.")
+    return creds
 
 # -----------------------------
 # Automatic run (GitHub Actions)
@@ -232,9 +182,9 @@ if AUTO_RUN:
     creds = load_credentials()
     recipients = [e.strip() for e in os.getenv("EMAIL_RECIPIENTS", "").split(",") if e.strip()]
     subject = f"[ADVISORY] AI Market Analysis - {datetime.utcnow().strftime('%B %d, %Y')}"
-    articles = get_ai_news_articles(["AAPL","MSFT","GOOG","NVDA","TSLA","AMZN"])
-    analysis, tokens, cost = analyze_news_gpt(format_articles_for_gpt(articles, 10),
-                                              ["AAPL","MSFT","GOOG","NVDA","TSLA","AMZN"])
+    TICKERS = ["AAPL","MSFT","GOOG","NVDA","TSLA","AMZN"]
+    articles = get_ai_news_articles(TICKERS)
+    analysis, tokens, cost = analyze_news_gpt(format_articles_for_gpt(articles, 10), TICKERS)
     for idx, recipient in enumerate(recipients, 1):
         result = create_or_send_message(creds, recipient, subject, analysis, advisor_id=f"advisor{idx}")
         print("Auto-run draft created:", result)

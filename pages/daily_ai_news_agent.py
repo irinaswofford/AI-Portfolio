@@ -1,8 +1,6 @@
 # -----------------------------
 # Environment and clients
-# -----------------------------
-
-
+# ----------------------------
 
 # -----------------------------
 # Path setup (MUST be first)
@@ -12,6 +10,9 @@ import pathlib
 
 ROOT_DIR = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
+print("Python path:", sys.path)
+print("Current dir:", pathlib.Path(__file__).resolve())
+
 
 # -----------------------------
 # Imports

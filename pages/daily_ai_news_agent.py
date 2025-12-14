@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from transformers import pipeline
 from openai import OpenAI
 import streamlit as st
-from pathlib import Path  # only import Path once
+from pathlib import Path  # import Path once
 
 # -----------------------------
 # Ensure repo root is in sys.path
@@ -16,7 +16,7 @@ from pathlib import Path  # only import Path once
 ROOT_DIR = Path(__file__).resolve().parents[1]  # one level above pages/
 sys.path.insert(0, str(ROOT_DIR))
 
-# Now import utils safely
+# Import utils
 from utils import load_credentials, create_gmail_draft
 
 # -----------------------------
@@ -62,7 +62,7 @@ def load_cache(key):
         return json.load(f)
 
 # -----------------------------
-# AI + Software/ML Terms
+# AI Terms
 # -----------------------------
 AI_TERMS = [
     "AI", "artificial intelligence", "machine learning", "ChatGPT", "OpenAI",
@@ -71,12 +71,14 @@ AI_TERMS = [
 ]
 
 # -----------------------------
-# Fetch news function
+# Fetch AI news
 # -----------------------------
 def get_ai_news_articles(tickers, max_articles=20):
     yesterday = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
     url = "https://newsapi.org/v2/everything"
+
     query = "(" + " OR ".join(AI_TERMS) + ")"
+
     params = {
         "q": query,
         "from": yesterday,
@@ -92,7 +94,7 @@ def get_ai_news_articles(tickers, max_articles=20):
 
     for a in articles:
         title = a.get("title", "")
-        desc = a.get("description", "") or ""
+        desc = a.get("description") or ""
         text = f"{title} {desc}"[:500].lower()
         relevance = sum(2 * text.count(term.lower()) for term in AI_TERMS)
         relevance += sum(5 for t in tickers if t.lower() in text)
@@ -107,23 +109,25 @@ def get_ai_news_articles(tickers, max_articles=20):
 
     return sorted(scored, key=lambda x: x["relevance"], reverse=True)
 
-
+# -----------------------------
+# Format for GPT
+# -----------------------------
 def format_articles_for_gpt(articles, top_n=10):
-    formatted_blocks = []
-    for idx, a in enumerate(articles[:top_n], start=1):
-        block = (
+    blocks = []
+    for idx, a in enumerate(articles[:top_n], 1):
+        blocks.append(
             f"Article {idx}:\n"
             f"Title: {a['title']}\n"
             f"Description: {a['description']}\n"
             f"URL: {a['url']}\n"
             f"Relevance Score: {a['relevance']}\n"
-            f"Sentiment: {a['sentiment']['label']} "
-            f"(confidence {a['sentiment']['score']:.2f})"
+            f"Sentiment: {a['sentiment']['label']} (confidence {a['sentiment']['score']:.2f})"
         )
-        formatted_blocks.append(block)
-    return "\n\n".join(formatted_blocks)
+    return "\n\n".join(blocks)
 
-
+# -----------------------------
+# GPT analysis
+# -----------------------------
 def analyze_news_gpt(articles_text, tickers):
     system_prompt = f"""
 You are a financial analyst specializing in AI/technology stocks.
@@ -136,11 +140,10 @@ Use cautious language; all output is for human review only.
     resp = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"Analyze these AI news articles:\n{articles_text}"}
+            {"role":"system","content":system_prompt},
+            {"role":"user","content":f"Analyze these AI news articles:\n{articles_text}"}
         ],
-        max_tokens=1000,
-        temperature=0
+        max_tokens=1000, temperature=0
     )
     analysis = resp.choices[0].message.content
     tokens_used = resp.usage.total_tokens
@@ -152,7 +155,7 @@ Use cautious language; all output is for human review only.
 # -----------------------------
 st.title("AI Market News Agent — Manual + Dashboard")
 
-# --- Section 1: Manual Run ---
+# Manual run section
 st.header("Manual Analysis & Draft Creation")
 tickers_input = st.text_input("Tickers (comma-separated):", "AAPL,MSFT,GOOG,NVDA,TSLA,AMZN")
 TICKERS = [t.strip().upper() for t in tickers_input.split(",") if t.strip()]
@@ -173,7 +176,7 @@ if st.button("Fetch & Analyze AI News"):
             creds = load_credentials()
             recipients = [e.strip() for e in email_input.split(",") if e.strip()]
             subject = f"[ADVISORY] AI Market Analysis - {datetime.utcnow().strftime('%B %d, %Y')}"
-            for idx, recipient in enumerate(recipients, start=1):
+            for idx, recipient in enumerate(recipients, 1):
                 draft = create_gmail_draft(creds, recipient, subject, analysis, advisor_id=f"advisor{idx}")
                 if isinstance(draft, dict) and draft.get("id"):
                     st.success(f"Draft created for {recipient} (ID: {draft['id']})")
@@ -184,14 +187,13 @@ st.info("""
 ⚠️ Important:
 - Manual runs only create drafts if you check the box above.
 - Automatic job runs daily at 5 AM ET via GitHub Actions.
-- That scheduled job always creates Gmail drafts and writes to the audit log.
-- All drafts are advisory only and require human review before any action.
+- Drafts are advisory only and require human review before any action.
 """)
 
-# --- Section 2: Dashboard ---
+# Dashboard
 st.header("Advisory Drafts Dashboard (Audit Log)")
 AUDIT_LOG = "draft_audit_log.json"
-path = Path(AUDIT_LOG)  # fixed, no more pathlib.Path
+path = Path(AUDIT_LOG)
 if not path.exists():
     st.warning("No audit log found yet. Once the daily job runs, entries will appear here.")
 else:
@@ -199,19 +201,17 @@ else:
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
-                try:
-                    entries.append(json.loads(line))
-                except:
-                    pass
+                try: entries.append(json.loads(line))
+                except: pass
     if not entries:
         st.info("Audit log present but empty.")
     else:
         for e in reversed(entries[-50:]):
             relevance_display = f"{e.get('relevance','?')}"
-            sentiment_display = e.get('sentiment', {}).get('label', '?')
+            sentiment_display = e.get('sentiment', {}).get('label','?')
             st.markdown(
                 f"- **Advisor ID:** {e.get('advisor_id')} | **Recipient:** {e.get('recipient')}  \n"
-                f"  **Subject:** {e.get('subject')} | **Time (UTC):** {e.get('timestamp')} | "
+                f"  **Subject:** {e.get('subject']} | **Time (UTC):** {e.get('timestamp')} | "
                 f"**Draft ID:** {e.get('draft_id')} | **Relevance:** {relevance_display} | **Sentiment:** {sentiment_display}"
             )
         st.caption("Open Gmail to review drafts before sending. This dashboard is read-only.")

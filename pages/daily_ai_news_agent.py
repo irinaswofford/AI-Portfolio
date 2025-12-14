@@ -17,7 +17,8 @@ from google.auth.transport.requests import Request
 # -----------------------------
 ROOT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT_DIR))
-from utils import load_credentials, create_or_send_message, create_gmail_draft
+from utils import load_credentials, create_or_send_message
+
 
 AUTO_RUN = os.getenv("AUTO_RUN", "false").lower() == "true"
 

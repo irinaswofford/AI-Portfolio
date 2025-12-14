@@ -74,47 +74,62 @@ def load_credentials() -> Credentials:
 # -----------------------------
 # Draft or Send
 # -----------------------------
-def create_or_send_message(creds: Credentials, recipient: str, subject: str, body: str, advisor_id: Optional[str] = None):
+def create_or_send_message(
+    creds: Credentials,
+    recipient: str,
+    subject: str,
+    body: str,
+    advisor_id: Optional[str] = None
+):
     """
     Creates a Gmail draft OR sends an email depending on SEND_EMAIL env var.
     - SEND_EMAIL=true → sends immediately
     - default → creates draft
     """
-    service = build("gmail", "v1", credentials=creds)
+    try:
+        service = build("gmail", "v1", credentials=creds)
 
-    disclaimer = (
-        "\n\n---\nThis analysis is provided by the AI Market News Agent. "
-        "It is for informational purposes only and does not constitute investment advice. "
-        "All decisions are the responsibility of the recipient."
-    )
-    header = "⚠️ This is for informational purposes only. Please review before acting.\n\n"
-    full_body = f"{header}{body}{disclaimer}"
+        disclaimer = (
+            "\n\n---\nThis analysis is provided by the AI Market News Agent. "
+            "It is for informational purposes only and does not constitute investment advice. "
+            "All decisions are the responsibility of the recipient."
+        )
+        header = "⚠️ This is for informational purposes only. Please review before acting.\n\n"
+        full_body = f"{header}{body}{disclaimer}"
 
-    message = MIMEMultipart()
-    message["to"] = recipient
-    message["subject"] = subject
-    message.attach(MIMEText(full_body, "plain"))
+        message = MIMEMultipart()
+        message["to"] = recipient
+        message["subject"] = subject
+        message.attach(MIMEText(full_body, "plain"))
 
-    encoded_message = {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode("utf-8")}
+        encoded_message = {
+            "raw": base64.urlsafe_b64encode(message.as_bytes()).decode("utf-8")
+        }
 
-    send_mode = os.getenv("SEND_EMAIL", "false").lower() == "true"
+        send_mode = os.getenv("SEND_EMAIL", "false").lower() == "true"
 
-    if send_mode:
-        result = service.users().messages().send(userId="me", body=encoded_message).execute()
-    else:
-        result = service.users().drafts().create(userId="me", body={"message": encoded_message}).execute()
+        if send_mode:
+            result = service.users().messages().send(userId="me", body=encoded_message).execute()
+        else:
+            result = service.users().drafts().create(userId="me", body={"message": encoded_message}).execute()
 
-    # Audit log entry
-    log_entry = {
-        "advisor_id": advisor_id,
-        "recipient": recipient,
-        "subject": subject,
-        "timestamp": datetime.utcnow().isoformat(),
-        "draft_id": result.get("id") if not send_mode else None,
-        "message_id": result.get("id") if send_mode else None,
-        "mode": "send" if send_mode else "draft"
-    }
-    with open(AUDIT_LOG, "a", encoding="utf-8") as log_file:
-        log_file.write(json.dumps(log_entry) + "\n")
+        print("Gmail API result:", result)  # helpful for debugging
 
-    return result
+        # Audit log entry
+        log_entry = {
+            "advisor_id": advisor_id,
+            "recipient": recipient,
+            "subject": subject,
+            "timestamp": datetime.utcnow().isoformat(),
+            "draft_id": result.get("id") if not send_mode else None,
+            "message_id": result.get("id") if send_mode else None,
+            "mode": "send" if send_mode else "draft"
+        }
+        with open(AUDIT_LOG, "a", encoding="utf-8") as log_file:
+            log_file.write(json.dumps(log_entry) + "\n")
+
+        return result
+
+    except Exception as e:
+        print("Error creating draft:", e)
+        return {"error": str(e)}

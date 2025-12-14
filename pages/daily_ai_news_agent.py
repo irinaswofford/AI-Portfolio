@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT_DIR))
 
 # Import utils
 from utils import load_credentials, create_or_send_message
+AUTO_RUN = os.getenv("AUTO_RUN", "false").lower() == "true"
 
 
 # -----------------------------
@@ -223,3 +224,17 @@ else:
                 f"**Draft ID:** {e.get('draft_id')} | **Relevance:** {relevance_display} | **Sentiment:** {sentiment_display}"
             )
         st.caption("Open Gmail to review drafts before sending. This dashboard is read-only.")
+
+# -----------------------------
+# Automatic run (GitHub Actions)
+# -----------------------------
+if AUTO_RUN:
+    creds = load_credentials()
+    recipients = [e.strip() for e in os.getenv("EMAIL_RECIPIENTS", "").split(",") if e.strip()]
+    subject = f"[ADVISORY] AI Market Analysis - {datetime.utcnow().strftime('%B %d, %Y')}"
+    articles = get_ai_news_articles(["AAPL","MSFT","GOOG","NVDA","TSLA","AMZN"])
+    analysis, tokens, cost = analyze_news_gpt(format_articles_for_gpt(articles, 10),
+                                              ["AAPL","MSFT","GOOG","NVDA","TSLA","AMZN"])
+    for idx, recipient in enumerate(recipients, 1):
+        result = create_or_send_message(creds, recipient, subject, analysis, advisor_id=f"advisor{idx}")
+        print("Auto-run draft created:", result)

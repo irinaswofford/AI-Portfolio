@@ -49,7 +49,7 @@ jobs:
           TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
           AUTO_RUN: true   # 👈 ensures automatic branch runs
         run: |
-          python run_daily_ai_news.py
+          python pages/run_daily_ai_news.py
 
       # 7️⃣ Upload audit log artifact
       - name: Upload audit log artifact

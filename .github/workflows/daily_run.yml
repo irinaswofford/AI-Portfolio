@@ -37,7 +37,7 @@ jobs:
           CREDENTIALS_JSON: ${{ secrets.CREDENTIALS_JSON }}
           TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
         run: |
-          python daily_ai_news_agent.py
+          python pages/daily_ai_news_agent.py
 
       - name: Upload audit log artifact
         if: always()

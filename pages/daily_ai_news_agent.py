@@ -1,6 +1,4 @@
-
 import sys
-from pathlib import Path
 import os
 import json
 import httpx
@@ -10,7 +8,7 @@ from datetime import datetime, timedelta
 from transformers import pipeline
 from openai import OpenAI
 import streamlit as st
-from pathlib import Path
+from pathlib import Path  # only import Path once
 
 # -----------------------------
 # Ensure repo root is in sys.path
@@ -34,32 +32,37 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 # -----------------------------
 # Sentiment analyzer (CPU-only)
 # -----------------------------
-sentiment_analyzer = pipeline("sentiment-analysis",
-    model="distilbert-base-uncased-finetuned-sst-2-english", device=-1)
+sentiment_analyzer = pipeline(
+    "sentiment-analysis",
+    model="distilbert-base-uncased-finetuned-sst-2-english",
+    device=-1  # CPU only
+)
 if hasattr(torch, "compile"):
     torch._dynamo.disable()
 
 # -----------------------------
 # Cache
 # -----------------------------
-CACHE_DIR = pathlib.Path("cache"); CACHE_DIR.mkdir(exist_ok=True)
+CACHE_DIR = Path("cache")
+CACHE_DIR.mkdir(exist_ok=True)
 
 def get_cache_key(articles):
-    urls = [a.get("url","") for a in articles]
+    urls = [a.get("url", "") for a in articles]
     return hashlib.md5("".join(urls).encode()).hexdigest()
 
 def save_cache(key, articles):
-    with open(CACHE_DIR/f"{key}.json","w",encoding="utf-8") as f:
-        json.dump(articles,f,ensure_ascii=False,indent=2)
+    with open(CACHE_DIR / f"{key}.json", "w", encoding="utf-8") as f:
+        json.dump(articles, f, ensure_ascii=False, indent=2)
 
-def is_cached(key): return (CACHE_DIR/f"{key}.json").exists()
-def load_cache(key): return json.load(open(CACHE_DIR/f"{key}.json","r",encoding="utf-8"))
+def is_cached(key):
+    return (CACHE_DIR / f"{key}.json").exists()
+
+def load_cache(key):
+    with open(CACHE_DIR / f"{key}.json", "r", encoding="utf-8") as f:
+        return json.load(f)
 
 # -----------------------------
-# Expanded AI + Infrastructure Terms
-# -----------------------------
-# -----------------------------
-# AI + Software/ML Terms Only
+# AI + Software/ML Terms
 # -----------------------------
 AI_TERMS = [
     "AI", "artificial intelligence", "machine learning", "ChatGPT", "OpenAI",
@@ -67,12 +70,13 @@ AI_TERMS = [
     "cloud", "HPC", "distributed inference"
 ]
 
-
+# -----------------------------
+# Fetch news function
+# -----------------------------
 def get_ai_news_articles(tickers, max_articles=20):
     yesterday = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
     url = "https://newsapi.org/v2/everything"
 
-    # Broad AI terms query without requiring tickers
     query = "(" + " OR ".join(AI_TERMS) + ")"
 
     params = {
@@ -81,7 +85,6 @@ def get_ai_news_articles(tickers, max_articles=20):
         "sortBy": "publishedAt",
         "pageSize": max_articles,
         "apiKey": NEWS_API_KEY,
-        # Remove 'language':'en' to fetch all languages
     }
 
     resp = httpx.get(url, params=params, timeout=30)
@@ -90,24 +93,22 @@ def get_ai_news_articles(tickers, max_articles=20):
     scored = []
 
     for a in articles:
-        title = a.get("title","")
-        desc = a.get("description","") or ""
+        title = a.get("title", "")
+        desc = a.get("description", "") or ""
         text = f"{title} {desc}"[:500].lower()
-        relevance = 0
-        # weight AI terms only
-        for term in AI_TERMS:
-            relevance += 2 * text.count(term.lower())
-        # optional: increase relevance if tickers appear
-        for t in tickers:
-            if t.lower() in text:
-                relevance += 5
+        relevance = sum(2 * text.count(term.lower()) for term in AI_TERMS)
+        relevance += sum(5 for t in tickers if t.lower() in text)
         sentiment = sentiment_analyzer(text[:512])[0]
-        scored.append({"title":title,"url":a.get("url"),
-                       "description":desc[:300],"relevance":relevance,
-                       "sentiment":sentiment})
+        scored.append({
+            "title": title,
+            "url": a.get("url"),
+            "description": desc[:300],
+            "relevance": relevance,
+            "sentiment": sentiment
+        })
 
-    # sort by relevance descending
     return sorted(scored, key=lambda x: x["relevance"], reverse=True)
+
 
 def format_articles_for_gpt(articles,top_n=10):
     formatted_blocks=[]

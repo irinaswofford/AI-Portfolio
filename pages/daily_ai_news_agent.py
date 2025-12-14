@@ -35,7 +35,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 sentiment_analyzer = pipeline(
     "sentiment-analysis",
     model="distilbert-base-uncased-finetuned-sst-2-english",
-    device=-1  # CPU only
+    device=-1
 )
 if hasattr(torch, "compile"):
     torch._dynamo.disable()
@@ -76,9 +76,7 @@ AI_TERMS = [
 def get_ai_news_articles(tickers, max_articles=20):
     yesterday = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
     url = "https://newsapi.org/v2/everything"
-
     query = "(" + " OR ".join(AI_TERMS) + ")"
-
     params = {
         "q": query,
         "from": yesterday,
@@ -110,10 +108,10 @@ def get_ai_news_articles(tickers, max_articles=20):
     return sorted(scored, key=lambda x: x["relevance"], reverse=True)
 
 
-def format_articles_for_gpt(articles,top_n=10):
-    formatted_blocks=[]
-    for idx,a in enumerate(articles[:top_n],start=1):
-        block=(
+def format_articles_for_gpt(articles, top_n=10):
+    formatted_blocks = []
+    for idx, a in enumerate(articles[:top_n], start=1):
+        block = (
             f"Article {idx}:\n"
             f"Title: {a['title']}\n"
             f"Description: {a['description']}\n"
@@ -125,8 +123,9 @@ def format_articles_for_gpt(articles,top_n=10):
         formatted_blocks.append(block)
     return "\n\n".join(formatted_blocks)
 
-def analyze_news_gpt(articles_text,tickers):
-    system_prompt=f"""
+
+def analyze_news_gpt(articles_text, tickers):
+    system_prompt = f"""
 You are a financial analyst specializing in AI/technology stocks.
 Analyze these AI news articles for potential market impact.
 Provide Buy/Hold/Watch signals for all tickers listed: {', '.join(tickers)}.
@@ -134,44 +133,49 @@ Write in a professional email format.
 Prioritize the top 10 most relevant articles.
 Use cautious language; all output is for human review only.
 """
-    resp=client.chat.completions.create(
+    resp = client.chat.completions.create(
         model="gpt-3.5-turbo",
-        messages=[{"role":"system","content":system_prompt},
-                  {"role":"user","content":f"Analyze these AI news articles:\n{articles_text}"}],
-        max_tokens=1000,temperature=0
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Analyze these AI news articles:\n{articles_text}"}
+        ],
+        max_tokens=1000,
+        temperature=0
     )
-    analysis=resp.choices[0].message.content
-    tokens_used=resp.usage.total_tokens
-    cost=tokens_used/1000*0.002
-    return analysis,tokens_used,cost
+    analysis = resp.choices[0].message.content
+    tokens_used = resp.usage.total_tokens
+    cost = tokens_used / 1000 * 0.002
+    return analysis, tokens_used, cost
 
 # -----------------------------
-# UI
+# Streamlit UI
 # -----------------------------
 st.title("AI Market News Agent — Manual + Dashboard")
 
 # --- Section 1: Manual Run ---
 st.header("Manual Analysis & Draft Creation")
-tickers_input=st.text_input("Tickers (comma-separated):","AAPL,MSFT,GOOG,NVDA,TSLA,AMZN")
-TICKERS=[t.strip().upper() for t in tickers_input.split(",") if t.strip()]
-email_input=st.text_input("Advisor email(s):","irinaswofford@gmail.com")
+tickers_input = st.text_input("Tickers (comma-separated):", "AAPL,MSFT,GOOG,NVDA,TSLA,AMZN")
+TICKERS = [t.strip().upper() for t in tickers_input.split(",") if t.strip()]
+email_input = st.text_input("Advisor email(s):", "irinaswofford@gmail.com")
 
 if st.button("Fetch & Analyze AI News"):
-    articles=get_ai_news_articles(TICKERS)
-    if not articles: st.error("No articles found.")
+    articles = get_ai_news_articles(TICKERS)
+    if not articles:
+        st.error("No articles found.")
     else:
-        st.text_area("Top Articles:",format_articles_for_gpt(articles,20),height=300)
-        analysis,tokens,cost=analyze_news_gpt(format_articles_for_gpt(articles,10),TICKERS)
-        st.text_area("GPT Draft Analysis:",analysis,height=400)
+        st.text_area("Top Articles:", format_articles_for_gpt(articles, 20), height=300)
+        analysis, tokens, cost = analyze_news_gpt(format_articles_for_gpt(articles, 10), TICKERS)
+        st.text_area("GPT Draft Analysis:", analysis, height=400)
         st.info(f"Tokens used: {tokens} • Cost: ${cost:.4f}")
-        approve=st.checkbox("I understand this is advisory only (required to create draft)")
+
+        approve = st.checkbox("I understand this is advisory only (required to create draft)")
         if approve and email_input:
-            creds=load_credentials()
-            recipients=[e.strip() for e in email_input.split(",") if e.strip()]
-            subject=f"[ADVISORY] AI Market Analysis - {datetime.utcnow().strftime('%B %d, %Y')}"
-            for idx,recipient in enumerate(recipients,1):
-                draft=create_gmail_draft(creds,recipient,subject,analysis,advisor_id=f"advisor{idx}")
-                if isinstance(draft,dict) and draft.get("id"):
+            creds = load_credentials()
+            recipients = [e.strip() for e in email_input.split(",") if e.strip()]
+            subject = f"[ADVISORY] AI Market Analysis - {datetime.utcnow().strftime('%B %d, %Y')}"
+            for idx, recipient in enumerate(recipients, start=1):
+                draft = create_gmail_draft(creds, recipient, subject, analysis, advisor_id=f"advisor{idx}")
+                if isinstance(draft, dict) and draft.get("id"):
                     st.success(f"Draft created for {recipient} (ID: {draft['id']})")
                 else:
                     st.error(f"Failed to create draft for {recipient}: {draft}")
@@ -186,22 +190,25 @@ st.info("""
 
 # --- Section 2: Dashboard ---
 st.header("Advisory Drafts Dashboard (Audit Log)")
-AUDIT_LOG="draft_audit_log.json"
-path=pathlib.Path(AUDIT_LOG)
+AUDIT_LOG = "draft_audit_log.json"
+path = Path(AUDIT_LOG)  # fixed, no more pathlib.Path
 if not path.exists():
     st.warning("No audit log found yet. Once the daily job runs, entries will appear here.")
 else:
-    entries=[]
-    with open(path,"r",encoding="utf-8") as f:
+    entries = []
+    with open(path, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
-                try: entries.append(json.loads(line))
-                except: pass
-    if not entries: st.info("Audit log present but empty.")
+                try:
+                    entries.append(json.loads(line))
+                except:
+                    pass
+    if not entries:
+        st.info("Audit log present but empty.")
     else:
         for e in reversed(entries[-50:]):
             relevance_display = f"{e.get('relevance','?')}"
-            sentiment_display = e.get('sentiment',{}).get('label','?')
+            sentiment_display = e.get('sentiment', {}).get('label', '?')
             st.markdown(
                 f"- **Advisor ID:** {e.get('advisor_id')} | **Recipient:** {e.get('recipient')}  \n"
                 f"  **Subject:** {e.get('subject')} | **Time (UTC):** {e.get('timestamp')} | "

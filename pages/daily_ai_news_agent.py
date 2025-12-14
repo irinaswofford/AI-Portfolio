@@ -2,8 +2,8 @@
 # Environment and clients
 # -----------------------------
 import streamlit as st
-OPENAI_API_KEY =  st.secrets("OPENAI_API_KEY")
-NEWS_API_KEY =  st.secrets("NEWS_API_KEY")
+OPENAI_API_KEY =  st.secrets["OPENAI_API_KEY"]
+NEWS_API_KEY =  st.secrets["NEWS_API_KEY"]
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # -----------------------------

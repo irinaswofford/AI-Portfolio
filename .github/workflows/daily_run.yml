@@ -45,7 +45,7 @@ jobs:
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
           EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
         run: |
-          python -m ai_portfolio.pages.daily_ai_news_agent
+          python -m AI-Portfolio.pages.daily_ai_news_agent
 
 
       # 7️⃣ Upload audit log artifact

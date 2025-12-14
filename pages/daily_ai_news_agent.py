@@ -1,17 +1,54 @@
 # -----------------------------
 # Environment and clients
 # -----------------------------
-import streamlit as st
-import os, json, httpx, torch, hashlib, pathlib, streamlit as st
+
+
+
+# -----------------------------
+# Path setup (MUST be first)
+# -----------------------------
+import sys
+import pathlib
+
+ROOT_DIR = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT_DIR))
+
+# -----------------------------
+# Imports
+# -----------------------------
+import os
+import json
+import httpx
+import torch
+import hashlib
 from datetime import datetime, timedelta
+import streamlit as st
 from transformers import pipeline
 from openai import OpenAI
 from utils import load_credentials, create_gmail_draft
-import torch
 
-OPENAI_API_KEY =  st.secrets["OPENAI_API_KEY"]
-NEWS_API_KEY =  st.secrets["NEWS_API_KEY"]
+# -----------------------------
+# Environment & keys (safe)
+# -----------------------------
+def get_secret(key: str):
+    try:
+        return st.secrets.get(key)
+    except Exception:
+        return None
+
+OPENAI_API_KEY = get_secret("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
+NEWS_API_KEY = get_secret("NEWS_API_KEY") or os.getenv("NEWS_API_KEY")
+
+if not OPENAI_API_KEY:
+    raise RuntimeError("OPENAI_API_KEY not set (Streamlit secrets or env var required)")
+if not NEWS_API_KEY:
+    raise RuntimeError("NEWS_API_KEY not set (Streamlit secrets or env var required)")
+
 client = OpenAI(api_key=OPENAI_API_KEY)
+
+
+
+
 
 # -----------------------------
 # Sentiment analyzer (CPU-only)

@@ -23,14 +23,23 @@ TOKEN_FILE = "token.pickle"
 CREDENTIALS_FILE = "credentials.json"
 AUDIT_LOG = "draft_audit_log.json"
 
+
 def _save_json(path: str, content: str):
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+
 
 # -----------------------------
 # Load credentials
 # -----------------------------
 def load_credentials() -> Credentials:
+    """
+    Loads Gmail OAuth2 credentials.
+    1. Checks token.pickle.
+    2. Refreshes if expired.
+    3. Falls back to local OAuth flow if necessary.
+    Supports headless usage in GitHub Actions.
+    """
     cred_json = os.getenv("CREDENTIALS_JSON")
     token_json = os.getenv("TOKEN_JSON")
 
@@ -39,9 +48,12 @@ def load_credentials() -> Credentials:
 
     creds: Optional[Credentials] = None
 
+    # Try pickle first
     if os.path.exists(TOKEN_FILE):
         with open(TOKEN_FILE, "rb") as token:
             creds = pickle.load(token)
+
+    # Try base64 token_json if provided
     elif token_json:
         try:
             creds = pickle.loads(base64.b64decode(token_json))
@@ -54,25 +66,32 @@ def load_credentials() -> Credentials:
             with open(TOKEN_FILE, "wb") as token:
                 pickle.dump(creds, token)
 
-    if creds and creds.valid:
-        return creds
+    # Refresh if expired
     if creds and creds.expired and creds.refresh_token:
         creds.refresh(Request())
         with open(TOKEN_FILE, "wb") as token:
             pickle.dump(creds, token)
         return creds
 
-    if os.path.exists(CREDENTIALS_FILE):
+    # Local OAuth flow if nothing valid
+    if (not creds or not creds.valid) and os.path.exists(CREDENTIALS_FILE):
         flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
         creds = flow.run_local_server(port=0)
         with open(TOKEN_FILE, "wb") as token:
             pickle.dump(creds, token)
         return creds
 
-    raise RuntimeError("No valid Gmail credentials available. Provide CREDENTIALS_JSON/TOKEN_JSON or run local OAuth.")
+    if creds and creds.valid:
+        return creds
+
+    raise RuntimeError(
+        "No valid Gmail credentials available. "
+        "Provide CREDENTIALS_JSON/TOKEN_JSON or run local OAuth."
+    )
+
 
 # -----------------------------
-# Draft or Send
+# Draft or send message
 # -----------------------------
 def create_or_send_message(
     creds: Credentials,
@@ -89,6 +108,7 @@ def create_or_send_message(
     try:
         service = build("gmail", "v1", credentials=creds)
 
+        # Append disclaimer
         disclaimer = (
             "\n\n---\nThis analysis is provided by the AI Market News Agent. "
             "It is for informational purposes only and does not constitute investment advice. "
@@ -97,6 +117,7 @@ def create_or_send_message(
         header = "⚠️ This is for informational purposes only. Please review before acting.\n\n"
         full_body = f"{header}{body}{disclaimer}"
 
+        # Construct email
         message = MIMEMultipart()
         message["to"] = recipient
         message["subject"] = subject
@@ -113,9 +134,9 @@ def create_or_send_message(
         else:
             result = service.users().drafts().create(userId="me", body={"message": encoded_message}).execute()
 
-        print("Gmail API result:", result)  # helpful for debugging
+        print("Gmail API result:", result)
 
-        # Audit log entry
+        # Audit log
         log_entry = {
             "advisor_id": advisor_id,
             "recipient": recipient,
@@ -133,3 +154,4 @@ def create_or_send_message(
     except Exception as e:
         print("Error creating draft:", e)
         return {"error": str(e)}
+

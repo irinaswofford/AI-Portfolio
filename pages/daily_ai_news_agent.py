@@ -201,8 +201,8 @@ from datetime import datetime, timedelta
 from transformers import pipeline
 from openai import OpenAI
 import streamlit as st
-from utils import load_credentials, create_gmail_draft
-
+# from utils import load_credentials, create_gmail_draft
+from utils import load_credentials, create_or_send_message
 # -----------------------------
 # Environment and clients
 # -----------------------------
@@ -356,11 +356,11 @@ if st.button("Fetch & Analyze AI News"):
 
             if email_input:
                 try:
-                    creds = load_credentials()
+                    creds = ()
                     recipients = [e.strip() for e in email_input.split(",") if e.strip()]
                     subject = f"[ADVISORY] AI Market Analysis - {datetime.utcnow().strftime('%B %d, %Y')}"
                     for idx, recipient in enumerate(recipients,1):
-                        draft = create_gmail_draft(creds, recipient, subject, analysis, advisor_id=f"advisor{idx}")
+                        draft = create_or_send_message(creds, recipient, subject, analysis, advisor_id=f"advisor{idx}")
                         if isinstance(draft, dict) and draft.get("id"):
                             st.success(f"Draft created for {recipient} (ID: {draft['id']})")
                         else:

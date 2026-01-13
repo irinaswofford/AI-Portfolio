@@ -4,7 +4,7 @@ WEBHOOK_URL = st.secrets["WEBHOOK_URL"] #uncomment for production
 components.html("""
 <script 
     src="https://irinaswofford.github.io/assistant-widget/widget.js"
-    data-webhook="WEBHOOK_URL"
+    data-webhook="{WEBHOOK_URL}"
     data-client-key="test_client_002"
     data-brand-color="#8b5cf6"
     data-agent-name="Marvia AI"

@@ -68,7 +68,7 @@ selected_page = st.sidebar.radio(
         "Sales Agent- Agentic Framework",
         "NLP and Generative AI: Speech-to-Text AI Voice Agent",
         "Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator",
-        "AI News Agent",
+        "Clinical AI Assistent Demo"",
         "Customer Chatbot Fine Tunned with ChatGPT Turbo"
     ],
     key="unique_radio_key",
@@ -533,7 +533,9 @@ elif  st.session_state.page =="NLP and Generative AI: Speech-to-Text AI Voice Ag
         load_page("pages/speach-to-text.py")   
 elif  st.session_state.page =="Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator":
         load_page("pages/text-to-speach.py")
-elif st.session_state.page == "AI News Agent":
-    load_page("pages/daily_ai_news_agent.py")  
+elif st.session_state.page == "Clinical AI Assistent Demo":
+    load_page("pages/marvia_ai.py")
+# elif st.session_state.page == "AI News Agent":
+#     load_page("pages/daily_ai_news_agent.py")  
 elif  st.session_state.page =="Customer Chatbot Fine Tunned with ChatGPT Turbo":
         load_page("pages/chatbot_fine_tuned.py")  

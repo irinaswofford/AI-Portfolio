@@ -1,6 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
 WEBHOOK_URL = st.secrets["WEBHOOK_URL"] #uncomment for production
+CLIENT_KEY = st.secrets["FAX_CLIENT_KEY"]
 components.html("""
 <script 
     src="https://irinaswofford.github.io/assistant-widget/widget.js"

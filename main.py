@@ -68,7 +68,6 @@ selected_page = st.sidebar.radio(
         "Sales Agent- Agentic Framework",
         "NLP and Generative AI: Speech-to-Text AI Voice Agent",
         "Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator",
-        "Clinical AI Assistent Demo",
         "Customer Chatbot Fine Tunned with ChatGPT Turbo"
     ],
     key="unique_radio_key",

@@ -68,6 +68,7 @@ selected_page = st.sidebar.radio(
         "Sales Agent- Agentic Framework",
         "NLP and Generative AI: Speech-to-Text AI Voice Agent",
         "Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator",
+        "AI News Agent",
         "Customer Chatbot Fine Tunned with ChatGPT Turbo"
     ],
     key="unique_radio_key",
@@ -252,25 +253,25 @@ def get_user_credentials():
                         pickle.dump(creds, f)
                     st.success("✅ Authentication successful! Credentials saved.")
                     logging.info("Authentication successful. Rerunning app.")
-    
+
                     # --- IMPORTANT ADDITION ---
                     # Remove the 'code' from query parameters after successful exchange
                     st.query_params.pop("code", None) # Safely remove the 'code' parameter from the URL
                     st.rerun() # Force a rerun with a clean URL
-    
+
                 except Exception as e:
                     st.error(f"❌ Failed to fetch token: {e}")
                     st.error(f"Full Exception (from get_user_credentials): {e}") # Provide full exception for more detail
                     logging.error(f"Failed to fetch token: {e}", exc_info=True)
                     creds = None # Ensure creds is None if token fetch fails, allowing re-prompt
-    
+
                     # --- IMPORTANT ADDITION ---
                     # Remove the 'code' from query parameters even on failure to prevent reuse
                     st.query_params.pop("code", None)
                     # Do NOT call st.rerun() here immediately after failure.
                     # Let the error message remain visible for the user.
                     # They can manually refresh or try the sign-in link again.
-    
+
             else:
                 logging.info("No auth code found in URL. Waiting for user interaction.")
                 # This st.rerun() is useful here to pick up the code after the first redirect,
@@ -532,5 +533,7 @@ elif  st.session_state.page =="NLP and Generative AI: Speech-to-Text AI Voice Ag
         load_page("pages/speach-to-text.py")   
 elif  st.session_state.page =="Computer Vision, Generative AI: A Text-to-Speech, Audio, and Video Generator":
         load_page("pages/text-to-speach.py")
+    elif st.session_state.page == "AI News Agent":
+    load_page("pages/daily_ai_news_agent.py")  
 elif  st.session_state.page =="Customer Chatbot Fine Tunned with ChatGPT Turbo":
         load_page("pages/chatbot_fine_tuned.py")  

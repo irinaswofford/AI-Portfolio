@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import pickle
 import base64
-import torch
+# import torch
 import logging
 
 from portfolio_data import portfolio_data
@@ -25,10 +25,10 @@ CSE_ID = os.getenv('CSE_ID')
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 
 # Fix PyTorch warning
-try:
-    torch.classes.__path__ = []
-except AttributeError:
-    pass
+# try:
+#     torch.classes.__path__ = []
+# except AttributeError:
+#     pass
 
 # ---------------- UI CLEAN ----------------
 st.markdown("""
